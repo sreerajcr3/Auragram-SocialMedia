@@ -1,5 +1,4 @@
 import 'package:aura/presentation/functions/functions.dart';
-import 'package:aura/presentation/screens/home.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

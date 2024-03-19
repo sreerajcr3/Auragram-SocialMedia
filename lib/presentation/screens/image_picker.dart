@@ -1,5 +1,5 @@
-import 'package:aura/core/colors/colors.dart';
 import 'package:aura/domain/image_picker/photo_picker.dart';
+import 'package:aura/presentation/screens/demo.dart';
 import 'package:flutter/material.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
@@ -21,121 +21,77 @@ class _ImagePIckerState extends State<ImagePIcker> {
     MediaServices().loadAlbums(RequestType.common).then((value) {
       setState(() {
         albumList = value;
-         selectedAlbum = value.isNotEmpty ? value[0] : null; 
+        selectedAlbum =  value[0];
+        print("selected albums:${albumList}");
       });
-    });
-    MediaServices().loadAssets(selectedAlbum!).then((value) {
-      setState(() {
-        assetList = value;
+      MediaServices().loadAssets(selectedAlbum!).then((value) {
+        setState(() {
+          assetList = value;
+        });
       });
     });
     super.initState();
   }
 
+  Future pickAssets(
+      {required int maxCount, required RequestType requestType}) async {
+    final result = await Navigator.push(context, MaterialPageRoute(builder: (ctx){
+  return MediaPickerDemo(maxCount: maxCount, requestType: requestType);
+    }));
+    if ( result != null) {
+      setState(() {
+       selectedAssetList = List<AssetEntity>.from(result);
+      
+        print("object:$selectedAssetList");
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Column(
-        children: [
-          Flexible(
-              child: Column(
+      appBar: AppBar(backgroundColor: Colors.blue),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          pickAssets(maxCount: 10, requestType: RequestType.common);
+        },
+        child: const Icon(Icons.camera),
+      ),
+      body: GridView.builder(
+        itemCount: selectedAssetList.length,
+        gridDelegate:
+            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        itemBuilder: (context, index) {
+          AssetEntity assetEntity = selectedAssetList[index];
+          return Stack(
             children: [
-              SizedBox(
-                height: height * 0.5,
+              Positioned.fill(
+                child: AssetEntityImage(
+                  assetEntity,
+                  isOriginal: false,
+                  thumbnailSize: const ThumbnailSize.square(1000),
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Center(
+                      child: Icon(Icons.error),
+                    );
+                  },
+                ),
               ),
-              Row(
-                children: [
-                  if (selectedAlbum != null)
-                    GestureDetector(
-                      onTap: () {
-                        albums(height);
-                      },
+              if (assetEntity.type == AssetType.video)
+                const Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Icon(Icons.video_call),
                     ),
-                  Text(
-                    selectedAlbum!.name == "Recent"
-                        ? "Gallery"
-                        : selectedAlbum!.name,
-                    style: const TextStyle(
-                        color: kWhite,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20),
                   ),
-                  const Icon(Icons.arrow_downward)
-                ],
-              ),
-              Flexible(
-                  child: assetList.isEmpty
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 4),
-                          itemBuilder: (ctx, index) {
-                            AssetEntity assetEntity = assetList[index];
-                            return assetWidget(assetEntity);
-                          }))
+                ),
             ],
-          ))
-        ],
+          );
+        },
       ),
     );
   }
-
-  void albums(height) {
-    showModalBottomSheet(
-        context: context,
-        builder: (ctx) {
-          return ListView.builder(
-              itemCount: albumList.length,
-              physics: BouncingScrollPhysics(),
-              itemBuilder: (ctx, index) {
-                return ListTile(
-                  onTap: () {
-                    setState(() {
-                      selectedAlbum = albumList[index];
-                    });
-                    MediaServices().loadAssets(selectedAlbum!).then((value) {
-                      setState(() {
-                        assetList = value;
-                      });
-                    });
-                  },
-                  title: Text(albumList[index].name == "Recent"
-                      ? "Gallery"
-                      : albumList[index].name),
-                );
-              });
-        });
-  }
-
-  Widget assetWidget(AssetEntity assetEntity) => Stack(children: [
-        Positioned.fill(
-          child: AssetEntityImage(
-            assetEntity,
-            isOriginal: false,
-            thumbnailSize: ThumbnailSize.square(250),
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return const Center(
-                child: Icon(
-                  Icons.error,
-                  color: Colors.red,
-                ),
-              );
-            },
-          ),
-        ),
-        if (assetEntity.type == AssetType.video)
-          const Positioned.fill(
-              child: Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Icon(Icons.video_camera_back),
-            ),
-          ))
-      ]);
 }

@@ -1,5 +1,4 @@
 import 'package:aura/presentation/screens/bottom_navigation.dart';
-import 'package:aura/presentation/screens/home.dart';
 import 'package:aura/presentation/screens/log_in.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
