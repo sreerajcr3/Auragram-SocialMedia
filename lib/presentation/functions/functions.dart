@@ -35,7 +35,14 @@ navigatorPush(page, context) {
 userLoggedIn(context) async {
   final sharedprefs = await SharedPreferences.getInstance();
   await sharedprefs.setBool(savedkey, true);
-  // navigatorReplacement(const HomeScreen(), context);
+}
+saveToken(userId) async {
+  final sharedprefs = await SharedPreferences.getInstance();
+  await sharedprefs.setString('token', userId);
+}
+ Future<String?> getToken() async {
+  final sharedPrefs = await SharedPreferences.getInstance();
+  return sharedPrefs.getString('token');
 }
 
 Future<void> checkLoggedIn(context) async {

@@ -1,7 +1,7 @@
 import 'package:aura/bloc/logIn_bloc/bloc/log_in_bloc.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/presentation/functions/functions.dart';
-import 'package:aura/presentation/screens/home.dart';
+import 'package:aura/presentation/screens/home/home.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

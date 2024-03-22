@@ -5,4 +5,7 @@ class ApiEndPoints {
   static const login = "/login";
   static const forgotPassword = "/forget-password";
   static const forgotPasswordOtp = "/forget-send-otp";
+  static const createpost = "/createpost";
+  static const getPosts = "/posts";
+  // static const coludinaryUrl = "http://api.cloudinary.com/v1_1/"
 }

@@ -3,17 +3,17 @@ import 'package:aura/domain/image_picker/photo_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
-class MediaPickerDemo extends StatefulWidget {
+class MediaPicker extends StatefulWidget {
   final int maxCount;
   final RequestType requestType;
-  const MediaPickerDemo(
+  const MediaPicker(
       {super.key, required this.maxCount, required this.requestType});
 
   @override
-  State<MediaPickerDemo> createState() => _MediaPickerDemoState();
+  State<MediaPicker> createState() => _MediaPickerState();
 }
 
-class _MediaPickerDemoState extends State<MediaPickerDemo> {
+class _MediaPickerState extends State<MediaPicker> {
   AssetPathEntity? selectedAlbum;
   List<AssetPathEntity> albumList = [];
   List<AssetEntity> assetList = [];
@@ -41,8 +41,9 @@ class _MediaPickerDemoState extends State<MediaPickerDemo> {
     return Scaffold(
       backgroundColor: kWhite,
       appBar: AppBar(
+        
         foregroundColor: Colors.white,
-        // elevation: 0,
+        elevation: 0,
         title: DropdownButton<AssetPathEntity>(
           value: selectedAlbum,
           onChanged: (AssetPathEntity? value) {
@@ -82,6 +83,7 @@ class _MediaPickerDemoState extends State<MediaPickerDemo> {
           GestureDetector(
             onTap: () {
               Navigator.pop(context, selectedAssetList);
+              
             },
             child: const Center(
               child: Padding(

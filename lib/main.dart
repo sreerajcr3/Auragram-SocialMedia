@@ -1,3 +1,5 @@
+import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
+import 'package:aura/bloc/create_post/bloc/create_post_bloc.dart';
 import 'package:aura/bloc/logIn_bloc/bloc/log_in_bloc.dart';
 import 'package:aura/bloc/otpBloc/bloc/otp_bloc.dart';
 import 'package:aura/bloc/signUpbloc/bloc/sign_up_bloc.dart';
@@ -16,13 +18,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => OtpBloc(),
-        ),
-        BlocProvider(
-          create: (context) => SignUpBloc(),
-        ),
+        BlocProvider(create: (context) => OtpBloc()),
+        BlocProvider(create: (context) => SignUpBloc()),
         BlocProvider(create: (context) => LogInBloc()),
+        BlocProvider(create: (context) => CreatePostBloc()),
+        BlocProvider(create: (context) => PostsBloc()),
+        
       ],
       child: MaterialApp(
           title: 'Flutter Demo',

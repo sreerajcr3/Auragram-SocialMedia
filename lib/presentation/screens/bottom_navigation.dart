@@ -1,6 +1,6 @@
 import 'package:aura/core/colors/colors.dart';
-import 'package:aura/presentation/screens/image_picker.dart';
-import 'package:aura/presentation/screens/home.dart';
+import 'package:aura/presentation/screens/Image_picker/image_picker.dart';
+import 'package:aura/presentation/screens/home/home.dart';
 import 'package:aura/presentation/screens/profile/profile_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   var selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final pages = [const HomeScreen(),ImagePIcker(), const Profile()];
+    final pages = [const HomeScreen(), CreatePost(), const Profile()];
     return Scaffold(
       body: pages[selectedIndex],
       bottomNavigationBar: Padding(
