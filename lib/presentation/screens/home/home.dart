@@ -20,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Posts>> post;
+ late final VideoPlayerController videoPlayerController;
 
   @override
   void initState() {
@@ -51,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
               scrollDirection: Axis.horizontal,
               child: Card(
                 elevation: 5,
-                margin: EdgeInsets.symmetric(horizontal: 15),
+                margin: const EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
                   children: List.generate(10, (index) => storyCircle()),
                 ),
@@ -73,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   print("successs sstate worked");
                   return ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: state.posts.length,
                     itemBuilder: (context, index) {
                       print('media urls: ${state.posts[index].mediaURL}');
@@ -82,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: const EdgeInsets.all(5.0),
                         child: Card(
                           margin:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           elevation: 10,
                           color: Colors.grey[100],
                           child: Column(
@@ -100,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 .isEmpty
                                             ? state
                                                 .posts[index].user!.profilePic!
-                                            : "https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpgaa")),
+                                            : "https://i.pinimg.com/564x/20/c0/0f/20c00f0f135c950096a54b7b465e45cc.jpg")),
                                     kwidth10,
                                     Text(
                                       state.posts[index].user!.username!,
@@ -133,19 +134,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                               mediaUrl,
                                               fit: BoxFit.cover,
                                             )
-                                          : FlickVideoPlayer(
-                                              flickManager: FlickManager(
-                                                videoPlayerController:
-                                                    VideoPlayerController
-                                                        .networkUrl(
-                                                  Uri.parse(mediaUrl),
-                                                  httpHeaders: {
-                                                    "Authorization":
-                                                        "334583943739261"
-                                                  },
-                                                ),
-                                              ),
-                                            ),
+                                          // : FlickVideoPlayer(
+                                          //     flickManager: FlickManager(
+                                          //       videoPlayerController:
+                                          //           VideoPlayerController
+                                          //               .networkUrl(
+                                          //         Uri.parse(mediaUrl),
+                                          //         httpHeaders: {
+                                          //           "Authorization":
+                                          //               "334583943739261"
+                                          //         },
+                                          //       ),
+                                          //     ),
+                                          //   ),
+                                          :_buildVideoPlayer(mediaUrl)
                                     );
                                   },
                                 ),
@@ -214,6 +216,21 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+  Widget _buildVideoPlayer( mediaUrl) {
+    print("media url : $mediaUrl");
+    final videoPlayerController = VideoPlayerController.networkUrl(
+      Uri.parse(mediaUrl),
+      httpHeaders: {"Authorization": "334583943739261"},
+    );
+
+    return FlickVideoPlayer(
+      flickManager: FlickManager(
+        videoPlayerController: videoPlayerController,
+      ),
+    );
+  }
+
 
 storyCircle() {
   return const Padding(

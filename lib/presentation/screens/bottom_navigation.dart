@@ -1,9 +1,11 @@
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/presentation/screens/Image_picker/image_picker.dart';
+import 'package:aura/presentation/screens/explore.dart';
 import 'package:aura/presentation/screens/home/home.dart';
 import 'package:aura/presentation/screens/profile/profile_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   const CustomBottomNavigationBar({super.key});
@@ -17,7 +19,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   var selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final pages = [const HomeScreen(), CreatePost(), const Profile()];
+    final pages = [const HomeScreen(),const ExplorePage(),const CreatePost(), const Profile()];
     return Scaffold(
       body: pages[selectedIndex],
       bottomNavigationBar: Padding(
@@ -40,20 +42,20 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
               });
             },
             items: const [
-              // BottomNavigationBarItem(
-              //   icon: Icon(Icons.login),
-              //   label: "Login",
-              // ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: "Home",
               ),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.add),
+                icon: Icon(CupertinoIcons.search),
+                label: "Search",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Ionicons.add),
                 label: "NEW Post",
               ),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.person),
+                icon: Icon(Ionicons.person_outline),
                 label: "Profile",
               )
             ],

@@ -236,11 +236,9 @@ class ApiService {
 
   //----------------------------------------get post-----------------------------------
 
-  
-
   static Future<List<Posts>> getPosts() async {
     final client = http.Client();
-    List<Posts>list= [];
+    List<Posts> list = [];
     try {
       final String? token = await getToken();
       final headers = {
@@ -251,8 +249,8 @@ class ApiService {
           Uri.parse("${ApiEndPoints.baseUrl}${ApiEndPoints.getPosts}"),
           headers: headers);
       if (response.statusCode == 200 || response.statusCode == 201) {
-       final List decodeData = jsonDecode(response.body);
-       print(decodeData[0]);
+        final List decodeData = jsonDecode(response.body);
+        print(decodeData[0]);
         print(response.body);
         return decodeData.map((post) => Posts.fromJson(post)).toList();
       } else {
@@ -262,6 +260,44 @@ class ApiService {
       log(e.toString());
       print("failed");
       return list;
+    }
+  }
+
+  //-------------------------------------getUser-----------------------------------
+
+  static Future GetUser(String text) async {
+    final client = http.Client();
+    try {
+      final String? token = await getToken();
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+      final response = await client.get(
+          Uri.parse("${ApiEndPoints.baseUrl}${ApiEndPoints.search}$text"),
+          headers: headers);
+      print("search statuscode:${response.statusCode}");
+      print("search body: ${response.body}");
+      List<User> users = [];
+
+      if (response.statusCode == 200) {
+        final decodedData = jsonDecode(response.body);
+
+        List<dynamic> userList = decodedData['users'];
+
+        for (var userData in userList) {
+          User user = User.fromJson(userData);
+          users.add(user);
+        }
+        //  return decodedData['users'].map((userData) => User.fromJson(userData)).toList();
+
+        print('Username: ${users[0].username}');
+
+        return users;
+      }
+    } catch (e) {
+      log(e.toString());
+      return [];
     }
   }
 }
