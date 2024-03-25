@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:aura/core/urls/url.dart';
+import 'package:aura/domain/model/currentUser.dart';
 import 'package:aura/domain/model/post_model.dart';
 import 'package:aura/domain/model/user_model.dart';
 import 'package:aura/presentation/functions/functions.dart';
@@ -35,6 +36,8 @@ class ApiService {
       debugPrint('response body signup = ${response.body}');
       final responseBody = jsonDecode(response.body);
       if (response.statusCode == 201) {
+        final token = responseBody['token'].toString();
+        saveToken(token);
         return 'Success';
       } else if (responseBody['error'] ==
           "Username Already Taken. Please Choose different one or login instead") {
@@ -263,9 +266,9 @@ class ApiService {
     }
   }
 
-  //-------------------------------------getUser-----------------------------------
+  //-------------------------------------SearchgetUser-----------------------------------
 
-  static Future GetUser(String text) async {
+  static Future searchGetUser(String text) async {
     final client = http.Client();
     try {
       final String? token = await getToken();
@@ -276,8 +279,8 @@ class ApiService {
       final response = await client.get(
           Uri.parse("${ApiEndPoints.baseUrl}${ApiEndPoints.search}$text"),
           headers: headers);
-      print("search statuscode:${response.statusCode}");
-      print("search body: ${response.body}");
+      debugPrint("search statuscode:${response.statusCode}");
+      debugPrint("search body: ${response.body}");
       List<User> users = [];
 
       if (response.statusCode == 200) {
@@ -291,13 +294,45 @@ class ApiService {
         }
         //  return decodedData['users'].map((userData) => User.fromJson(userData)).toList();
 
-        print('Username: ${users[0].username}');
+        debugPrint('Username: ${users[0].username}');
 
         return users;
       }
     } catch (e) {
       log(e.toString());
       return [];
+    }
+  }
+
+  //--------------------------------------CurrentUser   Profile-------------------------------------
+
+  static Future<CurrentUser?> currentUser() async {
+    final client = http.Client();
+    try {
+      final String? token = await getToken();
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+      const url = "${ApiEndPoints.baseUrl}${ApiEndPoints.currentUser}";
+      final response = await client.get(Uri.parse(url), headers: headers);
+      debugPrint("currentUserrequestbody = ${response.body}");
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final decodedData = jsonDecode(response.body);
+        final userData = decodedData['user'];
+        final currentUserPosts = decodedData['posts'];
+        final user = User.fromJson(userData);
+        final List<Posts> posts = [];
+        for (var element in currentUserPosts) {
+          posts.add(Posts.fromJson(element));
+        }
+        return CurrentUser(user: user, posts: posts);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log('error $e');
+      return null;
     }
   }
 }

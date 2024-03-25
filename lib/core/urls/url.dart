@@ -8,5 +8,7 @@ class ApiEndPoints {
   static const createpost = "/createpost";
   static const getPosts = "/posts";
   static const search = "/search?query=";
+  static const currentUser = "/me";
+
   // static const coludinaryUrl = "http://api.cloudinary.com/v1_1/"
 }

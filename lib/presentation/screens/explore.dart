@@ -1,8 +1,9 @@
-import 'package:aura/bloc/cubit/cubit/explore_page_cubit.dart';
 import 'package:aura/bloc/searchBloc/bloc/search_bloc.dart';
 import 'package:aura/core/constants/measurements.dart';
+import 'package:aura/cubit/explorePage_cubit/explore_page_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:ionicons/ionicons.dart';
 
 class ExplorePage extends StatefulWidget {
@@ -13,7 +14,6 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  bool a = true;
   final searchController = TextEditingController();
 
   @override
@@ -69,11 +69,28 @@ class _ExplorePageState extends State<ExplorePage> {
                               ),
                             ],
                           ),
+                          kheight20
                         ],
                       ),
                       !state
-                          ? const Center(
-                              child: Text("Explore"),
+                          ? SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.8,
+                              child: Expanded(
+                                child: MasonryGridView.builder(
+                                    gridDelegate:
+                                        SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2),
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          height: 100,
+                                          width: 50,
+                                          color: Colors.greenAccent,
+                                        ),
+                                      );
+                                    }),
+                              ),
                             )
                           : SizedBox(
                               height: MediaQuery.of(context).size.height *
@@ -114,22 +131,24 @@ class _ExplorePageState extends State<ExplorePage> {
                                     );
                                   } else if (state is SearchErrorState) {
                                     return Center(
-                                        child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        const Icon(
-                                          Ionicons.search_outline,
-                                          size: 35,
-                                        ),
-                                        kheight15,
-                                        Text(
-                                          """Opps..! No result found for '${searchController.text}'"""
-                                          "",
-                                          style: const TextStyle(fontSize: 18),
-                                        ),
-                                      ],
-                                    ));
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(
+                                            Ionicons.search_outline,
+                                            size: 35,
+                                          ),
+                                          kheight15,
+                                          Text(
+                                            """Opps..! No result found for '${searchController.text}'"""
+                                            "",
+                                            style:
+                                                const TextStyle(fontSize: 18),
+                                          ),
+                                        ],
+                                      ),
+                                    );
                                   } else {
                                     return Container();
                                   }

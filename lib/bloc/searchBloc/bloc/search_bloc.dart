@@ -14,10 +14,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   FutureOr<void> getUserEvent(
       GetUserEvent event, Emitter<SearchState> emit) async {
-    final result = await ApiService.GetUser(event.text);
+    final result = await ApiService.searchGetUser(event.text);
     if (result.isNotEmpty) {
       emit(SearchSuccessState(usersList: result));
-    }else{
+    } else {
       emit(SearchErrorState());
     }
   }

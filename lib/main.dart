@@ -1,10 +1,12 @@
 import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
 import 'package:aura/bloc/create_post/bloc/create_post_bloc.dart';
-import 'package:aura/bloc/cubit/cubit/explore_page_cubit.dart';
+import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
 import 'package:aura/bloc/logIn_bloc/bloc/log_in_bloc.dart';
 import 'package:aura/bloc/otpBloc/bloc/otp_bloc.dart';
 import 'package:aura/bloc/searchBloc/bloc/search_bloc.dart';
 import 'package:aura/bloc/signUpbloc/bloc/sign_up_bloc.dart';
+import 'package:aura/cubit/duration_cubit/cubit/duration_cubit.dart';
+import 'package:aura/cubit/explorePage_cubit/explore_page_cubit.dart';
 import 'package:aura/presentation/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,9 +28,11 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => CreatePostBloc()),
         BlocProvider(create: (context) => PostsBloc()),
         BlocProvider(create: (context) => SearchBloc()),
+        BlocProvider(create: (context) => CurrentUserBloc()),
 
         //cubit
-        BlocProvider(create: (context) => ExplorePageCubit())
+        BlocProvider(create: (context) => ExplorePageCubit()),
+        BlocProvider(create: (context) => DurationCubit())
       ],
       child: MaterialApp(
           title: 'Flutter Demo',

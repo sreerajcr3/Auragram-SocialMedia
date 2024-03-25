@@ -13,14 +13,30 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
     on<PostsInitialFetchEvent>(postsInitialFetchEvent);
   }
 
+  // FutureOr<void> postsInitialFetchEvent(
+  //     PostsInitialFetchEvent event, Emitter<PostsState> emit) async {
+  //       emit(PostLoadingState());
+  //   final List<Posts> result = await ApiService.getPosts();
+  //   if (result.isNotEmpty) {
+  //     emit(PostSuccessState(posts: result));
+  //   }else{
+  //     emit(PostErrorState());
+  //   }
+  // }
   FutureOr<void> postsInitialFetchEvent(
-      PostsInitialFetchEvent event, Emitter<PostsState> emit) async {
-        emit(PostLoadingState());
+  PostsInitialFetchEvent event, Emitter<PostsState> emit) async {
+    print("loading");
+  emit(PostLoadingState());
+  try {
     final List<Posts> result = await ApiService.getPosts();
     if (result.isNotEmpty) {
       emit(PostSuccessState(posts: result));
-    }else{
+    } else {
       emit(PostErrorState());
     }
+  } catch (e) {
+    emit(PostErrorState());
   }
+}
+
 }

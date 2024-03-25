@@ -19,7 +19,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   var selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final pages = [const HomeScreen(),const ExplorePage(),const CreatePost(), const Profile()];
+    final pages = [const HomeScreen(),const ExplorePage(),const CreatePost(), const Profile(me: true,)];
     return Scaffold(
       body: pages[selectedIndex],
       bottomNavigationBar: Padding(
