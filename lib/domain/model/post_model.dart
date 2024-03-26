@@ -3,6 +3,7 @@ import 'package:aura/domain/model/user_model.dart';
 class Posts {
   final User? user;
   final String description;
+  final String id;
   final List<String> mediaURL;
   final String location;
   final List<dynamic> likes;
@@ -14,6 +15,7 @@ class Posts {
   Posts({
      this.user,
     required this.description,
+    required this.id,
     required this.mediaURL,
     required this.location,
     required this.likes,
@@ -27,6 +29,7 @@ class Posts {
     return Posts(
       user: json['userId'] is Map<String, dynamic> ? User.fromJson(json['userId']) : User(),
       description: json['description'],
+      id:json['_id'],
       mediaURL: List<String>.from(json['mediaURL']),
       location: json['location'],
       likes: List<dynamic>.from(json['likes']),
@@ -41,6 +44,7 @@ class Posts {
     return {
       'userId': user is Map<String, dynamic> ? user!.toJson() : User(),
       'description': description,
+      '_id':id,
       'mediaURL': mediaURL,
       'location': location,
       'likes': likes,

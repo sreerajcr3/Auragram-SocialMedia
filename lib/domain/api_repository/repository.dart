@@ -335,4 +335,28 @@ class ApiService {
       return null;
     }
   }
+  //------------------------------------------delete post-----------------------------------
+
+  static Future<bool>deletePost(String id)async{
+    final client = http.Client();
+    try {
+         final String? token = await getToken();
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+      final url = ("${ApiEndPoints.baseUrl}${ApiEndPoints.delete}$id");
+      final response = await client.delete(Uri.parse(url),headers:headers );
+      print("delete Status code = ${response.statusCode}");
+      print(response.body);
+if (response.statusCode == 200 || response.statusCode == 201) {
+  return true;
+}else{
+  return false;
+}
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
 }

@@ -26,9 +26,7 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       // appBar: AppBar(),
       body: BlocConsumer<CurrentUserBloc, CurrentUserState>(
-        listener: (context, state) {
-          // TODO: implement listener
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           if (state is CurrentUserSuccessState) {
             return SingleChildScrollView(
@@ -54,7 +52,7 @@ class _ProfileState extends State<Profile> {
                                   state.currentUser.user.coverPic!,
                                   fit: BoxFit.cover,
                                 )
-                              : Center(child: Text('Add Cover photo'))),
+                              : const Center(child: Text('Add Cover photo'))),
                       Positioned(
                         bottom: 20,
                         left: 10,
@@ -71,9 +69,9 @@ class _ProfileState extends State<Profile> {
                           child: widget.me == false
                               ? const UserProfileButton()
                               : ElevatedButton(
-                                  style: ButtonStyle(),
+                                  style: const ButtonStyle(),
                                   onPressed: () {},
-                                  child: Text(
+                                  child: const Text(
                                     "Edit Profile",
                                     style: TextStyle(
                                       fontFamily: "kanit",
@@ -133,40 +131,42 @@ class _ProfileState extends State<Profile> {
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Text(state.currentUser.user.bio ?? "Add Bio"),
                         ),
-                        kheight20,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(
-                              children: [
-                                profileText1(state.currentUser.posts.isEmpty
-                                    ? "0"
-                                    : state.currentUser.posts.length
-                                        .toString()),
-                                profileCardText2('Post')
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                profileText1(state
-                                        .currentUser.user.following!.isEmpty
-                                    ? "0"
-                                    : state.currentUser.user.followers!.length
-                                        .toString()),
-                                profileCardText2('Followers')
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                profileText1(state
-                                        .currentUser.user.following!.isEmpty
-                                    ? "0"
-                                    : state.currentUser.user.following!.length
-                                        .toString()),
-                                profileCardText2('Following')
-                              ],
-                            ),
-                          ],
+                        kheight15,
+                        Card(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
+                                children: [
+                                  profileText1(state.currentUser.posts.isEmpty
+                                      ? "0"
+                                      : state.currentUser.posts.length
+                                          .toString()),
+                                  profileCardText2('Post')
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  profileText1(state
+                                          .currentUser.user.following!.isEmpty
+                                      ? "0"
+                                      : state.currentUser.user.followers!.length
+                                          .toString()),
+                                  profileCardText2('Followers')
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  profileText1(state
+                                          .currentUser.user.following!.isEmpty
+                                      ? "0"
+                                      : state.currentUser.user.following!.length
+                                          .toString()),
+                                  profileCardText2('Following')
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                         const Divider(
                           thickness: 1,
@@ -191,7 +191,10 @@ class _ProfileState extends State<Profile> {
                         width: 20,
                         color: Colors.grey, // Adjust the color as needed
                         alignment: Alignment.center,
-                        child: Image.network(state.currentUser.posts[index].mediaURL[0],fit: BoxFit.cover,),
+                        child: Image.network(
+                          state.currentUser.posts[index].mediaURL[0],
+                          fit: BoxFit.cover,
+                        ),
                       );
                     },
                   )

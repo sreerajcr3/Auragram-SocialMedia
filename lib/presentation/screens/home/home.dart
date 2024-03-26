@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
+import 'package:aura/bloc/delete_post/bloc/delete_post_bloc.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/cubit/duration_cubit/cubit/duration_cubit.dart';
 import 'package:aura/domain/model/post_model.dart';
@@ -29,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     Timer(const Duration(seconds: 20), () {
       context.read<DurationCubit>().loading(true);
-      print(" bool::$loading");
     });
     context.read<PostsBloc>().add(PostsInitialFetchEvent());
     super.initState();
@@ -45,19 +45,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: Text('Log out'),
-                      content: Text("Do you really want to log out?"),
+                      title: const Text('Log out'),
+                      content: const Text("Do you really want to log out?"),
                       actions: [
                         IconButton(
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            icon: Text("cancel")),
+                            icon: const Text("cancel")),
                         IconButton(
                             onPressed: () {
                               logOut(context);
                             },
-                            icon: Text("ok")),
+                            icon: const Text("ok")),
                       ],
                     );
                   });
@@ -95,24 +95,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? BlocConsumer<PostsBloc, PostsState>(
                           listener: (context, state) {},
                           builder: (context, state) {
-                            print("postbloc loading stats:$loading");
                             if (state is PostErrorState) {
-                              print("error state worked");
                               return const Center(
                                 child: CircularProgressIndicator(),
                               );
                             } else if (state is PostLoadingState) {
                               return shimmer();
                             } else if (state is PostSuccessState) {
-                              print("successs sstate worked");
                               return ListView.builder(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: state.posts.length,
                                 itemBuilder: (context, index) {
-                                  print(
-                                      'media urls: ${state.posts[index].mediaURL}');
-
                                   return Padding(
                                     padding: const EdgeInsets.all(5.0),
                                     child: Card(
@@ -143,7 +137,42 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                                 const Spacer(),
                                                 IconButton(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return AlertDialog(
+                                                            title: const Text(
+                                                                'Delete'),
+                                                            content: const Text(
+                                                                "Do you really want to delete?"),
+                                                            actions: [
+                                                              IconButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  icon: const Text(
+                                                                      "cancel")),
+                                                              IconButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    context
+                                                                        .read<
+                                                                            DeletePostBloc>()
+                                                                        .add(DeleteEvent(
+                                                                            id: state.posts[index].id));
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  icon:
+                                                                      const Text(
+                                                                          "ok")),
+                                                            ],
+                                                          );
+                                                        });
+                                                  },
                                                   icon: const Icon(
                                                       Icons.more_vert),
                                                 )
