@@ -2,27 +2,27 @@ import 'package:aura/domain/model/user_model.dart';
 
 class Posts {
   final User? user;
-  final String description;
-  final String id;
-  final List<String> mediaURL;
-  final String location;
-  final List<dynamic> likes;
-  final List<dynamic> comments;
-  final bool isBlocked;
-  final String createdAt;
-  final String updatedAt;
+  final String? description;
+  final String? id;
+  final List<String>? mediaURL;
+  final String? location;
+  final List<dynamic>? likes;
+  final List<dynamic>? comments;
+  final bool? isBlocked;
+  final String? createdAt;
+  final String? updatedAt;
 
   Posts({
      this.user,
-    required this.description,
-    required this.id,
-    required this.mediaURL,
-    required this.location,
-    required this.likes,
-    required this.comments,
-    required this.isBlocked,
-    required this.createdAt,
-    required this.updatedAt,
+     this.description,
+     this.id,
+     this.mediaURL,
+     this.location,
+     this.likes,
+     this.comments,
+     this.isBlocked,
+     this.createdAt,
+     this.updatedAt,
   });
 
   factory Posts.fromJson(Map<String, dynamic> json) {

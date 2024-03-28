@@ -1,6 +1,8 @@
 import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
+import 'package:aura/presentation/functions/functions.dart';
+import 'package:aura/presentation/screens/edit_profile.dart';
 import 'package:aura/presentation/screens/profile/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +72,9 @@ class _ProfileState extends State<Profile> {
                               ? const UserProfileButton()
                               : ElevatedButton(
                                   style: const ButtonStyle(),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    navigatorPush(const EditProfile(), context);
+                                  },
                                   child: const Text(
                                     "Edit Profile",
                                     style: TextStyle(
@@ -192,7 +196,7 @@ class _ProfileState extends State<Profile> {
                         color: Colors.grey, // Adjust the color as needed
                         alignment: Alignment.center,
                         child: Image.network(
-                          state.currentUser.posts[index].mediaURL[0],
+                          state.currentUser.posts[index].mediaURL![0],
                           fit: BoxFit.cover,
                         ),
                       );

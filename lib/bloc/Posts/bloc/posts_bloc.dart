@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:aura/domain/api_repository/repository.dart';
+import 'package:aura/domain/api_repository/post_repository/post_repository.dart';
+import 'package:aura/domain/api_repository/uset_repository/repository.dart';
 import 'package:aura/domain/model/post_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
@@ -28,7 +29,7 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
     print("loading");
   emit(PostLoadingState());
   try {
-    final List<Posts> result = await ApiService.getPosts();
+    final List<Posts> result = await ApiServicesPost.getPosts();
     if (result.isNotEmpty) {
       emit(PostSuccessState(posts: result));
     } else {

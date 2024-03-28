@@ -36,11 +36,13 @@ userLoggedIn(context) async {
   final sharedprefs = await SharedPreferences.getInstance();
   await sharedprefs.setBool(savedkey, true);
 }
+
 saveToken(userId) async {
   final sharedprefs = await SharedPreferences.getInstance();
   await sharedprefs.setString('token', userId);
 }
- Future<String?> getToken() async {
+
+Future<String?> getToken() async {
   final sharedPrefs = await SharedPreferences.getInstance();
   return sharedPrefs.getString('token');
 }
@@ -60,4 +62,18 @@ Future<void> logOut(context) async {
   sharedprefs.setBool(savedkey, false);
   navigatorReplacement(const LogIn(), context);
   snackBar("Log out succefully", context);
+}
+
+Future<void> like() async {
+  final sharedprefs = await SharedPreferences.getInstance();
+  sharedprefs.setBool('liked', true);
+}
+Future<void> unlike() async {
+  final sharedprefs = await SharedPreferences.getInstance();
+  sharedprefs.setBool('liked', false);
+}
+
+Future<void> checkLike() async {
+  final sharedprefs = await SharedPreferences.getInstance();
+  sharedprefs.getBool('liked');
 }

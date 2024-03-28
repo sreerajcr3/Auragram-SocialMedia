@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:aura/domain/api_repository/repository.dart';
+import 'package:aura/domain/api_repository/post_repository/post_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -13,7 +13,7 @@ class DeletePostBloc extends Bloc<DeletePostEvent, DeletePostState> {
   }
 
   FutureOr<void> deleteEvent(DeleteEvent event, Emitter<DeletePostState> emit)async {
-    final result =await ApiService.deletePost(event.id);
+    final result =await ApiServicesPost.deletePost(event.id);
     if (result) {
       emit(DeletePostSuccessState());
     }else{

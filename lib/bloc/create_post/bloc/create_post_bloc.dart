@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:aura/domain/api_repository/repository.dart';
+import 'package:aura/domain/api_repository/post_repository/post_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -15,7 +15,7 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   FutureOr<void> createpost(
       Createpost event, Emitter<CreatePostState> emit) async {
         emit(CreatePostLoadingState());
-    final result = await ApiService.createPost(
+    final result = await ApiServicesPost.createPost(
         event.description, event.images, event.location);
     if (result == "Success") {
       emit(CreatePostSuccessState());

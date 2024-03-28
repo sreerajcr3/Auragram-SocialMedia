@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:aura/domain/api_repository/repository.dart';
+import 'package:aura/domain/api_repository/uset_repository/repository.dart';
 import 'package:aura/domain/model/currentUser.dart';
-import 'package:aura/domain/model/user_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -16,7 +15,7 @@ class CurrentUserBloc extends Bloc<CurrentUserEvent, CurrentUserState> {
 
   FutureOr<void> currentUserFetchEvent(
       CurrentUserFetchEvent event, Emitter<CurrentUserState> emit) async {
-    final user = await ApiService.currentUser();
+    final user = await ApiServiceUser.currentUser();
     if (user != null) {
       print("user fetch success");
       emit(CurrentUserSuccessState(currentUser: user));

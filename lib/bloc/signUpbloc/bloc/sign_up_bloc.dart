@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:aura/domain/api_repository/repository.dart';
+import 'package:aura/domain/api_repository/auth_repository/auth_repository.dart';
 import 'package:aura/domain/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +15,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
   FutureOr<void> signUpEvent(
       UserSignUp event, Emitter<SignUpState> emit) async {
-    final result = await ApiService.signUp(event.user);
+    final result = await ApiServicesAuth.signUp(event.user);
     if (result == 'Success') {
       emit(SignUpSuccessState());
     } else if (result == 'Username exists') {

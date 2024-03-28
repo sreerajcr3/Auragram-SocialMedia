@@ -32,7 +32,6 @@ class _MediaPickerState extends State<MediaPicker> {
         });
       });
     });
-    print(albumList.length);
     super.initState();
   }
 
@@ -41,10 +40,10 @@ class _MediaPickerState extends State<MediaPicker> {
     return Scaffold(
       backgroundColor: kWhite,
       appBar: AppBar(
-        
         foregroundColor: Colors.white,
         elevation: 0,
         title: DropdownButton<AssetPathEntity>(
+          dropdownColor: kWhite,
           value: selectedAlbum,
           onChanged: (AssetPathEntity? value) {
             setState(() {
@@ -83,7 +82,6 @@ class _MediaPickerState extends State<MediaPicker> {
           GestureDetector(
             onTap: () {
               Navigator.pop(context, selectedAssetList);
-              
             },
             child: const Center(
               child: Padding(

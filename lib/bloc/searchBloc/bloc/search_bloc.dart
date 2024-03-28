@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:aura/domain/api_repository/repository.dart';
+import 'package:aura/domain/api_repository/uset_repository/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,7 +14,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   FutureOr<void> getUserEvent(
       GetUserEvent event, Emitter<SearchState> emit) async {
-    final result = await ApiService.searchGetUser(event.text);
+    final result = await ApiServiceUser.searchGetUser(event.text);
     if (result.isNotEmpty) {
       emit(SearchSuccessState(usersList: result));
     } else {

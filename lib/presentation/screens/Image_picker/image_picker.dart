@@ -1,7 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:aura/bloc/create_post/bloc/create_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
-import 'package:aura/domain/api_repository/repository.dart';
+import 'package:aura/domain/api_repository/post_repository/post_repository.dart';
+import 'package:aura/domain/api_repository/uset_repository/repository.dart';
 import 'package:aura/domain/image_picker/photo_picker.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/Image_picker/demo.dart';
@@ -35,7 +38,6 @@ class _CreatePostState extends State<CreatePost> {
       setState(() {
         albumList = value;
         selectedAlbum = value[0];
-        print("selected albums:${albumList}");
       });
       MediaServices().loadAssets(selectedAlbum!).then((value) {
         setState(() {
@@ -184,7 +186,7 @@ class _CreatePostState extends State<CreatePost> {
                     text: "Post",
                     onPressed: () async {
                       final images =
-                          await ApiService.uploadImage(selectedAssetList);
+                          await ApiServicesPost.uploadImage(selectedAssetList);
                       context.read<CreatePostBloc>().add(
                             Createpost(
                                 images: images,

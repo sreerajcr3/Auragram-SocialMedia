@@ -99,17 +99,48 @@ class SkeletonCard extends StatelessWidget {
   }
 }
 
-Widget buildVideoPlayer(mediaUrl) {
-  final videoPlayerController = VideoPlayerController.networkUrl(
-    Uri.parse(mediaUrl),
-    httpHeaders: {"Authorization": "334583943739261"},
-  );
+// Widget buildVideoPlayer(mediaUrl) {
+//   final videoPlayerController = VideoPlayerController.networkUrl(
+//     Uri.parse(mediaUrl),
+//     httpHeaders: {"Authorization": "334583943739261"},
+//   );
 
-  return FlickVideoPlayer(
-    flickManager: FlickManager(
-      videoPlayerController: videoPlayerController,
-    ),
-  );
+//   return FlickVideoPlayer(
+//     flickManager: FlickManager(
+//       videoPlayerController: videoPlayerController,
+//     ),
+//   );
+// }
+
+class VideoPlayerWIdget extends StatefulWidget {
+  final String mediaUrl;
+  const VideoPlayerWIdget({super.key, required this.mediaUrl});
+
+  @override
+  State<VideoPlayerWIdget> createState() => _VideoPlayerWIdgetState();
+}
+
+class _VideoPlayerWIdgetState extends State<VideoPlayerWIdget> {
+  late VideoPlayerController videoPlayerController;
+  @override
+  void initState() {
+    //demo check video = https://www.youtube.com/watch?v=W6-O00alJUo
+    videoPlayerController = VideoPlayerController.networkUrl(
+      Uri.parse(widget.mediaUrl),
+      httpHeaders: {"Authorization": "334583943739261"},
+    );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FlickVideoPlayer(
+      flickManager: FlickManager(
+        autoPlay: false,
+        videoPlayerController: videoPlayerController,
+      ),
+    );
+  }
 }
 
 storyCircle() {
@@ -160,4 +191,42 @@ Shimmer shimmer() {
       },
     ),
   );
+}
+
+bool pressed = false;
+IconButton postIconButton(IconData icon1,map) {
+  return IconButton(
+    onPressed: () {
+     print("chap icon map:$map");
+    },
+    icon:  Icon(icon1) ,
+  );
+}
+
+class CustomAlertDialogue extends StatelessWidget {
+  final Text title;
+  final Text content;
+  final void Function() onPressed;
+
+  const CustomAlertDialogue(
+      {super.key,
+      required this.title,
+      required this.content,
+      required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title:  title,
+      content: content,
+      actions: [
+        IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Text("cancel")),
+        IconButton(onPressed: onPressed, icon: const Text("ok")),
+      ],
+    );
+  }
 }

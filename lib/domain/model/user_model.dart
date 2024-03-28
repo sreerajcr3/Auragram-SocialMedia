@@ -1,5 +1,6 @@
 class User {
   final String? username;
+  final String? id;
   final String? fullname;
   final String? email;
   final String? profilePic;
@@ -15,6 +16,7 @@ class User {
 
   User({
     this.username,
+    this.id,
     this.fullname,
     this.email,
     this.profilePic,
@@ -32,6 +34,7 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       username: json['username'],
+      id:json['_id'],
       fullname: json['fullname'],
       email: json['email'],
       profilePic: json['profile_picture'],
@@ -50,6 +53,7 @@ class User {
   Map<String, dynamic> toJson() {
     return {
       'username': username,
+      '_id':id,
       'fullname': fullname,
       'email': email,
       'profile_picture': profilePic,
