@@ -22,13 +22,14 @@ import 'package:flutter/material.dart';
 //   }
 
 
-postTextfield(hintText,controller) {
+postTextfield(hintText,controller,{Widget? button}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
           hintText: hintText,
+          suffixIcon:button ,
           border: const UnderlineInputBorder(borderSide: BorderSide.none),
         ),
       ),

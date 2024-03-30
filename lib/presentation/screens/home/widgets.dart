@@ -4,7 +4,9 @@ import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:timeago/timeago.dart';
 import 'package:video_player/video_player.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class Date extends StatelessWidget {
   final String date;
@@ -17,14 +19,38 @@ class Date extends StatelessWidget {
   Widget build(BuildContext context) {
     DateTime dateTime = DateTime.parse(date);
 
-    DateFormat formattedDate = DateFormat.yMMMd();
-    String finaldate = formattedDate.format(dateTime);
+    // DateFormat formattedDate = DateFormat.yMMMd();
+    // String finaldate = formattedDate.format(dateTime);
 
     return Text(
-      finaldate,
+      timeago.format(dateTime,locale: 'en'),
+      // timeago.setLocaleMessages('en', MyCustomMessages()),
       style: const TextStyle(color: Colors.blueGrey, fontSize: 12),
     );
   }
+}
+// Override "en" locale messages with custom messages that are more precise and short
+// timeago.setLocaleMessages('en', MyCustomMessages());
+
+
+// my_custom_messages.dart
+class MyCustomMessages implements LookupMessages {
+  @override String prefixAgo() => '';
+  @override String prefixFromNow() => '';
+  @override String suffixAgo() => '';
+  @override String suffixFromNow() => '';
+  @override String lessThanOneMinute(int seconds) => 'now';
+  @override String aboutAMinute(int minutes) => '${minutes}m';
+  @override String minutes(int minutes) => '${minutes}m';
+  @override String aboutAnHour(int minutes) => '${minutes}m';
+  @override String hours(int hours) => '${hours}h';
+  @override String aDay(int hours) => '${hours}h';
+  @override String days(int days) => '${days}d';
+  @override String aboutAMonth(int days) => '${days}d';
+  @override String months(int months) => '${months}mo';
+  @override String aboutAYear(int year) => '${year}y';
+  @override String years(int years) => '${years}y';
+  @override String wordSeparator() => ' ';
 }
 
 class SkeletonCard extends StatelessWidget {
@@ -194,11 +220,9 @@ Shimmer shimmer() {
 }
 
 bool pressed = false;
-IconButton postIconButton(IconData icon1,map) {
+IconButton postIconButton(IconData icon1,Function()? onPressed) {
   return IconButton(
-    onPressed: () {
-     print("chap icon map:$map");
-    },
+    onPressed: onPressed,
     icon:  Icon(icon1) ,
   );
 }

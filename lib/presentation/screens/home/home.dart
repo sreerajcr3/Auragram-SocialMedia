@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
+import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
 import 'package:aura/bloc/delete_post/bloc/delete_post_bloc.dart';
 import 'package:aura/bloc/like_unlike_bloc/bloc/like_unlike_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
@@ -10,6 +11,7 @@ import 'package:aura/domain/model/post_model.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/home/widgets.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
@@ -23,12 +25,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Future<List<Posts>> post;
+  // late Future<List<Posts>> post;
   late final VideoPlayerController videoPlayerController;
+  final commentController = TextEditingController();
   String postId = '';
   String userId = '';
   Map map = {};
   bool loading = false;
+  final post = Posts(likes: []);
   // bool liked = true;
 
   @override
@@ -38,39 +42,41 @@ class _HomeScreenState extends State<HomeScreen> {
       durationCubit.loading(true);
     });
     context.read<PostsBloc>().add(PostsInitialFetchEvent());
-    print("like map:${map}");
+    context.read<CurrentUserBloc>().add(CurrentUserFetchEvent());
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        endDrawer: Drawer(
-          child: TextButton.icon(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => CustomAlertDialogue(
-                  title: const Text(
-                    "Log out",
-                  ),
-                  content: const Text("Do you really want to log out?"),
-                  onPressed: () {
-                    logOut(context);
-                  },
+      resizeToAvoidBottomInset: true,
+      endDrawer: Drawer(
+        child: TextButton.icon(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => CustomAlertDialogue(
+                title: const Text(
+                  "Log out",
                 ),
-              );
-            },
-            icon: const Icon(Icons.logout),
-            label: const Text('Log out'),
-          ),
+                content: const Text("Do you really want to log out?"),
+                onPressed: () {
+                  logOut(context);
+                },
+              ),
+            );
+          },
+          icon: const Icon(Icons.logout),
+          label: const Text('Log out'),
         ),
-        appBar: AppBar(
-          title: const AppName(),
-        ),
-        body: BlocConsumer<LikeUnlikeBloc, LikeUnlikeState>(
-          listener: (context, likestate) {},
-          builder: (context, likestate) {
+      ),
+      appBar: AppBar(
+        title: const AppName(),
+      ),
+      body: BlocBuilder<LikeUnlikeBloc, LikeUnlikeState>(
+        builder: (context, _) {
+          if (_ is LikeCountUpdatedState) {
             return BlocBuilder<DurationCubit, bool>(
               builder: (context, finished) {
                 return SingleChildScrollView(
@@ -221,120 +227,168 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   },
                                                 ),
                                               ),
-                                              Row(
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      // map[state.posts[index].user!.id]=state.posts[index].id;
-
-                                                     
-
-                                                      if (map.containsKey(
-                                                              userId) &&
-                                                          map[userId] ==
-                                                              postId) {
-
-
-                                                                 context
-                                                            .read<
-                                                                LikeUnlikeBloc>()
-                                                            .add(
-                                                              UnlikeEvent(
-                                                                  id: state
-                                                                      .posts[
-                                                                          index]
-                                                                      .id!),
-                                                            );
-                                                        // Remove the key-value pair from the map
-                                                        map.remove(userId);
-                                                        // Perform an operation (e.g., dispatch UnlikeEvent)
-                                                       
-                                                      } else if(!map.containsKey(
-                                                              userId) &&
-                                                          map[userId] ==
-                                                              postId) {
-                                                        // Key-value pair doesn't exist or doesn't match, add it to the map
-                                                        map[userId] = postId;
-                                                        context
-                                                            .read<
-                                                                LikeUnlikeBloc>()
-                                                            .add(
-                                                              LikeAddEvent(
-                                                                  id: state
-                                                                      .posts[
-                                                                          index]
-                                                                      .id!),
-                                                            );
-                                                      }
-                                                    },
-                                                    child: !map.containsKey(
-                                                                userId) ||
-                                                            !map[userId]
-                                                                .contains(
-                                                                    postId)
-                                                        ? const Icon(Ionicons
-                                                            .heart_outline)
-                                                        : const Icon(
-                                                            Ionicons.heart),
-                                                  ),
-                                                  // postIconButton(Ionicons.heart,
-                                                  //     Ionicons.heart_outline),
-                                                  postIconButton(
-                                                      Ionicons
-                                                          .chatbubble_outline,
-                                                      map),
-                                                  // postIconButton(
-                                                  //     Ionicons.paper_plane_outline),
-                                                  // const Spacer(),
-                                                  // postIconButton(
-                                                  //     CupertinoIcons.bookmark)
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    state.posts[index].likes!
-                                                            .isEmpty
-                                                        ? Container()
-                                                        : Text(
-                                                            '${state.posts[index].likes!.length} ${state.posts[index].likes!.length != 1 ? 'likes' : 'like'}',
-                                                            style:
-                                                                const TextStyle(
-                                                              fontFamily:
-                                                                  'kanit',
-                                                              fontSize: 18,
-                                                            ),
+                                              BlocBuilder<CurrentUserBloc,
+                                                      CurrentUserState>(
+                                                  builder:
+                                                      (context, userState) {
+                                                if (userState
+                                                    is CurrentUserSuccessState) {
+                                                  return Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                          onTap: () {
+                                                            if (!state
+                                                                .posts[index]
+                                                                .likes!
+                                                                .contains(userState
+                                                                    .currentUser
+                                                                    .user
+                                                                    .id)) {
+                                                              state.posts[index]
+                                                                  .likes!
+                                                                  .add(userState
+                                                                      .currentUser
+                                                                      .user
+                                                                      .id!);
+                                                              context
+                                                                  .read<
+                                                                      LikeUnlikeBloc>()
+                                                                  .add(
+                                                                    LikeAddEvent(
+                                                                        id: state
+                                                                            .posts[index]
+                                                                            .id!),
+                                                                  );
+                                                            } else {
+                                                              state.posts[index]
+                                                                  .likes!
+                                                                  .remove(userState
+                                                                      .currentUser
+                                                                      .user
+                                                                      .id!);
+                                                              context
+                                                                  .read<
+                                                                      LikeUnlikeBloc>()
+                                                                  .add(
+                                                                    UnlikeEvent(
+                                                                        id: state
+                                                                            .posts[index]
+                                                                            .id!),
+                                                                  );
+                                                            }
+                                                          },
+                                                          child: !state
+                                                                  .posts[index]
+                                                                  .likes!
+                                                                  .contains(
+                                                                      userState
+                                                                          .currentUser
+                                                                          .user
+                                                                          .id!)
+                                                              ? const Icon(Ionicons
+                                                                  .heart_outline)
+                                                              : const Icon(
+                                                                  Ionicons
+                                                                      .heart)
+                                                          // child: BlocBuilder<LikeUnlikeBloc,
+                                                          //     LikeUnlikeState>(
+                                                          //   builder: (context, tap) {
+                                                          //     if (tap is LikeSuccessState) {
+                                                          //       return const Icon(
+                                                          //           Ionicons.heart);
+                                                          //     } else if (tap
+                                                          //         is UnlikeSuccessState) {
+                                                          //       return const Icon(
+                                                          //           Ionicons.heart_outline);
+                                                          //     } else {
+                                                          //       return const Icon(
+                                                          //           Ionicons.heart);
+                                                          //     }
+                                                          //   },
+                                                          // ),
                                                           ),
-                                                    Text(
-                                                      state.posts[index].user!
-                                                          .username!,
-                                                      style: const TextStyle(
-                                                          fontFamily: "kanit",
-                                                          fontSize: 18),
-                                                    ),
-                                                    Text(state.posts[index]
-                                                        .description!),
-                                                    state.posts[index].comments!
-                                                                .length >
-                                                            1
-                                                        ? Text(
-                                                            "View all ${state.posts[index].comments!.length.toString()}",
-                                                            style: const TextStyle(
-                                                                color: Colors
-                                                                    .blueGrey),
-                                                          )
-                                                        : Container(),
-                                                    Date(
-                                                        date: state.posts[index]
-                                                            .createdAt!),
-                                                  ],
-                                                ),
-                                              ),
+                                                      postIconButton(
+                                                        Ionicons
+                                                            .chatbubble_outline,
+                                                        () {
+                                                          commentBottomSheet(
+                                                              context,
+                                                              state,
+                                                              index,
+                                                              commentController);
+                                                        },
+                                                      ),
+                                                      postIconButton(
+                                                          Ionicons
+                                                              .paper_plane_outline,
+                                                          () {}),
+                                                      const Spacer(),
+                                                      postIconButton(
+                                                          CupertinoIcons
+                                                              .bookmark,
+                                                          () => null),
+                                                    ],
+                                                  );
+                                                } else {
+                                                  return Container();
+                                                }
+                                              }),
+                                              Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 10),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      state.posts[index].likes!
+                                                              .isEmpty
+                                                          ? Container()
+                                                          : Text(
+                                                              '${state.posts[index].likes!.length} ${state.posts[index].likes!.length != 1 ? 'likes' : 'like'}',
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontFamily:
+                                                                    'kanit',
+                                                                fontSize: 18,
+                                                              ),
+                                                            ),
+                                                      Text(
+                                                        state.posts[index].user!
+                                                            .username!,
+                                                        style: const TextStyle(
+                                                            fontFamily: "kanit",
+                                                            fontSize: 18),
+                                                      ),
+                                                      Text(state.posts[index]
+                                                          .description!),
+                                                      state
+                                                                  .posts[index]
+                                                                  .comments!
+                                                                  .length >
+                                                              1
+                                                          ? InkWell(
+                                                              onTap: () =>
+                                                                  commentBottomSheet(
+                                                                      context,
+                                                                      state,
+                                                                      index,
+                                                                      commentController),
+                                                              child: Text(
+                                                                "View all ${state.posts[index].comments!.length.toString()} comments",
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .blueGrey),
+                                                              ),
+                                                            )
+                                                          : Container(),
+                                                      Date(
+                                                          date: state
+                                                              .posts[index]
+                                                              .createdAt!),
+                                                    ],
+                                                  )),
                                               kheight15
                                             ],
                                           ),
@@ -353,7 +407,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
             );
-          },
-        ));
+          } else {
+            return Container();
+          }
+        },
+      ),
+    );
   }
 }

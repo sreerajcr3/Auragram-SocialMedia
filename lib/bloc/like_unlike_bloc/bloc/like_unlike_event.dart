@@ -16,3 +16,6 @@ class UnlikeEvent extends LikeUnlikeEvent {
 class LikeErrorState extends LikeUnlikeEvent {
   
 }
+class LikeCountState extends LikeUnlikeEvent {
+  
+}

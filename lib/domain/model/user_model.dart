@@ -68,4 +68,6 @@ class User {
       'otp': otp,
     };
   }
+
+  static empty() {}
 }

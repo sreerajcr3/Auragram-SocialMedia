@@ -12,6 +12,8 @@ class ApiEndPoints {
   static const delete = "/post/";
   static const like = "/post/like/";
   static const unlike = "/post/unlike/";
+  static const addcomment = "/post/comment/add";
+  static const deletecomment = "/post/comment/delete";
 
   // static const coludinaryUrl = "http://api.cloudinary.com/v1_1/"
 }

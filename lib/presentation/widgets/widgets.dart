@@ -1,10 +1,14 @@
+import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
+import 'package:aura/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
+import 'package:aura/presentation/screens/Image_picker/functions/functions_and_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TextformField extends StatelessWidget {
   final String labelText;
-  final String valueText;
+  final String? valueText;
   final TextEditingController controller;
   const TextformField({
     super.key,
@@ -121,6 +125,7 @@ class CustomButton extends StatelessWidget {
     );
   }
 }
+
 class AppName extends StatelessWidget {
   const AppName({
     super.key,
@@ -136,4 +141,101 @@ class AppName extends StatelessWidget {
           fontWeight: FontWeight.bold),
     );
   }
+}
+
+//----------------------------------------comment widget----------------------------------------
+Future<dynamic> commentBottomSheet(BuildContext context, PostSuccessState state,
+    int index, commentController) {
+  return showModalBottomSheet(
+      isDismissible: true,
+      // isScrollControlled: true,
+      context: context,
+      builder: (ctx) {
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: 100,
+                height: 10,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10), color: kGreyDark),
+              ),
+            ),
+            postTextfield("Add a comment", commentController,
+                button: ElevatedButton(
+                    onPressed: () {
+                      context.read<CommentBloc>().add(AddCommentEvent(
+                          postId: state.posts[index].id!,
+                          comment: commentController.text));
+                    },
+                    child: const Text('Post'))),
+            Expanded(
+              child: SingleChildScrollView(
+                child: state.posts[index].comments!.length != 0
+                    ? BlocBuilder<CommentBloc, CommentState>(
+                        builder: (context, _) {
+                        if (_ is CommentUpdateState) {
+                          return ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: state.posts[index].comments!.length,
+                            itemBuilder: (context, commentIndex) {
+                              //user in comments
+                              final user = state
+                                  .posts[index].comments![commentIndex].user;
+
+                              //comments
+                              final comment =
+                                  state.posts[index].comments![commentIndex];
+
+                              return ListTile(
+                                trailing: IconButton(
+                                    onPressed: () {
+                                      context
+                                          .read<CommentBloc>()
+                                          .add(DeleteCommentEvent(
+                                            postId: state.posts[index].id!,
+                                            commentId: comment.id!,
+                                          ));
+                                    },
+                                    icon: Icon(Icons.clear)),
+                                leading: CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(user!.profilePic!),
+                                ),
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(user.username!),
+                                    Text(comment.comment!),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return Container();
+                        }
+                      })
+                    : const SizedBox(
+                        height: 300,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(
+                                child: Text(
+                              'No comments yet',
+                              style:
+                                  TextStyle(fontSize: 22, fontFamily: 'kanit'),
+                            )),
+                            Text("start a conversation")
+                          ],
+                        ),
+                      ),
+              ),
+            ),
+          ],
+        );
+      });
 }

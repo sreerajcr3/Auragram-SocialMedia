@@ -197,7 +197,7 @@ class _ProfileState extends State<Profile> {
                         alignment: Alignment.center,
                         child: Image.network(
                           state.currentUser.posts[index].mediaURL![0],
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fitWidth,
                         ),
                       );
                     },

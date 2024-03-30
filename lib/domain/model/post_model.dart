@@ -1,3 +1,4 @@
+import 'package:aura/domain/model/comment_model.dart';
 import 'package:aura/domain/model/user_model.dart';
 
 class Posts {
@@ -6,34 +7,39 @@ class Posts {
   final String? id;
   final List<String>? mediaURL;
   final String? location;
-  final List<dynamic>? likes;
-  final List<dynamic>? comments;
+ final  List<String>? likes;
+  final List<CommentModel>? comments;
   final bool? isBlocked;
   final String? createdAt;
   final String? updatedAt;
 
   Posts({
-     this.user,
-     this.description,
-     this.id,
-     this.mediaURL,
-     this.location,
-     this.likes,
-     this.comments,
-     this.isBlocked,
-     this.createdAt,
-     this.updatedAt,
+    this.user,
+    this.description,
+    this.id,
+    this.mediaURL,
+    this.location,
+   required this.likes ,
+    this.comments,
+    this.isBlocked,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory Posts.fromJson(Map<String, dynamic> json) {
     return Posts(
-      user: json['userId'] is Map<String, dynamic> ? User.fromJson(json['userId']) : User(),
+      user: json['userId'] is Map<String, dynamic>
+          ? User.fromJson(json['userId'])
+          : User(),
       description: json['description'],
-      id:json['_id'],
+      id: json['_id'],
       mediaURL: List<String>.from(json['mediaURL']),
       location: json['location'],
-      likes: List<dynamic>.from(json['likes']),
-      comments: List<dynamic>.from(json['comments']),
+      likes: List<String>.from(json['likes']),
+      comments: (json['comments'] as List<dynamic>?)
+          ?.map((commentData) =>
+              CommentModel.fromJson(commentData as Map<String, dynamic>))
+          .toList(),
       isBlocked: json['isBlocked'],
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
@@ -44,7 +50,7 @@ class Posts {
     return {
       'userId': user is Map<String, dynamic> ? user!.toJson() : User(),
       'description': description,
-      '_id':id,
+      '_id': id,
       'mediaURL': mediaURL,
       'location': location,
       'likes': likes,

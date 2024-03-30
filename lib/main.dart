@@ -1,4 +1,5 @@
 import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
+import 'package:aura/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:aura/bloc/create_post/bloc/create_post_bloc.dart';
 import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
 import 'package:aura/bloc/delete_post/bloc/delete_post_bloc.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => CurrentUserBloc()),
         BlocProvider(create: (context) => DeletePostBloc()),
         BlocProvider(create: (context) => LikeUnlikeBloc()),
+        BlocProvider(create: (context) => CommentBloc()),
 
         //cubit
         BlocProvider(create: (context) => ExplorePageCubit()),

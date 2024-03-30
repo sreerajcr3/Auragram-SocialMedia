@@ -1,5 +1,5 @@
 import 'package:aura/core/colors/colors.dart';
-import 'package:aura/presentation/screens/Image_picker/image_picker.dart';
+import 'package:aura/presentation/screens/create_post.dart';
 import 'package:aura/presentation/screens/explore.dart';
 import 'package:aura/presentation/screens/home/home.dart';
 import 'package:aura/presentation/screens/profile/profile_page.dart';
