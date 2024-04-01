@@ -6,6 +6,7 @@ import 'package:aura/bloc/delete_post/bloc/delete_post_bloc.dart';
 import 'package:aura/bloc/like_unlike_bloc/bloc/like_unlike_bloc.dart';
 import 'package:aura/bloc/logIn_bloc/bloc/log_in_bloc.dart';
 import 'package:aura/bloc/otpBloc/bloc/otp_bloc.dart';
+import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/bloc/searchBloc/bloc/search_bloc.dart';
 import 'package:aura/bloc/signUpbloc/bloc/sign_up_bloc.dart';
 import 'package:aura/cubit/duration_cubit/cubit/duration_cubit.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => DeletePostBloc()),
         BlocProvider(create: (context) => LikeUnlikeBloc()),
         BlocProvider(create: (context) => CommentBloc()),
+        BlocProvider(create: (context) => SavePostBloc()),
 
         //cubit
         BlocProvider(create: (context) => ExplorePageCubit()),

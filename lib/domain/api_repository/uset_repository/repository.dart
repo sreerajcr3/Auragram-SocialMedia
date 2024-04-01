@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:aura/core/urls/url.dart';
 import 'package:aura/domain/model/currentUser.dart';
@@ -9,7 +8,6 @@ import 'package:aura/domain/model/user_model.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 class ApiServiceUser {
  

@@ -4,6 +4,7 @@ import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
 import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
 import 'package:aura/bloc/delete_post/bloc/delete_post_bloc.dart';
 import 'package:aura/bloc/like_unlike_bloc/bloc/like_unlike_bloc.dart';
+import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/cubit/duration_cubit/cubit/duration_cubit.dart';
@@ -12,7 +13,6 @@ import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/home/widgets.dart';
 import 'package:aura/presentation/screens/profile/UserProfile.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
@@ -31,10 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
   final commentController = TextEditingController();
   String postId = '';
   String userId = '';
-  Map map = {};
+  final Map map = {};
   bool loading = false;
   final post = Posts(likes: []);
-  // bool liked = true;
+  bool saved = true;
 
   @override
   void initState() {
@@ -44,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     context.read<PostsBloc>().add(PostsInitialFetchEvent());
     context.read<CurrentUserBloc>().add(CurrentUserFetchEvent());
+    context.read<SavePostBloc>().add(FetchsavedPostEvent());
 
     super.initState();
   }
@@ -143,9 +144,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     ),
                                                     kwidth10,
                                                     InkWell(
-                                                      onTap: () => navigatorPush(
-                                                           UserProfile(user: state.posts[index].user,),
-                                                          context),
+                                                      onTap: () =>
+                                                          navigatorPush(
+                                                              UserProfile(
+                                                                user: state
+                                                                    .posts[
+                                                                        index]
+                                                                    .user,
+                                                              ),
+                                                              context),
                                                       child: Text(
                                                         state.posts[index].user!
                                                             .username!,
@@ -313,10 +320,54 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               .paper_plane_outline,
                                                           () {}),
                                                       const Spacer(),
-                                                      postIconButton(
-                                                          CupertinoIcons
-                                                              .bookmark,
-                                                          () => null),
+                                                      BlocBuilder<SavePostBloc,
+                                                          SavePostState>(
+                                                        builder: (context,
+                                                            savedPostevent) {
+                                                          if (savedPostevent
+                                                              is FetchedSavedPostsState) {
+                                                            if (savedPostevent.savedPostsList.posts.contains(state.posts[index].id)) {
+                                                              print('yeesssss');
+                                                              return IconButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                           context
+                                                                      .read<
+                                                                          SavePostBloc>()
+                                                                      .add(ToSavePostEvent(
+                                                                          postId:
+                                                                              postId));
+                                                                      },
+                                                                  icon:
+                                                                      const Icon(
+                                                                    Icons
+                                                                        .bookmark,
+                                                                  ));
+                                                            } else {
+                                                              return const Text(
+                                                                  'data');
+                                                            }
+                                                          } else {
+                                                            return IconButton(
+                                                                onPressed: () {
+                                                                  context
+                                                                      .read<
+                                                                          SavePostBloc>()
+                                                                      .add(ToSavePostEvent(
+                                                                          postId:
+                                                                              postId));
+                                                                },
+                                                                icon:
+                                                                    const Icon(
+                                                                  Icons
+                                                                      .bookmark_added,
+                                                                ));
+                                                          }
+                                                          // return postIconButton(
+                                                          //     Icons.bookmark,
+                                                          //     () => null);
+                                                        },
+                                                      )
                                                     ],
                                                   );
                                                 } else {
