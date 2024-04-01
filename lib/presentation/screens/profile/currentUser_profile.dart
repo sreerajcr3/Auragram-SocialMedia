@@ -8,15 +8,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Profile extends StatefulWidget {
+class MyProfile extends StatefulWidget {
   final bool me;
-  const Profile({super.key, required this.me});
+  const MyProfile({super.key, required this.me});
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<MyProfile> createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileState extends State<MyProfile> {
   @override
   void initState() {
     context.read<CurrentUserBloc>().add(CurrentUserFetchEvent());

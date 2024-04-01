@@ -2,7 +2,7 @@ import 'package:aura/core/colors/colors.dart';
 import 'package:aura/presentation/screens/create_post.dart';
 import 'package:aura/presentation/screens/explore.dart';
 import 'package:aura/presentation/screens/home/home.dart';
-import 'package:aura/presentation/screens/profile/profile_page.dart';
+import 'package:aura/presentation/screens/profile/currentUser_profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
@@ -19,7 +19,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   var selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final pages = [const HomeScreen(),const ExplorePage(),const CreatePost(), const Profile(me: true,)];
+    final pages = [const HomeScreen(),const ExplorePage(),const CreatePost(), const MyProfile(me: true,)];
     return Scaffold(
       body: pages[selectedIndex],
       bottomNavigationBar: Padding(

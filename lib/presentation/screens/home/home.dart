@@ -10,6 +10,7 @@ import 'package:aura/cubit/duration_cubit/cubit/duration_cubit.dart';
 import 'package:aura/domain/model/post_model.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/home/widgets.dart';
+import 'package:aura/presentation/screens/profile/UserProfile.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -141,10 +142,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       ),
                                                     ),
                                                     kwidth10,
-                                                    Text(
-                                                      state.posts[index].user!
-                                                          .username!,
-                                                      style: const TextStyle(),
+                                                    InkWell(
+                                                      onTap: () => navigatorPush(
+                                                           UserProfile(user: state.posts[index].user,),
+                                                          context),
+                                                      child: Text(
+                                                        state.posts[index].user!
+                                                            .username!,
+                                                        style:
+                                                            const TextStyle(),
+                                                      ),
                                                     ),
                                                     const Spacer(),
                                                     IconButton(
@@ -289,24 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   .heart_outline)
                                                               : const Icon(
                                                                   Ionicons
-                                                                      .heart)
-                                                          // child: BlocBuilder<LikeUnlikeBloc,
-                                                          //     LikeUnlikeState>(
-                                                          //   builder: (context, tap) {
-                                                          //     if (tap is LikeSuccessState) {
-                                                          //       return const Icon(
-                                                          //           Ionicons.heart);
-                                                          //     } else if (tap
-                                                          //         is UnlikeSuccessState) {
-                                                          //       return const Icon(
-                                                          //           Ionicons.heart_outline);
-                                                          //     } else {
-                                                          //       return const Icon(
-                                                          //           Ionicons.heart);
-                                                          //     }
-                                                          //   },
-                                                          // ),
-                                                          ),
+                                                                      .heart)),
                                                       postIconButton(
                                                         Ionicons
                                                             .chatbubble_outline,
