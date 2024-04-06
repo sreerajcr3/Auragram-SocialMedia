@@ -10,6 +10,7 @@ part 'create_post_state.dart';
 class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
   CreatePostBloc() : super(CreatePostInitial()) {
     on<Createpost>(createpost);
+    
   }
 
   FutureOr<void> createpost(

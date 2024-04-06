@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:aura/bloc/create_post/bloc/create_post_bloc.dart';
-import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/domain/api_repository/post_repository/post_repository.dart';
 import 'package:aura/domain/image_picker/photo_picker.dart';
@@ -12,7 +11,6 @@ import 'package:aura/presentation/screens/bottom_navigation.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 class CreatePost extends StatefulWidget {
@@ -78,10 +76,7 @@ class _CreatePostState extends State<CreatePost> {
           } else if (state is CreatePostErrorState) {
             snackBar("Oops..! Server unreachable", context);
           } else if (state is CreatePostLoadingState) {
-            Center(
-              child: LoadingAnimationWidget.fourRotatingDots(
-                  color: kBlack, size: 10),
-            );
+           return demoButton(context);
           } else {}
         },
         builder: (context, state) {

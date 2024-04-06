@@ -16,3 +16,6 @@ class PostErrorState extends PostsState {
 class PostLoadingState extends PostsState {
   
 }
+class PostUpdatedState extends PostsState {
+  
+}

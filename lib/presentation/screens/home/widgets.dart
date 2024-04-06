@@ -1,7 +1,12 @@
+import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
+import 'package:aura/bloc/delete_post/bloc/delete_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
+import 'package:aura/presentation/functions/functions.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart';
@@ -73,7 +78,7 @@ class SkeletonCard extends StatelessWidget {
                 kwidth10,
                 Container(
                   decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 220, 217, 217),
+                      color: kWhite,
                       borderRadius: BorderRadius.circular(20)),
                   width: 100,
                   height: 20,
@@ -84,7 +89,7 @@ class SkeletonCard extends StatelessWidget {
           Container(
             height: 300,
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 220, 217, 217),
+                color:kWhite,
                 borderRadius: BorderRadius.circular(30)),
           ),
           kheight15,
@@ -94,7 +99,7 @@ class SkeletonCard extends StatelessWidget {
               width: 150,
               height: 30,
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 220, 217, 217),
+                color:kWhite,
                   borderRadius: BorderRadius.circular(20)),
             ),
           ),
@@ -104,7 +109,7 @@ class SkeletonCard extends StatelessWidget {
               width: 150,
               height: 12,
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 220, 217, 217),
+                color:kWhite,
                   borderRadius: BorderRadius.circular(10)),
             ),
           ),
@@ -114,7 +119,7 @@ class SkeletonCard extends StatelessWidget {
               width: 250,
               height: 12,
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 220, 217, 217),
+                color:kWhite,
                   borderRadius: BorderRadius.circular(10)),
             ),
           ),
@@ -220,10 +225,10 @@ Shimmer shimmer() {
 }
 
 bool pressed = false;
-IconButton postIconButton(IconData icon1,Function()? onPressed) {
+IconButton postIconButton(IconData icon1,{Function()? onPressed,color=kBlack}) {
   return IconButton(
     onPressed: onPressed,
-    icon:  Icon(icon1) ,
+    icon:  Icon(icon1,size: 27,color: color,) ,
   );
 }
 
@@ -254,3 +259,47 @@ class CustomAlertDialogue extends StatelessWidget {
     );
   }
 }
+  IconButton postDeleteIcon(
+      BuildContext context, PostSuccessState state, int index) {
+    return IconButton(
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return CustomAlertDialogue(
+                  title: const Text("Delete"),
+                  content: const Text(
+                    "Do you want to delete this post",
+                  ),
+                  onPressed: () {
+                    context
+                        .read<DeletePostBloc>()
+                        .add(DeleteEvent(id: state.posts[index].id!));
+                    Navigator.pop(context);
+                  });
+            });
+      },
+      icon: const Icon(Icons.more_vert),
+    );
+  }
+    TextButton logoutIcon(BuildContext context) {
+    return TextButton.icon(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => CustomAlertDialogue(
+              title: const Text(
+                "Log out",
+              ),
+              content: const Text("Do you really want to log out?"),
+              onPressed: () {
+                logOut(context);
+              },
+            ),
+          );
+        },
+        icon: const Icon(Icons.logout),
+        label: const Text('Log out'),
+      );
+  }
+

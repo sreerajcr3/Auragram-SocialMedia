@@ -1,6 +1,8 @@
 import 'package:aura/bloc/searchBloc/bloc/search_bloc.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/cubit/explorePage_cubit/explore_page_cubit.dart';
+import 'package:aura/presentation/functions/functions.dart';
+import 'package:aura/presentation/screens/profile/userProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -109,22 +111,25 @@ class _ExplorePageState extends State<ExplorePage> {
                                                   const EdgeInsets.symmetric(
                                                       vertical: 5),
                                               elevation: 10,
-                                              child: ListTile(
-                                                subtitle: Text(state
-                                                    .usersList[index].fullname),
-                                                leading: CircleAvatar(
-                                                    backgroundColor:
-                                                        Colors.grey,
-                                                    backgroundImage:
-                                                        NetworkImage(state
-                                                            .usersList[index]
-                                                            .profilePic)),
-                                                title: Text(
-                                                  state.usersList[index]
-                                                      .username,
-                                                  style: const TextStyle(
-                                                      fontFamily: "kanit",
-                                                      fontSize: 18),
+                                              child: InkWell(
+                                                onTap: () => navigatorPush(UserProfile(user: state.usersList[index]), context),
+                                                child: ListTile(
+                                                  subtitle: Text(state
+                                                      .usersList[index].fullname),
+                                                  leading: CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.grey,
+                                                      backgroundImage:
+                                                          NetworkImage(state
+                                                              .usersList[index]
+                                                              .profilePic)),
+                                                  title: Text(
+                                                    state.usersList[index]
+                                                        .username,
+                                                    style: const TextStyle(
+                                                        fontFamily: "kanit",
+                                                        fontSize: 18),
+                                                  ),
                                                 ),
                                               ),
                                             );

@@ -1,12 +1,15 @@
 import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
+import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
+import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/edit_profile.dart';
 import 'package:aura/presentation/screens/profile/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ionicons/ionicons.dart';
 
 class MyProfile extends StatefulWidget {
   final bool me;
@@ -20,6 +23,8 @@ class _ProfileState extends State<MyProfile> {
   @override
   void initState() {
     context.read<CurrentUserBloc>().add(CurrentUserFetchEvent());
+    context.read<SavePostBloc>().add(FetchsavedPostEvent());
+
     super.initState();
   }
 
@@ -28,7 +33,10 @@ class _ProfileState extends State<MyProfile> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        // appBar: AppBar(),
+        appBar: AppBar(
+          
+          automaticallyImplyLeading: false,
+        ),
         body: BlocConsumer<CurrentUserBloc, CurrentUserState>(
           listener: (context, state) {},
           builder: (context, state) {
@@ -41,41 +49,43 @@ class _ProfileState extends State<MyProfile> {
                       children: [
                         const SizedBox(
                           width: double.infinity,
-                          // color: Colors.green,
                           height: 300,
                         ),
                         Container(
-                            decoration:
-                                BoxDecoration(border: Border.all(), color: kGrey),
-                            // color: Colors.blue,
-                            height: 200,
-                            width: double.infinity,
-                            // color: Colors.blue,
-                            child: state.currentUser.user.coverPic != null
-                                ? Image.network(
-                                    state.currentUser.user.coverPic!,
-                                    fit: BoxFit.cover,
-                                  )
-                                : const Center(child: Text('Add Cover photo'))),
+                          decoration:
+                              BoxDecoration(border: Border.all(), color: kGrey),
+                          height: 200,
+                          width: double.infinity,
+                          child: state.currentUser.user.coverPic != null
+                              ? Image.network(
+                                  state.currentUser.user.coverPic!,
+                                  fit: BoxFit.cover,
+                                )
+                              : const Center(
+                                  child: Text('Add Cover photo'),
+                                ),
+                        ),
                         Positioned(
                           bottom: 20,
                           left: 10,
                           child: CircleAvatar(
-                            radius: 70,
-                            backgroundImage: NetworkImage(
-                              state.currentUser.user.profilePic!,
-                            ),
-                          ),
+                              radius: 70,
+                              backgroundImage:
+                                  state.currentUser.user.profilePic != ""
+                                      ? NetworkImage(
+                                          state.currentUser.user.profilePic!,
+                                        )
+                                      : const NetworkImage(demoProPic)),
                         ),
                         Positioned(
                             bottom: 35,
                             right: !widget.me ? 40 : 75,
-                            child: widget.me == false
-                                ? const UserProfileButton()
-                                : ElevatedButton(
+                            child:
+                                 ElevatedButton(
                                     style: const ButtonStyle(),
                                     onPressed: () {
-                                      navigatorPush(const EditProfile(), context);
+                                      navigatorPush(
+                                          const EditProfile(), context);
                                     },
                                     child: const Text(
                                       "Edit Profile",
@@ -135,44 +145,12 @@ class _ProfileState extends State<MyProfile> {
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: Text(state.currentUser.user.bio ?? "Add Bio"),
+                            child:
+                                Text(state.currentUser.user.bio ?? "Add Bio"),
                           ),
                           kheight15,
-                          Card(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Column(
-                                  children: [
-                                    profileText1(state.currentUser.posts.isEmpty
-                                        ? "0"
-                                        : state.currentUser.posts.length
-                                            .toString()),
-                                    profileCardText2('Post')
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    profileText1(state
-                                            .currentUser.user.following!.isEmpty
-                                        ? "0"
-                                        : state.currentUser.user.followers!.length
-                                            .toString()),
-                                    profileCardText2('Followers')
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    profileText1(state
-                                            .currentUser.user.following!.isEmpty
-                                        ? "0"
-                                        : state.currentUser.user.following!.length
-                                            .toString()),
-                                    profileCardText2('Following')
-                                  ],
-                                ),
-                              ],
-                            ),
+                          ProfileFollowersCountCard(
+                            state: state.currentUser.user,
                           ),
                           const Divider(
                             thickness: 1,
@@ -180,46 +158,41 @@ class _ProfileState extends State<MyProfile> {
                         ],
                       ),
                     ),
-                DefaultTabController(
-                          length: 2,
-                          child: Column(
-                            children: [
-                            const  TabBar(
-                                tabs: [
-                                  Tab(text: 'Posts'),
-                                  Tab(text: 'Saved'),
-                                ],
-                              ),
-                              // TabBarView
-                              SizedBox(
-                                height: 400, // Adjust the height as needed
-                                child: TabBarView(
-                                  children: [
-                                    // Profile tab
-                                    SingleChildScrollView(
-                                      child: Column(
-                                        children: [
-                                          // Profile content
-                                          // ...
-                                          // ProfilePostGrid
-                                          ProfilePostGrid(state: state),
-                                        ],
-                                      ),
-                                    ),
-                                    // Text tab
-                                    SingleChildScrollView(
-                                      child: Column(
-                                        children: [
-                                         ProfilePostGrid(state: state),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                    DefaultTabController(
+                      length: 2,
+                      child: Column(
+                        children: [
+                          const TabBar(
+                            tabs: [
+                              Tab(text: 'Posts'),
+                              Tab(text: 'Saved'),
                             ],
                           ),
-                        ),
+                          // TabBarView
+                          SizedBox(
+                            height: 400,
+                            child: TabBarView(
+                              children: [
+                                SingleChildScrollView(
+                                  child: Column(
+                                    children: [
+                                      ProfilePostGrid(state: state),
+                                    ],
+                                  ),
+                                ),
+                                SingleChildScrollView(
+                                  child: Column(
+                                    children: [
+                                      SavedPostGrid(state: state),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               );
@@ -246,30 +219,47 @@ class ProfilePostGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 500, // Adjust the height as needed
-      child: Expanded(
-        child: GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: state.currentUser.posts.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: 1,
-            mainAxisSpacing: 1,
-          ),
-          itemBuilder: (context, index) {
-            return Container(
-              color: Colors.grey, // Adjust the color as needed
-              alignment: Alignment.center,
-              child: Image.network(
-                state.currentUser.posts[index].mediaURL![0],
-                fit: BoxFit.fitWidth,
-              ),
-            );
-          },
-        ),
-      ),
-    );
+        height: 300, // Adjust the height as needed
+
+        child: state.currentUser.posts.length != 0
+            ? Expanded(
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: state.currentUser.posts.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 1,
+                    mainAxisSpacing: 1,
+                  ),
+                  itemBuilder: (context, index) {
+                    return Container(
+                      color: Colors.grey, // Adjust the color as needed
+                      alignment: Alignment.center,
+                      child: Image.network(
+                        state.currentUser.posts[index].mediaURL![0],
+                        fit: BoxFit.fitWidth,
+                      ),
+                    );
+                  },
+                ),
+              )
+            : const SizedBox(
+                // height: 100,
+                child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Ionicons.camera_outline,
+                    size: 30,
+                  ),
+                  kwidth10,
+                  Center(
+                      child: Text(
+                    'No Posts',
+                    style: TextStyle(fontSize: 22, fontFamily: 'kanit'),
+                  )),
+                ],
+              )));
   }
 }
-

@@ -32,8 +32,10 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
     final List<Posts> result = await ApiServicesPost.getPosts();
     if (result.isNotEmpty) {
       emit(PostSuccessState(posts: result));
+      // emit(PostUpdatedState());
     } else {
       emit(PostErrorState());
+      //  emit(PostUpdatedState());
     }
   } catch (e) {
     emit(PostErrorState());

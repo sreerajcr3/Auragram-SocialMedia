@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const savedkey = 'userLoggedin';
 
-//-------------------------------snackbar---------------------
+//-------------------------------snackbar--------------------------
 
 snackBar(String text, context) {
   return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -18,7 +18,7 @@ snackBar(String text, context) {
   ));
 }
 
-//------------------------------navigator------------------
+//------------------------------navigator-------------------------
 
 navigatorReplacement(page, context) {
   Navigator.of(context).pushReplacement(

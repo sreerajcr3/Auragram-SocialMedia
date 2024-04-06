@@ -1,10 +1,15 @@
 import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
 import 'package:aura/bloc/comment_bloc/bloc/comment_bloc.dart';
+import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
+import 'package:aura/bloc/like_unlike_bloc/bloc/like_unlike_bloc.dart';
+import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/presentation/screens/Image_picker/functions/functions_and_widgets.dart';
+import 'package:aura/presentation/screens/home/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ionicons/ionicons.dart';
 
 class TextformField extends StatelessWidget {
   final String labelText;
@@ -126,6 +131,14 @@ class CustomButton extends StatelessWidget {
   }
 }
 
+demoButton(context) {
+  return Container(
+    width: MediaQuery.sizeOf(context).width * 0.9,
+    height: 10,
+    color: kBlack,
+  );
+}
+
 class AppName extends StatelessWidget {
   const AppName({
     super.key,
@@ -199,7 +212,7 @@ Future<dynamic> commentBottomSheet(BuildContext context, PostSuccessState state,
                                             commentId: comment.id!,
                                           ));
                                     },
-                                    icon: Icon(Icons.clear)),
+                                    icon: const Icon(Icons.clear)),
                                 leading: CircleAvatar(
                                   backgroundImage:
                                       NetworkImage(user!.profilePic!),
@@ -207,7 +220,9 @@ Future<dynamic> commentBottomSheet(BuildContext context, PostSuccessState state,
                                 title: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(user.username!),
+                                    Text(user.username!,
+                                        style: TextStyle(
+                                            fontFamily: 'kanit', fontSize: 20)),
                                     Text(comment.comment!),
                                   ],
                                 ),
@@ -238,4 +253,155 @@ Future<dynamic> commentBottomSheet(BuildContext context, PostSuccessState state,
           ],
         );
       });
+}
+
+Row postIconRow(
+    PostSuccessState state,
+    int index,
+    CurrentUserSuccessState userState,
+    BuildContext context,
+    commentController) {
+  bool saved = false;
+
+  return Row(
+    children: [
+      GestureDetector(
+          onTap: () {
+            if (!state.posts[index].likes!
+                .contains(userState.currentUser.user.id)) {
+              state.posts[index].likes!.add(userState.currentUser.user.id!);
+              context.read<LikeUnlikeBloc>().add(
+                    LikeAddEvent(id: state.posts[index].id!),
+                  );
+            } else {
+              state.posts[index].likes!.remove(userState.currentUser.user.id!);
+              context.read<LikeUnlikeBloc>().add(
+                    UnlikeEvent(id: state.posts[index].id!),
+                  );
+            }
+          },
+          child: !state.posts[index].likes!
+                  .contains(userState.currentUser.user.id!)
+              ? postIconButton(Ionicons.heart_outline)
+              : postIconButton(Ionicons.heart, color: kred)),
+      postIconButton(Ionicons.chatbubble_outline,
+          onPressed: () =>
+              commentBottomSheet(context, state, index, commentController)),
+      postIconButton(
+        Ionicons.paper_plane_outline,
+      ),
+      const Spacer(),
+      BlocConsumer<SavePostBloc, SavePostState>(
+        listener: (context, saveState) {
+          if (saveState is SavePostSuccessState) {
+            context.read<SavePostBloc>().add(FetchsavedPostEvent());
+          }
+        },
+        builder: (context, saveState) {
+          if (saveState is FetchedSavedPostsState) {
+            print("savedpostlist = = ${saveState.savedPosts.posts}");
+            for (var i = 0; i < saveState.savedPosts.posts.length; i++) {
+              if (saveState.savedPosts.posts[i].id == state.posts[index].id) {
+                saved = true;
+              } else {
+                saved = false;
+              }
+            }
+            return saved
+                ? IconButton(
+                    onPressed: () {
+                      saved = false;
+                      context
+                          .read<SavePostBloc>()
+                          .add(UnsavePostEvent(postId: state.posts[index].id!));
+                    },
+                    icon: const Icon(
+                      Icons.bookmark,
+                      size: 27,
+                    ))
+                : IconButton(
+                    onPressed: () {
+                      saved = true;
+                      context
+                          .read<SavePostBloc>()
+                          .add(ToSavePostEvent(postId: state.posts[index].id!));
+                    },
+                    icon: const Icon(
+                      Icons.bookmark_border,
+                      size: 27,
+                    ));
+          }
+          // if (saveState is PostSuccessState) {
+          //   return IconButton(onPressed: (){
+          //      context
+          //                 .read<
+          //                     SavePostBloc>()
+          //                 .add(UnsavePostEvent(
+          //                     postId: state.posts[index].id!));
+          //   }, icon:  const Icon(
+          //               Icons
+          //                   .bookmark_added));
+          // }
+          // else if(state is UnSavePostSuccessState){
+          //    return IconButton(onPressed: (){
+          //      context
+          //                 .read<
+          //                     SavePostBloc>()
+          //                 .add(ToSavePostEvent(
+          //                     postId: state.posts[index].id!));
+          //   }, icon:  const Icon(
+          //               Icons
+          //                   .bookmark_outline));
+          // }
+          return const Padding(
+              padding: EdgeInsets.only(right: 11),
+              child: Icon(
+                Icons.bookmark_border,
+                size: 27,
+              ));
+
+          // if (saveState
+          //     is SavePostSuccessState) {
+          //   return const Icon(Icons
+          //       .bookmark);
+          // } else {
+          //   return const Icon(
+          //       Icons.bookmark_outline);
+          // }
+        },
+      )
+    ],
+  );
+}
+
+PageView postPageView(PostSuccessState state, int index) {
+  return PageView.builder(
+    scrollDirection: Axis.horizontal,
+    itemCount: state.posts[index].mediaURL!.length,
+    itemBuilder: (context, pageIndex) {
+      // postId = state.posts[index].id!;
+      // userId = state.posts[index].user!.id!;
+      final mediaUrl = state.posts[index].mediaURL![pageIndex];
+      return Container(
+          child: mediaUrl.contains("image")
+              ? Image.network(
+                  mediaUrl,
+                  fit: BoxFit.cover,
+                )
+              // : FlickVideoPlayer(
+              //     flickManager: FlickManager(
+              //       videoPlayerController:
+              //           VideoPlayerController
+              //               .networkUrl(
+              //         Uri.parse(mediaUrl),
+              //         httpHeaders: {
+              //           "Authorization":
+              //               "334583943739261"
+              //         },
+              //       ),
+              //     ),
+              //   ),
+              : VideoPlayerWIdget(mediaUrl: mediaUrl));
+    },
+  );
 }

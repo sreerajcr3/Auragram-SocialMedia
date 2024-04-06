@@ -15,7 +15,11 @@ class ApiEndPoints {
   static const addcomment = "/post/comment/add";
   static const deletecomment = "/post/comment/delete";
   static const savePost = "/save-post/";
+  static const unSavePost = "/unsave-post/";
   static const savedPost = "/saved-post";
+  static const getUser = "/user/";
+  static const follow = "/follow";
+  static const unFollow = "/unfollow";
 
   // static const coludinaryUrl = "http://api.cloudinary.com/v1_1/"
 }

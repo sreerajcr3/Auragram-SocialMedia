@@ -7,10 +7,12 @@ final class SavePostInitial extends SavePostState {}
 
 final class SavePostSuccessState extends SavePostState {}
 
+final class UnSavePostSuccessState extends SavePostState {}
+
 final class SavePostErrorState extends SavePostState {}
 
 class FetchedSavedPostsState extends SavePostState {
-  final SavedPosts savedPostsList;
+  final SavedPosts savedPosts;
 
-  FetchedSavedPostsState({required this.savedPostsList});
+  FetchedSavedPostsState({ required this.savedPosts});
 }

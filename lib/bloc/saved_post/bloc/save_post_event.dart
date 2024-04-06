@@ -10,3 +10,9 @@ final class ToSavePostEvent extends SavePostEvent {
 }
 
 final class FetchsavedPostEvent extends SavePostEvent {}
+
+final class UnsavePostEvent extends SavePostEvent {
+  final String postId;
+
+  UnsavePostEvent({required this.postId});
+}

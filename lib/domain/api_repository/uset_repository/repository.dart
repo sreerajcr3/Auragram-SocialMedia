@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:aura/core/urls/url.dart';
 import 'package:aura/domain/model/currentUser.dart';
+import 'package:aura/domain/model/get_user_model.dart';
 import 'package:aura/domain/model/post_model.dart';
 import 'package:aura/domain/model/user_model.dart';
 import 'package:aura/presentation/functions/functions.dart';
@@ -10,9 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ApiServiceUser {
- 
-
-
   //-------------------------------------SearchgetUser-----------------------------------
 
   static Future searchGetUser(String text) async {
@@ -69,11 +67,17 @@ class ApiServiceUser {
         final userData = decodedData['user'];
         final currentUserPosts = decodedData['posts'];
         final user = User.fromJson(userData);
+
         final List<Posts> posts = [];
         for (var element in currentUserPosts) {
           posts.add(Posts.fromJson(element));
         }
-        return CurrentUser(user: user, posts: posts);
+
+        final List followingUserIds = [];
+        for (var followingUser in user.followers!) {
+          followingUserIds.add(followingUser['_id']);
+        }
+        return CurrentUser(user: user, posts: posts,followingIdsList: followingUserIds);
       } else {
         return null;
       }
@@ -82,5 +86,67 @@ class ApiServiceUser {
       return null;
     }
   }
- 
+
+  //-------------------------------------------------get user ----------------------------------------------
+  static Future<GetUserModel?> getUser(userid) async {
+    final client = http.Client();
+    try {
+      final String? token = await getToken();
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+      final url = "${ApiEndPoints.baseUrl}${ApiEndPoints.getUser}$userid";
+      final response = await client.get(Uri.parse(url), headers: headers);
+
+      debugPrint("getuserrequestbody = ${response.body}");
+      debugPrint("getuserstatuscode = ${response.statusCode}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final decodedData = jsonDecode(response.body);
+        final userData = decodedData['user'];
+        final currentUserPosts = decodedData['posts'];
+        final user = User.fromJson(userData);
+
+        final List<Posts> posts = [];
+        for (var element in currentUserPosts) {
+          posts.add(Posts.fromJson(element));
+        }
+        return GetUserModel(user: user, posts: posts);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      log('error $e');
+      return null;
+    }
+  }
+
+  //###################################   extracting the id list of following from the current user        ###########################################
+
+  static Future getFollowingList() async {
+    final client = http.Client();
+
+    try {
+      final String? token = await getToken();
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+      const url = "${ApiEndPoints.baseUrl}${ApiEndPoints.currentUser}";
+      final response = await client.get(Uri.parse(url), headers: headers);
+      final decodedData = jsonDecode(response.body);
+      final userData = decodedData['user'];
+      final user = User.fromJson(userData);
+
+      final List followingUserIds = [];
+      for (var followingUser in user.following!) {
+        followingUserIds.add(followingUser['_id']);
+      }
+      print("user.following = ${followingUserIds}");
+      return followingUserIds;
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 }
