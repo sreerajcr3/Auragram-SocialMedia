@@ -32,7 +32,11 @@ class _ProfileState extends State<MyProfile> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+<<<<<<< HEAD
         appBar:customAppbar(text: "My Profile", context: context, onPressed: (){},leadingIcon: false),
+=======
+        appBar:customAppbar(text: "My Profile", context: context, onPressed: (){},leadingIcon: true),
+>>>>>>> ad8c6b731a14c70bd0ee93a4c2ba8367a4ecb5ca
         body: BlocConsumer<CurrentUserBloc, CurrentUserState>(
           listener: (context, state) {},
           builder: (context, state) {

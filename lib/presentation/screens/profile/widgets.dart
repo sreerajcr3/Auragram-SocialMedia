@@ -90,6 +90,7 @@ class ProfileFollowersCountCard extends StatelessWidget {
               profileCardText2('Post')
             ],
           ),
+<<<<<<< HEAD
           InkWell(
             onTap: () {
               navigatorPush(Followers(), context);
@@ -115,6 +116,23 @@ class ProfileFollowersCountCard extends StatelessWidget {
                 profileCardText2('Following')
               ],
             ),
+=======
+          Column(
+            children: [
+              profileText1(state.user.following!.isEmpty
+                  ? "0"
+                  : state.user.following!.length.toString()),
+              profileCardText2('Followers')
+            ],
+          ),
+          Column(
+            children: [
+              profileText1(state.user.followers!.isEmpty
+                  ? "0"
+                  : state.user.followers!.length.toString()),
+              profileCardText2('Following')
+            ],
+>>>>>>> ad8c6b731a14c70bd0ee93a4c2ba8367a4ecb5ca
           ),
         ],
       ),

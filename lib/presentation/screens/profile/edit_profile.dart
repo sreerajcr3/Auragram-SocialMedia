@@ -1,6 +1,9 @@
 import 'dart:io';
 
+<<<<<<< HEAD
 import 'package:aura/bloc/edit_profile/bloc/edit_profile_bloc.dart';
+=======
+>>>>>>> ad8c6b731a14c70bd0ee93a4c2ba8367a4ecb5ca
 import 'package:aura/bloc/image_picker/bloc/image_picker_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
@@ -39,9 +42,13 @@ class _EditProfileState extends State<EditProfile> {
       appBar: customAppbar(
           text: "Edit Profile",
           context: context,
+<<<<<<< HEAD
           onPressed: () {
             // context.read<EditProfileBloc>().add(AddDetailsEditProfileEvent(username: usernameController.text, fullname: fullnameeController.text, profilePic:profileImage!.path??widget.user.profilePic! , coverPic: coverImage ??widget.user.coverPic, bio: bioController.text))
             },
+=======
+          onPressed: () {},
+>>>>>>> ad8c6b731a14c70bd0ee93a4c2ba8367a4ecb5ca
           icon: const Text(
             'Save',
             style: TextStyle(fontSize: 18),
