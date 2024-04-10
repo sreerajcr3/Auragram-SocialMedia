@@ -1,15 +1,14 @@
 import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
 import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
-import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/presentation/functions/functions.dart';
-import 'package:aura/presentation/screens/edit_profile.dart';
+import 'package:aura/presentation/screens/profile/edit_profile.dart';
 import 'package:aura/presentation/screens/profile/widgets.dart';
+import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ionicons/ionicons.dart';
 
 class MyProfile extends StatefulWidget {
   final bool me;
@@ -33,10 +32,7 @@ class _ProfileState extends State<MyProfile> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          
-          automaticallyImplyLeading: false,
-        ),
+        appBar:customAppbar(text: "My Profile", context: context, onPressed: (){},leadingIcon: true),
         body: BlocConsumer<CurrentUserBloc, CurrentUserState>(
           listener: (context, state) {},
           builder: (context, state) {
@@ -47,116 +43,78 @@ class _ProfileState extends State<MyProfile> {
                   children: [
                     Stack(
                       children: [
-                        const SizedBox(
-                          width: double.infinity,
-                          height: 300,
-                        ),
                         Container(
-                          decoration:
-                              BoxDecoration(border: Border.all(), color: kGrey),
-                          height: 200,
+                          height: 350,
                           width: double.infinity,
-                          child: state.currentUser.user.coverPic != null
-                              ? Image.network(
-                                  state.currentUser.user.coverPic!,
-                                  fit: BoxFit.cover,
-                                )
-                              : const Center(
-                                  child: Text('Add Cover photo'),
-                                ),
+                          // color: Colors.orange,
                         ),
+                      
                         Positioned(
-                          bottom: 20,
-                          left: 10,
-                          child: CircleAvatar(
-                              radius: 70,
-                              backgroundImage:
-                                  state.currentUser.user.profilePic != ""
-                                      ? NetworkImage(
-                                          state.currentUser.user.profilePic!,
-                                        )
-                                      : const NetworkImage(demoProPic)),
-                        ),
+                            child: Container(
+                          height: 200,
+                          width: MediaQuery.sizeOf(context).width,
+                          color: Colors.green,
+                          child: state.currentUser.user.coverPic!= ""?Image.network(state.currentUser.user.coverPic!):Image.asset("assets/images/AURAGRAM Cover phot.jpg",fit: BoxFit.cover,),
+                        )),
                         Positioned(
-                            bottom: 35,
-                            right: !widget.me ? 40 : 75,
-                            child:
-                                 ElevatedButton(
-                                    style: const ButtonStyle(),
-                                    onPressed: () {
-                                      navigatorPush(
-                                          const EditProfile(), context);
-                                    },
-                                    child: const Text(
-                                      "Edit Profile",
-                                      style: TextStyle(
-                                        fontFamily: "kanit",
-                                      ),
-                                    ))),
-                        Positioned(
-                            top: 20,
-                            left: 15,
-                            child: IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: Icon(
-                                CupertinoIcons.back,
-                                color: kGrey,
-                                size: 25,
+                          top: 180,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
                               ),
-                            )),
+                            ),
+                            height: 160,
+                            width: MediaQuery.sizeOf(context).width,
+                          ),
+                        ),
                         Positioned(
-                            top: 20,
-                            left: 60,
-                            child: Text(
-                              state.currentUser.user.username!,
-                              style: TextStyle(fontSize: 18, color: kGrey),
-                            ))
+                          top: 150,
+                          left: 30,
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundImage:
+                                state.currentUser.user.profilePic != ""
+                                    ? NetworkImage(
+                                        state.currentUser.user.profilePic!)
+                                    : const NetworkImage(demoProPic),
+                          ),
+                        ),
+                        Positioned(
+                          top: 210,
+                          right: 70,
+                          child: containerButton("Edit Profile", () {
+                            navigatorPush(
+                              EditProfile(
+                                user: state.currentUser.user,
+                              ),
+                              context,
+                            );
+                          }, kBlack, textColor: kWhite),
+                        ),
+                        Positioned(
+                          left: 20,
+                          top: 270,
+                          child: Text(
+                            state.currentUser.user.fullname!,
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                        ),
+                        const Positioned(
+                          left: 20,
+                          top: 305,
+                          child: Text(
+                            // state.currentUser.user.bio!,
+                            "hi",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // kheight20,
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      state.currentUser.user.fullname!,
-                                      style: const TextStyle(
-                                          fontFamily: "kanit", fontSize: 20),
-                                    ),
-                                    // Text(
-                                    //   "Personal blog",
-                                    //   style: TextStyle(fontSize: 16),
-                                    // )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child:
-                                Text(state.currentUser.user.bio ?? "Add Bio"),
-                          ),
-                          kheight15,
-                          ProfileFollowersCountCard(
-                            state: state.currentUser.user,
-                          ),
-                          const Divider(
-                            thickness: 1,
-                          ),
-                        ],
-                      ),
+                    ProfileFollowersCountCard(
+                      state: state.currentUser,
                     ),
                     DefaultTabController(
                       length: 2,
@@ -205,61 +163,5 @@ class _ProfileState extends State<MyProfile> {
         ),
       ),
     );
-  }
-}
-
-class ProfilePostGrid extends StatelessWidget {
-  final dynamic state;
-
-  const ProfilePostGrid({
-    Key? key,
-    required this.state,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        height: 300, // Adjust the height as needed
-
-        child: state.currentUser.posts.length != 0
-            ? Expanded(
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: state.currentUser.posts.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 1,
-                    mainAxisSpacing: 1,
-                  ),
-                  itemBuilder: (context, index) {
-                    return Container(
-                      color: Colors.grey, // Adjust the color as needed
-                      alignment: Alignment.center,
-                      child: Image.network(
-                        state.currentUser.posts[index].mediaURL![0],
-                        fit: BoxFit.fitWidth,
-                      ),
-                    );
-                  },
-                ),
-              )
-            : const SizedBox(
-                // height: 100,
-                child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Ionicons.camera_outline,
-                    size: 30,
-                  ),
-                  kwidth10,
-                  Center(
-                      child: Text(
-                    'No Posts',
-                    style: TextStyle(fontSize: 22, fontFamily: 'kanit'),
-                  )),
-                ],
-              )));
   }
 }

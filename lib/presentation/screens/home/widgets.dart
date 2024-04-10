@@ -228,7 +228,7 @@ bool pressed = false;
 IconButton postIconButton(IconData icon1,{Function()? onPressed,color=kBlack}) {
   return IconButton(
     onPressed: onPressed,
-    icon:  Icon(icon1,size: 27,color: color,) ,
+    icon:  Icon(icon1,size: 24,color: color,) ,
   );
 }
 
@@ -279,7 +279,7 @@ class CustomAlertDialogue extends StatelessWidget {
                   });
             });
       },
-      icon: const Icon(Icons.more_vert),
+      icon: const Icon(Icons.more_horiz),
     );
   }
     TextButton logoutIcon(BuildContext context) {
