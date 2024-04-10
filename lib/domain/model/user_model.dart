@@ -3,7 +3,7 @@ class User {
   final String? id;
   final String? fullname;
   final String? email;
-  final String? profilePic;
+   String? profilePic;
   final String? coverPic;
   final String? password;
   final String? accountType;

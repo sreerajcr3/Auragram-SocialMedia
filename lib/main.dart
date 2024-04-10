@@ -6,13 +6,13 @@ import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
 import 'package:aura/bloc/delete_post/bloc/delete_post_bloc.dart';
 import 'package:aura/bloc/follow_unfollow/bloc/follow_unfollow_bloc.dart';
 import 'package:aura/bloc/get_user/get_user_bloc.dart';
+import 'package:aura/bloc/image_picker/bloc/image_picker_bloc.dart';
 import 'package:aura/bloc/like_unlike_bloc/bloc/like_unlike_bloc.dart';
 import 'package:aura/bloc/logIn_bloc/bloc/log_in_bloc.dart';
 import 'package:aura/bloc/otpBloc/bloc/otp_bloc.dart';
 import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/bloc/searchBloc/bloc/search_bloc.dart';
 import 'package:aura/bloc/signUpbloc/bloc/sign_up_bloc.dart';
-import 'package:aura/core/colors/colors.dart';
 import 'package:aura/cubit/duration_cubit/cubit/duration_cubit.dart';
 import 'package:aura/cubit/explorePage_cubit/explore_page_cubit.dart';
 import 'package:aura/presentation/screens/splash_screen.dart';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => OtpBloc()),
-        BlocProvider(create: (context) => SignUpBloc()),
+        BlocProvider(create: (context) => SignUpBloc()),  
         BlocProvider(create: (context) => LogInBloc()),
         BlocProvider(create: (context) => CreatePostBloc()),
         BlocProvider(create: (context) => PostsBloc()),
@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => GetUserBloc()),
         BlocProvider(create: (context) => FollowUnfollowBloc()),
         BlocProvider(create: (context) => BoolBloc()),
+        BlocProvider(create: (context) => ImagePickerBloc()),
 
         //cubit
         BlocProvider(create: (context) => ExplorePageCubit()),
@@ -52,9 +53,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
           title: 'Flutter Demo',
           theme: ThemeData(
-            fontFamily: "Poppins",
+            fontFamily: "JosefinSans",
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            scaffoldBackgroundColor: kGrey,
+            // scaffoldBackgroundColor: kGrey,
             useMaterial3: true,
           ),
           debugShowCheckedModeBanner: false,

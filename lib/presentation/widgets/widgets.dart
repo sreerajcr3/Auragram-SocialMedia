@@ -1,15 +1,20 @@
 import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
 import 'package:aura/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
+import 'package:aura/bloc/get_user/get_user_bloc.dart';
 import 'package:aura/bloc/like_unlike_bloc/bloc/like_unlike_bloc.dart';
 import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
+import 'package:aura/core/constants/user_demo_pic.dart';
+import 'package:aura/domain/model/user_model.dart';
 import 'package:aura/presentation/screens/Image_picker/functions/functions_and_widgets.dart';
 import 'package:aura/presentation/screens/home/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:multi_bloc_builder/builders/multi_bloc_consumer.dart';
 
 class TextformField extends StatelessWidget {
   final String labelText;
@@ -19,7 +24,7 @@ class TextformField extends StatelessWidget {
     super.key,
     required this.labelText,
     required this.controller,
-    required this.valueText,
+    this.valueText,
   });
 
   @override
@@ -76,7 +81,9 @@ class TItleHeading extends StatelessWidget {
           Text(
             text1,
             style: const TextStyle(
-                fontSize: 45, fontWeight: FontWeight.w600, fontFamily: 'kanit'),
+              fontSize: 45,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           //   AnimatedTextKit(
           //  isRepeatingAnimation: false,
@@ -88,12 +95,14 @@ class TItleHeading extends StatelessWidget {
           Text(
             text2!,
             style: const TextStyle(
-                fontSize: 35, fontWeight: FontWeight.w900, fontFamily: 'kanit'),
+              fontSize: 35,
+              fontWeight: FontWeight.w900,
+            ),
           ),
           kheight20,
           Text(
             subText,
-            style: const TextStyle(fontFamily: "kanit", fontSize: 18),
+            style: const TextStyle(fontSize: 18),
           )
         ],
       ),
@@ -125,7 +134,7 @@ class CustomButton extends StatelessWidget {
               Size.fromWidth(MediaQuery.sizeOf(context).width * 0.9))),
       child: Text(
         text,
-        style: const TextStyle(fontFamily: "kanit", fontSize: 18),
+        style: const TextStyle(fontSize: 18),
       ),
     );
   }
@@ -158,36 +167,79 @@ class AppName extends StatelessWidget {
 
 //----------------------------------------comment widget----------------------------------------
 Future<dynamic> commentBottomSheet(BuildContext context, PostSuccessState state,
-    int index, commentController) {
+    int index, commentController,CurrentUserSuccessState userSuccessState) {
   return showModalBottomSheet(
-      isDismissible: true,
-      // isScrollControlled: true,
-      context: context,
-      builder: (ctx) {
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                width: 100,
-                height: 10,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10), color: kGreyDark),
+    isDismissible: true,
+    context: context,
+    builder: (ctx) {
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 100,
+              height: 10,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: kGreyDark,
               ),
             ),
-            postTextfield("Add a comment", commentController,
-                button: ElevatedButton(
-                    onPressed: () {
-                      context.read<CommentBloc>().add(AddCommentEvent(
-                          postId: state.posts[index].id!,
-                          comment: commentController.text));
-                    },
-                    child: const Text('Post'))),
-            Expanded(
-              child: SingleChildScrollView(
-                child: state.posts[index].comments!.length != 0
-                    ? BlocBuilder<CommentBloc, CommentState>(
-                        builder: (context, _) {
+          ),
+          BlocConsumer<CommentBloc,CommentState>(
+            buildWhen:  null,
+            listenWhen: null,
+           
+            listener: (context, multistate) {
+             
+              if (multistate is CommentUpdateState) {
+                   context.read<CurrentUserBloc>().add(CurrentUserFetchEvent());
+                   context.read<PostsBloc>().add(PostsInitialFetchEvent());
+              }
+            },
+            builder: (context, multistate) {
+          
+                
+                    return Row(children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              userSuccessState.currentUser.user.profilePic != ''
+                                  ? userSuccessState
+                                      .currentUser.user.profilePic!
+                                  : demoProPic)),
+                    ),
+                    kwidth10,
+                    Expanded(
+                      child: TextFormField(
+                        controller: commentController,
+                        decoration: InputDecoration(
+                          suffix: InkWell(
+                              onTap: () { context.read<CommentBloc>().add(
+                                    AddCommentEvent(
+                                        postId: state.posts[index].id!,
+                                        comment: commentController.text),
+                                        
+                                  );print("post cliked");
+                              },
+                              child: const Text('Post')),
+                          hintText: 'Add a comment',
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              
+             
+              
+             
+            },
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: state.posts[index].comments!.length != 0
+                  ? BlocBuilder<CommentBloc, CommentState>(
+                      builder: (context, _) {
                         if (_ is CommentUpdateState) {
                           return ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
@@ -204,25 +256,26 @@ Future<dynamic> commentBottomSheet(BuildContext context, PostSuccessState state,
 
                               return ListTile(
                                 trailing: IconButton(
-                                    onPressed: () {
-                                      context
-                                          .read<CommentBloc>()
-                                          .add(DeleteCommentEvent(
+                                  onPressed: () {
+                                    context.read<CommentBloc>().add(
+                                          DeleteCommentEvent(
                                             postId: state.posts[index].id!,
                                             commentId: comment.id!,
-                                          ));
-                                    },
-                                    icon: const Icon(Icons.clear)),
-                                leading: CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(user!.profilePic!),
+                                          ),
+                                        );
+                                  },
+                                  icon: const Icon(Icons.clear),
                                 ),
+                                leading: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        user!.profilePic != ''
+                                            ? user.profilePic!
+                                            : demoProPic)),
                                 title: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(user.username!,
-                                        style: TextStyle(
-                                            fontFamily: 'kanit', fontSize: 20)),
+                                        style: const TextStyle(fontSize: 20)),
                                     Text(comment.comment!),
                                   ],
                                 ),
@@ -232,27 +285,31 @@ Future<dynamic> commentBottomSheet(BuildContext context, PostSuccessState state,
                         } else {
                           return Container();
                         }
-                      })
-                    : const SizedBox(
-                        height: 300,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Center(
-                                child: Text(
+                      },
+                    )
+                  : const SizedBox(
+                      height: 300,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Text(
                               'No comments yet',
-                              style:
-                                  TextStyle(fontSize: 22, fontFamily: 'kanit'),
-                            )),
-                            Text("start a conversation")
-                          ],
-                        ),
+                              style: TextStyle(
+                                fontSize: 22,
+                              ),
+                            ),
+                          ),
+                          Text('Start a conversation'),
+                        ],
                       ),
-              ),
+                    ),
             ),
-          ],
-        );
-      });
+          ),
+        ],
+      );
+    },
+  );
 }
 
 Row postIconRow(
@@ -284,12 +341,18 @@ Row postIconRow(
                   .contains(userState.currentUser.user.id!)
               ? postIconButton(Ionicons.heart_outline)
               : postIconButton(Ionicons.heart, color: kred)),
+
+      postLikeCount(state.posts[index].likes!.length.toString(),
+          state.posts[index].likes!.length > 1 ? "likes" : "like", index),
+
       postIconButton(Ionicons.chatbubble_outline,
           onPressed: () =>
-              commentBottomSheet(context, state, index, commentController)),
-      postIconButton(
-        Ionicons.paper_plane_outline,
-      ),
+              commentBottomSheet(context, state, index, commentController,userState)),
+      postLikeCount(state.posts[index].comments!.length.toString(),
+          state.posts[index].likes!.length > 1 ? "comments" : "comment", index),
+      // postIconButton(
+      //   Ionicons.paper_plane_outline,
+      // ),
       const Spacer(),
       BlocConsumer<SavePostBloc, SavePostState>(
         listener: (context, saveState) {
@@ -374,6 +437,51 @@ Row postIconRow(
   );
 }
 
+AppBar customAppbar(
+    {required String text,
+    required BuildContext context,
+    required void Function() onPressed,
+    Widget? icon,
+    bool leadingIcon = false}) {
+  List<Widget> appBarActions = [];
+
+  // Add the icon button if the icon is provided
+  if (icon != null) {
+    appBarActions.add(
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: InkWell(
+          onTap: onPressed,
+          child: icon,
+        ),
+      ),
+    );
+  }
+  return AppBar(
+      actions: appBarActions,
+      title: Text(
+        text,
+        style: const TextStyle(fontFamily: "JosefinSans", fontSize: 18),
+      ),
+      centerTitle: true,
+      backgroundColor: Colors.transparent,
+      leading: !leadingIcon
+          ? IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back_ios_sharp),
+            )
+          : Container());
+}
+
+Text postLikeCount(text, item, int index) {
+  return Text(
+    "$text $item",
+    style: const TextStyle(fontSize: 15),
+  );
+}
+
 PageView postPageView(PostSuccessState state, int index) {
   return PageView.builder(
     scrollDirection: Axis.horizontal,
@@ -382,7 +490,9 @@ PageView postPageView(PostSuccessState state, int index) {
       // postId = state.posts[index].id!;
       // userId = state.posts[index].user!.id!;
       final mediaUrl = state.posts[index].mediaURL![pageIndex];
-      return Container(
+      return ClipRRect(
+          borderRadius: BorderRadius.circular(30),
+          // decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.green),
           child: mediaUrl.contains("image")
               ? Image.network(
                   mediaUrl,
@@ -403,5 +513,30 @@ PageView postPageView(PostSuccessState state, int index) {
               //   ),
               : VideoPlayerWIdget(mediaUrl: mediaUrl));
     },
+  );
+}
+
+loading() {
+  return Center(
+      child: LoadingAnimationWidget.dotsTriangle(color: kBlack, size: 35));
+}
+
+containerButton(text, Function() onTap, bg, {textColor = Colors.black}) {
+  return InkWell(
+    onTap: onTap,
+    child: Container(
+      decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(7),
+          border: Border.all()),
+      child: Center(
+          child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+        child: Text(
+          text,
+          style: TextStyle(color: textColor, fontSize: 16),
+        ),
+      )),
+    ),
   );
 }

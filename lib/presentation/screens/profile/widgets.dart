@@ -1,10 +1,12 @@
 //-----------------------profile following text----------------
+import 'package:aura/bloc/get_user/get_user_bloc.dart';
 import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ionicons/ionicons.dart';
 
 profileCardText2(text) => Text(
       text,
@@ -17,10 +19,7 @@ profileText1(text) {
     child: Text(
       text.toString(),
       style: const TextStyle(
-          fontSize: 25,
-          fontWeight: FontWeight.bold,
-          fontFamily: "kanit",
-          color: Colors.black54),
+          fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black54),
     ),
   );
 }
@@ -85,25 +84,23 @@ class ProfileFollowersCountCard extends StatelessWidget {
         children: [
           Column(
             children: [
-              profileText1(state.posts!.length == 0
-                  ? "0"
-                  : state.posts.length),
+              profileText1(state.posts.length == 0 ? "0" : state.posts.length),
               profileCardText2('Post')
             ],
           ),
           Column(
             children: [
-              profileText1(state.following!.isEmpty
+              profileText1(state.user.following!.isEmpty
                   ? "0"
-                  : state.following!.length.toString()),
+                  : state.user.following!.length.toString()),
               profileCardText2('Followers')
             ],
           ),
           Column(
             children: [
-              profileText1(state.followers!.isEmpty
+              profileText1(state.user.followers!.isEmpty
                   ? "0"
-                  : state.followers!.length.toString()),
+                  : state.user.followers!.length.toString()),
               profileCardText2('Following')
             ],
           ),
@@ -113,8 +110,7 @@ class ProfileFollowersCountCard extends StatelessWidget {
   }
 }
 
-SizedBox profileButton(
-    {required Widget child,  void Function()? onPressed}) {
+SizedBox profileButton({required Widget child, void Function()? onPressed}) {
   return SizedBox(
       // width: width,
       child: ElevatedButton(
@@ -176,5 +172,133 @@ class SavedPostGrid extends StatelessWidget {
         }
       },
     );
+  }
+}
+
+Container followUnfollowButton(text, follow, {color = kWhite}) {
+  return Container(
+    decoration: BoxDecoration(
+        gradient: LinearGradient(
+            colors: !follow
+                ? [Colors.blueAccent, Colors.lightBlueAccent]
+                : [kGrey, Colors.greenAccent]),
+        borderRadius: BorderRadius.circular(8)),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 5),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 17),
+      ),
+    ),
+  );
+}
+
+SizedBox emptyMessage() {
+  return const SizedBox(
+      height: 300,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Ionicons.camera_outline,
+            size: 30,
+          ),
+          kwidth10,
+          Center(
+              child: Text(
+            'No Post available',
+            style: TextStyle(fontSize: 22, fontFamily: 'kanit'),
+          )),
+        ],
+      ));
+}
+
+profileCountCard(GetUsersuccessState getuserstate) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: [
+      Column(
+        children: [
+          profileText1(getuserstate.getUserModel.posts.isEmpty
+              ? "0"
+              : getuserstate.getUserModel.posts.length),
+          profileCardText2('Post')
+        ],
+      ),
+      Column(
+        children: [
+          profileText1(getuserstate.getUserModel.user.following!.isEmpty
+              ? "0"
+              : getuserstate.getUserModel.user.following!.length.toString()),
+          profileCardText2('Followers')
+        ],
+      ),
+      Column(
+        children: [
+          profileText1(getuserstate.getUserModel.user.followers!.isEmpty
+              ? "0"
+              : getuserstate.getUserModel.user.followers!.length.toString()),
+          profileCardText2('Following')
+        ],
+      ),
+    ],
+  );
+}
+
+class ProfilePostGrid extends StatelessWidget {
+  final dynamic state;
+
+  const ProfilePostGrid({
+    Key? key,
+    required this.state,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: 300, // Adjust the height as needed
+
+        child: state.currentUser.posts.length != 0
+            ? Expanded(
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: state.currentUser.posts.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 1,
+                    mainAxisSpacing: 1,
+                  ),
+                  itemBuilder: (context, index) {
+                    return Container(
+                      color: Colors.grey, // Adjust the color as needed
+                      alignment: Alignment.center,
+                      child: Image.network(
+                        state.currentUser.posts[index].mediaURL![0],
+                        fit: BoxFit.fitWidth,
+                      ),
+                    );
+                  },
+                ),
+              )
+            : const SizedBox(
+                // height: 100,
+                child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Ionicons.camera_outline,
+                    size: 30,
+                  ),
+                  kwidth10,
+                  Center(
+                      child: Text(
+                    'No Posts',
+                    style: TextStyle(
+                      fontSize: 22,
+                    ),
+                  )),
+                ],
+              )));
   }
 }

@@ -41,9 +41,11 @@ dependencies:
   flutter_otp_text_field: ^1.1.1
   flutter_staggered_grid_view: ^0.7.0
   http: ^1.2.0
+  image_picker: ^1.0.7
   intl: ^0.19.0
   ionicons: ^0.2.2
   loading_animation_widget: ^1.2.1
+  multi_bloc_builder: ^1.0.0
   page_transition: ^2.1.0
   photo_manager: ^3.0.0
   shared_preferences: ^2.2.2
@@ -91,7 +93,7 @@ flutter:
   fonts:
     - family: Poppins
       fonts:
-        - asset: asset/popins/Poppins-Regular.ttf
+        - asset: asset/popins/Poppins-SemiBold.ttf
     #       - asset: fonts/Schyler-Italic.ttf
     #         style: italic
     - family: kanit
@@ -102,6 +104,9 @@ flutter:
     - family: DancingScript
       fonts:
         - asset: asset/dancing script/DancingScript-Regular.ttf
+    - family: JosefinSans
+      fonts:
+        - asset: asset/josefinSans/static/JosefinSans-Medium.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
