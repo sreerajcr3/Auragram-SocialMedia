@@ -4,6 +4,7 @@ import 'package:aura/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:aura/bloc/create_post/bloc/create_post_bloc.dart';
 import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
 import 'package:aura/bloc/delete_post/bloc/delete_post_bloc.dart';
+import 'package:aura/bloc/edit_profile/bloc/edit_profile_bloc.dart';
 import 'package:aura/bloc/follow_unfollow/bloc/follow_unfollow_bloc.dart';
 import 'package:aura/bloc/get_user/get_user_bloc.dart';
 import 'package:aura/bloc/image_picker/bloc/image_picker_bloc.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => FollowUnfollowBloc()),
         BlocProvider(create: (context) => BoolBloc()),
         BlocProvider(create: (context) => ImagePickerBloc()),
+        BlocProvider(create: (context) => EditProfileBloc()),
 
         //cubit
         BlocProvider(create: (context) => ExplorePageCubit()),

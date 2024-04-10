@@ -32,7 +32,7 @@ class _ProfileState extends State<MyProfile> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar:customAppbar(text: "My Profile", context: context, onPressed: (){},leadingIcon: true),
+        appBar:customAppbar(text: "My Profile", context: context, onPressed: (){},leadingIcon: false),
         body: BlocConsumer<CurrentUserBloc, CurrentUserState>(
           listener: (context, state) {},
           builder: (context, state) {
@@ -131,20 +131,8 @@ class _ProfileState extends State<MyProfile> {
                             height: 400,
                             child: TabBarView(
                               children: [
-                                SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      ProfilePostGrid(state: state),
-                                    ],
-                                  ),
-                                ),
-                                SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      SavedPostGrid(state: state),
-                                    ],
-                                  ),
-                                ),
+                                ProfilePostGrid(state: state),
+                                SavedPostGrid(state: state),
                               ],
                             ),
                           ),

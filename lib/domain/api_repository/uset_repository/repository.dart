@@ -66,6 +66,7 @@ class ApiServiceUser {
         final decodedData = jsonDecode(response.body);
         final userData = decodedData['user'];
         final currentUserPosts = decodedData['posts'];
+
         final user = User.fromJson(userData);
 
         final List<Posts> posts = [];
@@ -77,7 +78,15 @@ class ApiServiceUser {
         for (var followingUser in user.followers!) {
           followingUserIds.add(followingUser['_id']);
         }
-        return CurrentUser(user: user, posts: posts,followingIdsList: followingUserIds);
+        final List followingUsersNames = [];
+        for (var followingUser in user.followers!) {
+          followingUserIds.add(followingUser['_id']);
+        }
+        final List followersUsersNames = [];
+        for (var followingUser in user.followers!) {
+          followingUserIds.add(followingUser['_id']);
+        }
+        return CurrentUser(user: user, posts: posts,followingIdsList: followingUserIds,followersUsersList: followersUsersNames,followingUsersList: followingUsersNames);
       } else {
         return null;
       }

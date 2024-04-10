@@ -5,9 +5,14 @@ class CurrentUser {
   final User user;
   final List<Posts> posts;
   final List followingIdsList;
+  final List followingUsersList;
+  final List followersUsersList;
 
-  CurrentUser( {required this.user, required this.posts,required this.followingIdsList});
+  CurrentUser({
+    required this.user,
+    required this.posts,
+    required this.followingIdsList,
+    required this.followingUsersList,
+    required this.followersUsersList,
+  });
 }
-
-
-

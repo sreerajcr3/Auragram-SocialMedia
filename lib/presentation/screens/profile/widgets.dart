@@ -3,6 +3,8 @@ import 'package:aura/bloc/get_user/get_user_bloc.dart';
 import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
+import 'package:aura/presentation/functions/functions.dart';
+import 'package:aura/presentation/screens/profile/followers_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -88,21 +90,31 @@ class ProfileFollowersCountCard extends StatelessWidget {
               profileCardText2('Post')
             ],
           ),
-          Column(
-            children: [
-              profileText1(state.user.following!.isEmpty
-                  ? "0"
-                  : state.user.following!.length.toString()),
-              profileCardText2('Followers')
-            ],
+          InkWell(
+            onTap: () {
+              navigatorPush(Followers(), context);
+            },
+            child: Column(
+              children: [
+                profileText1(state.user.following!.isEmpty
+                    ? "0"
+                    : state.user.following!.length.toString()),
+                profileCardText2('Followers')
+              ],
+            ),
           ),
-          Column(
-            children: [
-              profileText1(state.user.followers!.isEmpty
-                  ? "0"
-                  : state.user.followers!.length.toString()),
-              profileCardText2('Following')
-            ],
+          InkWell(
+             onTap: () {
+              navigatorPush(Followers(), context);
+            },
+            child: Column(
+              children: [
+                profileText1(state.user.followers!.isEmpty
+                    ? "0"
+                    : state.user.followers!.length.toString()),
+                profileCardText2('Following')
+              ],
+            ),
           ),
         ],
       ),
