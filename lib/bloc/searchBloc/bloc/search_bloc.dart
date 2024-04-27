@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:aura/domain/api_repository/uset_repository/repository.dart';
+import 'package:aura/domain/api_repository/user_repository/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

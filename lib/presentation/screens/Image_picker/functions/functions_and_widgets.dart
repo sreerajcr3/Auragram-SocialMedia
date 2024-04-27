@@ -23,18 +23,15 @@ import 'package:flutter/material.dart';
 
 postTextfield(hintText, controller, {Widget? button}) {
   return SizedBox(
-    child: Row(
-      children: [
-        CircleAvatar(),
-        TextFormField(
-          controller: controller,
-          decoration: InputDecoration(
-            hintText: hintText,
-            suffixIcon: button,
-            border: const UnderlineInputBorder(borderSide: BorderSide.none),
-          ),
-        ),
-      ],
+    child: TextFormField(
+      style:const TextStyle(fontSize: 18),
+      controller: controller,
+      decoration: InputDecoration(
+        
+        hintText: hintText,
+        suffixIcon: button,
+        border: const UnderlineInputBorder(borderSide: BorderSide.none),
+      ),
     ),
   );
 }

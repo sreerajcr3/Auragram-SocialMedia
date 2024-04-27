@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:aura/domain/api_repository/uset_repository/repository.dart';
+import 'package:aura/domain/api_repository/user_repository/repository.dart';
 import 'package:aura/domain/model/get_user_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';

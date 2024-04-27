@@ -2,7 +2,7 @@ import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:aura/bloc/otpBloc/bloc/otp_bloc.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/presentation/functions/functions.dart';
-import 'package:aura/presentation/screens/otp.dart';
+import 'package:aura/presentation/screens/auth/otp.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -114,14 +114,15 @@ class _SignUpState extends State<SignUpScreen> {
                             valueText: 'Password',
                             labelText: "Password",
                             controller: passwordController,
-                          ), kheight20,
+                          ),
+                          kheight20,
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width * 0.9,
                             child: CustomDropdown(
                               decoration: CustomDropdownDecoration(
                                   closedBorder: Border.all(),
                                   closedBorderRadius:
-                                      BorderRadius.circular(20)),
+                                      BorderRadius.circular(10)),
                               validateOnChange: true,
                               // Function to validate if the current selected item is valid or not
                               validator: (value) =>
@@ -133,12 +134,12 @@ class _SignUpState extends State<SignUpScreen> {
                               },
                               hintText: 'Select Account type',
                             ),
-                          ), kheight20,
+                          ),
+                          kheight20,
                           CustomButton(
                             text: "Sign up",
                             onPressed: () {
                               if (key.currentState!.validate()) {
-                               
                                 debugPrint(selectedValue);
                                 final email = emailController.text;
 

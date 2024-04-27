@@ -12,16 +12,18 @@ class FollowUnfollowBloc
   FollowUnfollowBloc() : super(FollowUnfollowInitial()) {
     on<TofollowEvent>(tofollowEvent);
     on<ToUnfollowEvent>(toUnfollowEvent);
-     emit(FollowUpdatedState());
+    on<FollowUpdateEvent>(followUpdateEvent);
+
+    //  emit(FollowUnfollowInitial());
   }
 
   FutureOr<void> tofollowEvent(
       TofollowEvent event, Emitter<FollowUnfollowState> emit) async {
     final result = await ApiServiceFollowUnfollow.follow(event.userId);
     if (result) {
-      emit(FollowUpdatedState());
+      emit(FollowSuccesssFullState());
     } else {
-      emit(FollowUpdatedState());
+      // emit(FollowUpdatedState());
     }
   }
 
@@ -29,9 +31,19 @@ class FollowUnfollowBloc
       ToUnfollowEvent event, Emitter<FollowUnfollowState> emit) async {
     final result = await ApiServiceFollowUnfollow.unfollow(event.userId);
     if (result) {
-      emit(FollowUpdatedState());
+      emit(UnFollowSuccesssFullState());
+
     } else {
-      emit(FollowUpdatedState());
+      // emit(FollowUpdatedState());
     }
+  }
+
+  FutureOr<void> followUpdateEvent(
+      FollowUpdateEvent event, Emitter<FollowUnfollowState> emit) {
+        print("follow bloc worked");
+    emit(FollowUpdatedState());
+    // Timer(Duration(seconds: 2), () {
+    //   emit(FollowfailedFullState());
+    // });
   }
 }

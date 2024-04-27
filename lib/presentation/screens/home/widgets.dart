@@ -1,13 +1,13 @@
-import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
 import 'package:aura/bloc/delete_post/bloc/delete_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
+import 'package:aura/core/commonData/common_data.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/presentation/functions/functions.dart';
-import 'package:flick_video_player/flick_video_player.dart';
+import 'package:aura/presentation/screens/post/edit_post.dart';
+import 'package:aura/presentation/screens/post/post_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart';
 import 'package:video_player/video_player.dart';
@@ -28,7 +28,7 @@ class Date extends StatelessWidget {
     // String finaldate = formattedDate.format(dateTime);
 
     return Text(
-      timeago.format(dateTime,locale: 'en'),
+      timeago.format(dateTime, locale: 'en'),
       // timeago.setLocaleMessages('en', MyCustomMessages()),
       style: const TextStyle(color: Colors.blueGrey, fontSize: 12),
     );
@@ -37,25 +37,40 @@ class Date extends StatelessWidget {
 // Override "en" locale messages with custom messages that are more precise and short
 // timeago.setLocaleMessages('en', MyCustomMessages());
 
-
 // my_custom_messages.dart
 class MyCustomMessages implements LookupMessages {
-  @override String prefixAgo() => '';
-  @override String prefixFromNow() => '';
-  @override String suffixAgo() => '';
-  @override String suffixFromNow() => '';
-  @override String lessThanOneMinute(int seconds) => 'now';
-  @override String aboutAMinute(int minutes) => '${minutes}m';
-  @override String minutes(int minutes) => '${minutes}m';
-  @override String aboutAnHour(int minutes) => '${minutes}m';
-  @override String hours(int hours) => '${hours}h';
-  @override String aDay(int hours) => '${hours}h';
-  @override String days(int days) => '${days}d';
-  @override String aboutAMonth(int days) => '${days}d';
-  @override String months(int months) => '${months}mo';
-  @override String aboutAYear(int year) => '${year}y';
-  @override String years(int years) => '${years}y';
-  @override String wordSeparator() => ' ';
+  @override
+  String prefixAgo() => '';
+  @override
+  String prefixFromNow() => '';
+  @override
+  String suffixAgo() => '';
+  @override
+  String suffixFromNow() => '';
+  @override
+  String lessThanOneMinute(int seconds) => 'now';
+  @override
+  String aboutAMinute(int minutes) => '${minutes}m';
+  @override
+  String minutes(int minutes) => '${minutes}m';
+  @override
+  String aboutAnHour(int minutes) => '${minutes}m';
+  @override
+  String hours(int hours) => '${hours}h';
+  @override
+  String aDay(int hours) => '${hours}h';
+  @override
+  String days(int days) => '${days}d';
+  @override
+  String aboutAMonth(int days) => '${days}d';
+  @override
+  String months(int months) => '${months}mo';
+  @override
+  String aboutAYear(int year) => '${year}y';
+  @override
+  String years(int years) => '${years}y';
+  @override
+  String wordSeparator() => ' ';
 }
 
 class SkeletonCard extends StatelessWidget {
@@ -78,8 +93,7 @@ class SkeletonCard extends StatelessWidget {
                 kwidth10,
                 Container(
                   decoration: BoxDecoration(
-                      color: kWhite,
-                      borderRadius: BorderRadius.circular(20)),
+                      color: kWhite, borderRadius: BorderRadius.circular(20)),
                   width: 100,
                   height: 20,
                 ),
@@ -89,8 +103,7 @@ class SkeletonCard extends StatelessWidget {
           Container(
             height: 300,
             decoration: BoxDecoration(
-                color:kWhite,
-                borderRadius: BorderRadius.circular(30)),
+                color: kWhite, borderRadius: BorderRadius.circular(30)),
           ),
           kheight15,
           Padding(
@@ -99,8 +112,7 @@ class SkeletonCard extends StatelessWidget {
               width: 150,
               height: 30,
               decoration: BoxDecoration(
-                color:kWhite,
-                  borderRadius: BorderRadius.circular(20)),
+                  color: kWhite, borderRadius: BorderRadius.circular(20)),
             ),
           ),
           Padding(
@@ -109,8 +121,7 @@ class SkeletonCard extends StatelessWidget {
               width: 150,
               height: 12,
               decoration: BoxDecoration(
-                color:kWhite,
-                  borderRadius: BorderRadius.circular(10)),
+                  color: kWhite, borderRadius: BorderRadius.circular(10)),
             ),
           ),
           Padding(
@@ -119,8 +130,7 @@ class SkeletonCard extends StatelessWidget {
               width: 250,
               height: 12,
               decoration: BoxDecoration(
-                color:kWhite,
-                  borderRadius: BorderRadius.circular(10)),
+                  color: kWhite, borderRadius: BorderRadius.circular(10)),
             ),
           ),
           kheight15
@@ -130,21 +140,8 @@ class SkeletonCard extends StatelessWidget {
   }
 }
 
-// Widget buildVideoPlayer(mediaUrl) {
-//   final videoPlayerController = VideoPlayerController.networkUrl(
-//     Uri.parse(mediaUrl),
-//     httpHeaders: {"Authorization": "334583943739261"},
-//   );
-
-//   return FlickVideoPlayer(
-//     flickManager: FlickManager(
-//       videoPlayerController: videoPlayerController,
-//     ),
-//   );
-// }
-
 class VideoPlayerWIdget extends StatefulWidget {
-  final String mediaUrl;
+  final mediaUrl;
   const VideoPlayerWIdget({super.key, required this.mediaUrl});
 
   @override
@@ -158,18 +155,16 @@ class _VideoPlayerWIdgetState extends State<VideoPlayerWIdget> {
     //demo check video = https://www.youtube.com/watch?v=W6-O00alJUo
     videoPlayerController = VideoPlayerController.networkUrl(
       Uri.parse(widget.mediaUrl),
-      httpHeaders: {"Authorization": "334583943739261"},
+      httpHeaders: {"Authorization": "787284768575152"},
     );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FlickVideoPlayer(
-      flickManager: FlickManager(
-        autoPlay: false,
-        videoPlayerController: videoPlayerController,
-      ),
+    return AspectRatio(
+      aspectRatio: videoPlayerController.value.aspectRatio,
+      child: VideoPlayer(videoPlayerController),
     );
   }
 }
@@ -225,10 +220,15 @@ Shimmer shimmer() {
 }
 
 bool pressed = false;
-IconButton postIconButton(IconData icon1,{Function()? onPressed,color=kBlack}) {
+IconButton postIconButton(IconData icon1,
+    {Function()? onPressed, color = kBlack}) {
   return IconButton(
     onPressed: onPressed,
-    icon:  Icon(icon1,size: 24,color: color,) ,
+    icon: Icon(
+      icon1,
+      size: 24,
+      color: color,
+    ),
   );
 }
 
@@ -246,7 +246,7 @@ class CustomAlertDialogue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title:  title,
+      title: title,
       content: content,
       actions: [
         IconButton(
@@ -259,47 +259,114 @@ class CustomAlertDialogue extends StatelessWidget {
     );
   }
 }
-  IconButton postDeleteIcon(
-      BuildContext context, PostSuccessState state, int index) {
-    return IconButton(
-      onPressed: () {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return CustomAlertDialogue(
-                  title: const Text("Delete"),
-                  content: const Text(
-                    "Do you want to delete this post",
+
+IconButton postDeleteIcon(BuildContext context, state, int index) {
+  return IconButton(
+    onPressed: () {
+      showModalBottomSheet(
+        context: context,
+        builder: (ctx) {
+          return SizedBox(
+            width: MediaQuery.sizeOf(context).width,
+            height: MediaQuery.sizeOf(context).height / 8,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: SizedBox(
+                  // width: MediaQuery.sizeOf(context).width,
+
+                  child: Column(
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () => showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomAlertDialogue(
+                              title: const Text("Delete"),
+                              content: const Text(
+                                "Do you want to delete this post",
+                              ),
+                              onPressed: () {
+                                if (editedList.contains(state.posts[index].id)) {
+                                  editedList.remove(state.posts[index].id);
+                                }
+                                context.read<DeletePostBloc>().add(
+                                    DeleteEvent(id: state.posts[index].id!));
+                                navigatorPush(const PostDetailPage(), context);
+                              });
+                        }),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Delete  ",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Icon(Icons.delete)
+                      ],
+                    ),
                   ),
-                  onPressed: () {
-                    context
-                        .read<DeletePostBloc>()
-                        .add(DeleteEvent(id: state.posts[index].id!));
-                    Navigator.pop(context);
-                  });
-            });
-      },
-      icon: const Icon(Icons.more_horiz),
-    );
-  }
-    TextButton logoutIcon(BuildContext context) {
-    return TextButton.icon(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) => CustomAlertDialogue(
-              title: const Text(
-                "Log out",
-              ),
-              content: const Text("Do you really want to log out?"),
-              onPressed: () {
-                logOut(context);
-              },
+                  const Divider(),
+                  InkWell(
+                    onTap: () => navigatorPush(
+                        EditPost(
+                          post: state.posts[index],
+                        ),
+                        context),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Edit  ",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        Icon(Icons.edit)
+                      ],
+                    ),
+                  ),
+                ],
+              )),
             ),
           );
         },
-        icon: const Icon(Icons.logout),
-        label: const Text('Log out'),
       );
-  }
+    },
+    icon: const Icon(Icons.more_horiz),
+  );
+}
 
+TextButton logoutIcon(BuildContext context) {
+  return TextButton.icon(
+    onPressed: () {
+      showDialog(
+        context: context,
+        builder: (context) => CustomAlertDialogue(
+          title: const Text(
+            "Log out",
+          ),
+          content: const Text("Do you really want to log out?"),
+          onPressed: () {
+            logOut(context);
+          },
+        ),
+      );
+    },
+    icon: const Icon(Icons.logout),
+    label: const Text('Log out'),
+  );
+}
+
+logoutFunction(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (context) => CustomAlertDialogue(
+      title: const Text(
+        "Log out",
+      ),
+      content: const Text("Do you really want to log out?"),
+      onPressed: () {
+        logOut(context);
+      },
+    ),
+  );
+}

@@ -2,9 +2,8 @@ import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
 import 'package:aura/bloc/searchBloc/bloc/search_bloc.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/cubit/explorePage_cubit/explore_page_cubit.dart';
-import 'package:aura/domain/model/post_model.dart';
 import 'package:aura/presentation/functions/functions.dart';
-import 'package:aura/presentation/screens/profile/userProfile.dart';
+import 'package:aura/presentation/screens/profile/user_profile_new.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -98,7 +97,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                     child: MasonryGridView.builder(
                                   gridDelegate:
                                       const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2),
+                                          crossAxisCount: 3),
                                   itemCount: state[1].posts.length,
                                   itemBuilder: (context, index) {
                                     final post = state[1];
@@ -132,7 +131,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                                 elevation: 10,
                                                 child: InkWell(
                                                   onTap: () => navigatorPush(
-                                                      UserProfile(
+                                                      UserProfileSccreen(
+                                                        
                                                           user: state.usersList[
                                                               index]),
                                                       context),

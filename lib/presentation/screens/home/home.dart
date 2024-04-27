@@ -6,14 +6,14 @@ import 'package:aura/bloc/delete_post/bloc/delete_post_bloc.dart';
 import 'package:aura/bloc/like_unlike_bloc/bloc/like_unlike_bloc.dart';
 import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
+import 'package:aura/core/commonData/common_data.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/cubit/duration_cubit/cubit/duration_cubit.dart';
-import 'package:aura/domain/model/post_model.dart';
 import 'package:aura/presentation/functions/functions.dart';
+import 'package:aura/presentation/screens/bottom_navigation/bottom_navigation.dart';
 import 'package:aura/presentation/screens/home/widgets.dart';
-import 'package:aura/presentation/screens/profile/UserProfile.dart';
-import 'package:aura/presentation/screens/profile/userProfileNew.dart';
+import 'package:aura/presentation/screens/profile/user_profile_new.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,14 +27,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // late Future<List<Posts>> post;
   late final VideoPlayerController videoPlayerController;
   final commentController = TextEditingController();
   String postId = '';
   String userId = '';
-  final Map map = {};
-  bool loading = false;
-  final post = Posts(likes: []);
+  final Map likedUsersMap = {};
+
   bool saved = false;
 
   @override
@@ -50,6 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  Future<void> refresh() async {
+    await Future.delayed(const Duration(seconds: 2));
+    context.read<PostsBloc>().add(PostsInitialFetchEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,33 +60,33 @@ class _HomeScreenState extends State<HomeScreen> {
       endDrawer: Drawer(
         child: logoutIcon(context),
       ),
-      // appBar: AppBar(
-      //   automaticallyImplyLeading: false,
-      //   backgroundColor: Colors.transparent,
-      //   title: const AppName(),
-      // ),
-      body: BlocBuilder<DeletePostBloc, DeletePostState>(
-        builder: (context, deleteState) {
-          //######################       to update the state after delete    ##########################
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        title: const AppName(),
+      ),
+      body: RefreshIndicator(
+        onRefresh: refresh,
+        child: BlocBuilder<DeletePostBloc, DeletePostState>(
+          builder: (context, deleteState) {
+            //######################       to update the state after delete    ##########################
 
-          if (deleteState is DeletePostSuccessState) {
-            context.read<PostsBloc>().add(PostsInitialFetchEvent());
-          }
-          return SafeArea(
-            child: BlocBuilder<LikeUnlikeBloc, LikeUnlikeState>(
-              builder: (context, _) {
-                if (_ is LikeCountUpdatedState) {
-                  return BlocBuilder<DurationCubit, bool>(
-                    builder: (context, finished) {
-                      return SingleChildScrollView(
-                        child: GestureDetector(
-                          onLongPressStart: (details) => print("swipe"),
+            if (deleteState is DeletePostSuccessState) {
+              // context.read<PostsBloc>().add(PostsInitialFetchEvent());
+            }
+            return SafeArea(
+              child: BlocBuilder<LikeUnlikeBloc, LikeUnlikeState>(
+                builder: (context, _) {
+                  if (_ is LikeCountUpdatedState) {
+                    return BlocBuilder<DurationCubit, bool>(
+                      builder: (context, finished) {
+                        return SingleChildScrollView(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 14),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                AppName(),
+                                // AppName(),
                                 // finished
                                 //     ? SingleChildScrollView(
                                 //         scrollDirection: Axis.horizontal,
@@ -102,9 +105,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         },
                                         builder: (context, state) {
                                           if (state is PostErrorState) {
-                                            return const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
+                                            return Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Center(child: loading()),
+                                              ],
                                             );
                                           } else if (state
                                               is PostLoadingState) {
@@ -117,6 +123,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   const NeverScrollableScrollPhysics(),
                                               itemCount: state.posts.length,
                                               itemBuilder: (context, index) {
+                                                for (var element in state
+                                                    .posts[index].likes!) {
+                                                  print(
+                                                      "post$index = $element");
+                                                  likedUsersMap[state
+                                                      .posts[index]
+                                                      .id] = element;
+                                                }
+                                                print(
+                                                    "liked users map = ${likedUsersMap[state.posts[index].id]}");
+
                                                 return Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
@@ -125,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       children: [
                                                         kwidth10,
                                                         CircleAvatar(
-                                                          radius: 23,
+                                                          radius: 20,
                                                           backgroundImage:
                                                               NetworkImage(
                                                             state
@@ -142,57 +159,79 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 : demoProPic,
                                                           ),
                                                         ),
+
                                                         kwidth10,
 
                                                         //#########################  navigating the page to the user profile    ##########################################
+                                                        BlocBuilder<
+                                                            CurrentUserBloc,
+                                                            CurrentUserState>(
+                                                          builder: (context,
+                                                              userState) {
+                                                            if (userState
+                                                                is CurrentUserSuccessState) {
+                                                              // ######################################   Post Icon Row #####################################
 
-                                                        InkWell(
-                                                          onTap: () =>
-                                                              navigatorPush(
-                                                                  UserProfileSccreen(
-                                                                    user: state
-                                                                        .posts[
-                                                                            index]
-                                                                        .user!,
-                                                                  ),
-                                                                  context),
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                state
-                                                                    .posts[
-                                                                        index]
-                                                                    .user!
-                                                                    .username!,
-                                                                style: const TextStyle(
-                                                                    fontSize:
-                                                                        18,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500),
-                                                              ),
-                                                              Text(
-                                                                state
-                                                                    .posts[
-                                                                        index]
-                                                                    .location
-                                                                    .toString(),
-                                                                style: const TextStyle(
-                                                                    fontSize:
-                                                                        12,
-                                                                    color:
-                                                                        kGreyDark),
-                                                              )
-                                                            ],
-                                                          ),
+                                                              return InkWell(
+                                                                onTap: () => state
+                                                                            .posts[
+                                                                                index]
+                                                                            .user!
+                                                                            .id ==
+                                                                        userState
+                                                                            .currentUser
+                                                                            .user
+                                                                            .id
+                                                                    ? indexChangeNotifier
+                                                                        .value = 3
+                                                                    : navigatorPush(
+                                                                        UserProfileSccreen(
+                                                                          user: state
+                                                                              .posts[index]
+                                                                              .user!,
+                                                                        ),
+                                                                        context),
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Text(
+                                                                      state
+                                                                          .posts[
+                                                                              index]
+                                                                          .user!
+                                                                          .username!,
+                                                                      style: const TextStyle(
+                                                                          fontSize:
+                                                                              18,
+                                                                          fontWeight:
+                                                                              FontWeight.w500),
+                                                                    ),
+                                                                    Text(
+                                                                      state
+                                                                          .posts[
+                                                                              index]
+                                                                          .location
+                                                                          .toString(),
+                                                                      style: const TextStyle(
+                                                                          fontSize:
+                                                                              12,
+                                                                          color:
+                                                                              kGreyDark),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            } else {
+                                                              return Container();
+                                                            }
+                                                          },
                                                         ),
 
-                                                        const Spacer(),
-                                                        postDeleteIcon(context,
-                                                            state, index)
+                                                        // const Spacer(),
+                                                        // postDeleteIcon(context,
+                                                        //     state, index)
                                                       ],
                                                     ),
                                                     kheight5,
@@ -232,7 +271,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         }
                                                       },
                                                     ),
-
                                                     Text(
                                                       state.posts[index].user!
                                                           .username!,
@@ -243,39 +281,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     Text(
                                                       state.posts[index]
                                                           .description!,
-                                                      style:const TextStyle(
+                                                      style: const TextStyle(
                                                           fontSize: 16),
                                                     ),
-                                                    //     state
-                                                    //                 .posts[
-                                                    //                     index]
-                                                    //                 .comments!
-                                                    //                 .length >
-                                                    //             1
-                                                    //         ? InkWell(
-                                                    //             onTap: () =>
-                                                    //                 commentBottomSheet(
-                                                    //                     context,
-                                                    //                     state,
-                                                    //                     index,
-                                                    //                     commentController),
-                                                    //             child: Text(
-                                                    //               "View all ${state.posts[index].comments!.length.toString()} comments",
-                                                    //               style: const TextStyle(
-                                                    //                   color: Colors
-                                                    //                       .blueGrey),
-                                                    //             ),
-                                                    //           )
-                                                    //         : Container(),
                                                     kheight5,
                                                     Date(
                                                         date: state.posts[index]
                                                             .createdAt!),
-                                                    //   ],
-                                                    // )
-                                                    //
-                                                    // ),
-
+                                                    kheight5,
+                                                    editedList.contains(state
+                                                            .posts[index].id!)
+                                                        ? const Text(
+                                                            'edited',
+                                                            style: TextStyle(
+                                                                color:
+                                                                    kGreyDark),
+                                                          )
+                                                        : Container(),
                                                     kheight15
                                                   ],
                                                 );
@@ -290,17 +312,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  return Container();
-                }
-              },
-            ),
-          );
-        },
+                        );
+                      },
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }

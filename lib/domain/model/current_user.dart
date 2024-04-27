@@ -6,7 +6,7 @@ class CurrentUser {
   final List<Posts> posts;
   final List followingIdsList;
   final List followingUsersList;
-  final List followersUsersList;
+  final List<User> followersUsersList;
 
   CurrentUser({
     required this.user,

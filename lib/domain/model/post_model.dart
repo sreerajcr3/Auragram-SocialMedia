@@ -7,7 +7,7 @@ class Posts {
   final String? id;
   final List<String>? mediaURL;
   final String? location;
- final  List<String>? likes;
+  final List<String>? likes;
   final List<CommentModel>? comments;
   final bool? isBlocked;
   final String? createdAt;
@@ -19,7 +19,7 @@ class Posts {
     this.id,
     this.mediaURL,
     this.location,
-   required this.likes ,
+    required this.likes,
     this.comments,
     this.isBlocked,
     this.createdAt,

@@ -1,5 +1,5 @@
-import 'package:aura/presentation/screens/bottom_navigation.dart';
-import 'package:aura/presentation/screens/log_in.dart';
+import 'package:aura/presentation/screens/bottom_navigation/bottom_navigation.dart';
+import 'package:aura/presentation/screens/auth/log_in.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,12 +22,12 @@ snackBar(String text, context) {
 
 navigatorReplacement(page, context) {
   Navigator.of(context).pushReplacement(
-      PageTransition(child: page, type: PageTransitionType.fade));
+      PageTransition(child: page, type: PageTransitionType.fade,duration: const Duration(seconds: 1)));
 }
 
 navigatorPush(page, context) {
   Navigator.of(context)
-      .push(PageTransition(child: page, type: PageTransitionType.fade));
+      .push(PageTransition(child: page, type: PageTransitionType.fade,duration:const Duration(milliseconds: 1000)));
 }
 
 //-----------------------shared preference---------------------

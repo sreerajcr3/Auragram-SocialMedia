@@ -1,12 +1,14 @@
 import 'package:aura/bloc/logIn_bloc/bloc/log_in_bloc.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/presentation/functions/functions.dart';
-import 'package:aura/presentation/screens/bottom_navigation.dart';
-import 'package:aura/presentation/screens/forgot_password.dart';
-import 'package:aura/presentation/screens/sign_up.dart';
+import 'package:aura/presentation/screens/bottom_navigation/bottom_navigation.dart';
+import 'package:aura/presentation/screens/auth/forgot_password.dart';
+import 'package:aura/presentation/screens/auth/sign_up.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ionicons/ionicons.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -57,36 +59,36 @@ class _LogInState extends State<LogIn> {
                   child: Column(
                     children: [
                       TextformField(
-                          labelText: 'username',
+                          prefixIcon: CupertinoIcons.person_fill,
+                          labelText: 'Username',
                           controller: usernameController,
-                          valueText: "username"),
+                          valueText: "Username"),
                       kheight30,
                       TextformField(
+                          prefixIcon: Icons.lock,
                           labelText: 'Password',
                           controller: passwordController,
                           valueText: "Password"),
                       kheight20,
                       CustomButton(
-                        text: "Log in",
+                        text: "Log In",
                         onPressed: () {
                           if (key.currentState!.validate()) {
                             context.read<LogInBloc>().add(UserLogin(
                                 username: usernameController.text,
                                 password: passwordController.text));
-                                userLoggedIn(context);
+                            userLoggedIn(context);
                           }
                         },
                       ),
                       TextButton(
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => const SignUpScreen()));
+                            navigatorPush(const SignUpScreen(), context);
                           },
-                          child: const Text('sign up')),
+                          child: const Text('Sign up')),
                       TextButton(
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => const ForgotPassword()));
+                            navigatorPush(const ForgotPassword(), context);
                           },
                           child: const Text('Forgot Password'))
                     ],
@@ -99,5 +101,4 @@ class _LogInState extends State<LogIn> {
       ),
     );
   }
-
 }

@@ -20,11 +20,13 @@ class TextformField extends StatelessWidget {
   final String labelText;
   final String? valueText;
   final TextEditingController controller;
+  final IconData? prefixIcon;
   const TextformField({
     super.key,
     required this.labelText,
     required this.controller,
     this.valueText,
+    this.prefixIcon,
   });
 
   @override
@@ -41,17 +43,18 @@ class TextformField extends StatelessWidget {
         },
         controller: controller,
         decoration: InputDecoration(
+            prefixIcon: Icon(prefixIcon) ?? null,
             focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(color: Colors.red)),
             errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(color: Colors.red)),
             focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide()),
             enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(10),
                 borderSide:
                     const BorderSide()), // border: const OutlineInputBorder(),
             labelText: labelText),
@@ -126,12 +129,21 @@ class CustomButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-          backgroundColor: const MaterialStatePropertyAll(
-            kBlack,
+       
+        backgroundColor: const MaterialStatePropertyAll(
+          kBlack,
+        ),
+        foregroundColor: const MaterialStatePropertyAll(kWhite),
+        fixedSize: MaterialStatePropertyAll(
+          
+         Size( MediaQuery.sizeOf(context).width/1.1 ,65)
+        ),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10), 
+            ),
           ),
-          foregroundColor: const MaterialStatePropertyAll(kWhite),
-          fixedSize: MaterialStatePropertyAll(
-              Size.fromWidth(MediaQuery.sizeOf(context).width * 0.9))),
+      ),
       child: Text(
         text,
         style: const TextStyle(fontSize: 18),
@@ -166,8 +178,8 @@ class AppName extends StatelessWidget {
 }
 
 //----------------------------------------comment widget----------------------------------------
-Future<dynamic> commentBottomSheet(BuildContext context, PostSuccessState state,
-    int index, commentController,CurrentUserSuccessState userSuccessState) {
+Future<dynamic> commentBottomSheet(BuildContext context,  state,
+    int index, commentController,  userSuccessState) {
   return showModalBottomSheet(
     isDismissible: true,
     context: context,
@@ -185,54 +197,47 @@ Future<dynamic> commentBottomSheet(BuildContext context, PostSuccessState state,
               ),
             ),
           ),
-          BlocConsumer<CommentBloc,CommentState>(
-            buildWhen:  null,
+          BlocConsumer<CommentBloc, CommentState>(
+            buildWhen: null,
             listenWhen: null,
-           
             listener: (context, multistate) {
-             
               if (multistate is CommentUpdateState) {
-                   context.read<CurrentUserBloc>().add(CurrentUserFetchEvent());
-                   context.read<PostsBloc>().add(PostsInitialFetchEvent());
+                context.read<CurrentUserBloc>().add(CurrentUserFetchEvent());
+                context.read<PostsBloc>().add(PostsInitialFetchEvent());
               }
             },
             builder: (context, multistate) {
-          
-                
-                    return Row(children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              userSuccessState.currentUser.user.profilePic != ''
-                                  ? userSuccessState
-                                      .currentUser.user.profilePic!
-                                  : demoProPic)),
-                    ),
-                    kwidth10,
-                    Expanded(
-                      child: TextFormField(
-                        controller: commentController,
-                        decoration: InputDecoration(
-                          suffix: InkWell(
-                              onTap: () { context.read<CommentBloc>().add(
+              return Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            userSuccessState.currentUser.user.profilePic != ''
+                                ? userSuccessState.currentUser.user.profilePic!
+                                : demoProPic)),
+                  ),
+                  kwidth10,
+                  Expanded(
+                    child: TextFormField(
+                      controller: commentController,
+                      decoration: InputDecoration(
+                        suffix: InkWell(
+                            onTap: () {
+                              context.read<CommentBloc>().add(
                                     AddCommentEvent(
                                         postId: state.posts[index].id!,
                                         comment: commentController.text),
-                                        
-                                  );print("post cliked");
-                              },
-                              child: const Text('Post')),
-                          hintText: 'Add a comment',
-                        ),
+                                  );
+                              print("post cliked");
+                            },
+                            child: const Text('Post')),
+                        hintText: 'Add a comment',
                       ),
                     ),
-                  ],
-                );
-              
-             
-              
-             
+                  ),
+                ],
+              );
             },
           ),
           Expanded(
@@ -312,12 +317,9 @@ Future<dynamic> commentBottomSheet(BuildContext context, PostSuccessState state,
   );
 }
 
-Row postIconRow(
-    PostSuccessState state,
-    int index,
-    CurrentUserSuccessState userState,
-    BuildContext context,
-    commentController) {
+Row postIconRow(state, int index, CurrentUserSuccessState userState,
+    BuildContext context, commentController) {
+      context.read<SavePostBloc>().add(FetchsavedPostEvent());
   bool saved = false;
 
   return Row(
@@ -346,8 +348,8 @@ Row postIconRow(
           state.posts[index].likes!.length > 1 ? "likes" : "like", index),
 
       postIconButton(Ionicons.chatbubble_outline,
-          onPressed: () =>
-              commentBottomSheet(context, state, index, commentController,userState)),
+          onPressed: () => commentBottomSheet(
+              context, state, index, commentController, userState)),
       postLikeCount(state.posts[index].comments!.length.toString(),
           state.posts[index].likes!.length > 1 ? "comments" : "comment", index),
       // postIconButton(
@@ -419,7 +421,7 @@ Row postIconRow(
           return const Padding(
               padding: EdgeInsets.only(right: 11),
               child: Icon(
-                Icons.bookmark_border,
+                Icons.abc,
                 size: 27,
               ));
 
@@ -431,7 +433,7 @@ Row postIconRow(
           //   return const Icon(
           //       Icons.bookmark_outline);
           // }
-        },
+        }
       )
     ],
   );
@@ -482,7 +484,7 @@ Text postLikeCount(text, item, int index) {
   );
 }
 
-PageView postPageView(PostSuccessState state, int index) {
+PageView postPageView(state, int index) {
   return PageView.builder(
     scrollDirection: Axis.horizontal,
     itemCount: state.posts[index].mediaURL!.length,
@@ -491,7 +493,7 @@ PageView postPageView(PostSuccessState state, int index) {
       // userId = state.posts[index].user!.id!;
       final mediaUrl = state.posts[index].mediaURL![pageIndex];
       return ClipRRect(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(5),
           // decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.green),
           child: mediaUrl.contains("image")
               ? Image.network(
@@ -531,7 +533,7 @@ containerButton(text, Function() onTap, bg, {textColor = Colors.black}) {
           border: Border.all()),
       child: Center(
           child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 20),
         child: Text(
           text,
           style: TextStyle(color: textColor, fontSize: 16),

@@ -13,3 +13,9 @@ final class AddCoverPicEvent extends ImagePickerEvent{
 
   AddCoverPicEvent({required this.image});
 }
+
+final class UploadProfilePicCloudinary extends ImagePickerEvent{
+  final dynamic image;
+
+  UploadProfilePicCloudinary({required this.image});
+}

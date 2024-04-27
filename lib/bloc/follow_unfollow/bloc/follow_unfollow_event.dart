@@ -14,3 +14,6 @@ final class ToUnfollowEvent extends FollowUnfollowEvent {
 
   ToUnfollowEvent({required this.userId});
 }
+
+final class FollowUpdateEvent extends FollowUnfollowEvent {}
+final class FollowUpdateStopEvent extends FollowUnfollowEvent {}

@@ -20,18 +20,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      body: Container(
-       // decoration: BoxDecoration(gradient: LinearGradient(colors: [Colors.white70,Colors.red],begin: Alignment.bottomLeft)),
-        child: Center(
-          child: AppName(),
-        ),
+    return const  Scaffold(
+      body: Center(
+        child: AppName(),
       ),
     );
   }
 
   splashScreendelay() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     checkLoggedIn(context);
   }
 }

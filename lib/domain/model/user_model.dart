@@ -1,6 +1,6 @@
 class User {
   final String? username;
-  final String? id;
+   String? id;
   final String? fullname;
   final String? email;
    String? profilePic;
@@ -13,6 +13,10 @@ class User {
   final List? posts;
   final int? phoneNo;
   final String? otp;
+  final bool? isBlocked;
+  final String? createdAt;
+  final String? updatedAt;
+  final int? v;
 
   User({
     this.username,
@@ -29,6 +33,10 @@ class User {
     this.posts,
     this.phoneNo,
     this.otp,
+    this.isBlocked,
+    this.createdAt,
+    this.updatedAt,
+    this.v,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -47,6 +55,10 @@ class User {
       posts: json['posts'] != null ? List.from(json['posts']) : [],
       phoneNo: json['phoneNo'],
       otp: json['otp'],
+      isBlocked: json['isBlocked'],
+      createdAt:json['createdAt'],
+      updatedAt:json['updatedAt'],
+      v:json['__v'],
     );
   }
 
@@ -66,6 +78,9 @@ class User {
       'posts': posts,
       'phoneNo': phoneNo,
       'otp': otp,
+      'isBlocked':isBlocked,
+      'createdAt':createdAt,
+      '__v':v,
     };
   }
 

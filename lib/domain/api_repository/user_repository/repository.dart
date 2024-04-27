@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:aura/core/urls/url.dart';
-import 'package:aura/domain/model/currentUser.dart';
+import 'package:aura/domain/model/current_user.dart';
 import 'package:aura/domain/model/get_user_model.dart';
 import 'package:aura/domain/model/post_model.dart';
 import 'package:aura/domain/model/user_model.dart';
@@ -63,6 +63,8 @@ class ApiServiceUser {
       final response = await client.get(Uri.parse(url), headers: headers);
       debugPrint("currentUserrequestbody = ${response.body}");
       if (response.statusCode == 200 || response.statusCode == 201) {
+      debugPrint("succusful state profile");
+
         final decodedData = jsonDecode(response.body);
         final userData = decodedData['user'];
         final currentUserPosts = decodedData['posts'];
@@ -75,18 +77,32 @@ class ApiServiceUser {
         }
 
         final List followingUserIds = [];
-        for (var followingUser in user.followers!) {
+        for (var followingUser in user.following!) {
           followingUserIds.add(followingUser['_id']);
         }
+
+        final List<User> followersUsers = [];
+        for (var user in user.followers!) {
+          followersUsers.add(User.fromJson(user));
+        }
+
+       
         final List followingUsersNames = [];
-        for (var followingUser in user.followers!) {
-          followingUserIds.add(followingUser['_id']);
+        for (var user in user.following!) {
+          followingUsersNames.add(User.fromJson(user));
         }
-        final List followersUsersNames = [];
-        for (var followingUser in user.followers!) {
-          followingUserIds.add(followingUser['_id']);
-        }
-        return CurrentUser(user: user, posts: posts,followingIdsList: followingUserIds,followersUsersList: followersUsersNames,followingUsersList: followingUsersNames);
+        // final List followersUserslist = [];
+        // for (var followingUser in user.following!) {
+        //   followersUserslist.add(followingUser['username']);
+        // }
+        // print("followers list === $followingUsersNames");
+        // print("followers list === $followersUserslist");
+        return CurrentUser(
+            user: user,
+            posts: posts,
+            followingIdsList: followingUserIds,
+            followingUsersList: followingUsersNames,
+            followersUsersList: followersUsers);
       } else {
         return null;
       }
@@ -121,7 +137,23 @@ class ApiServiceUser {
         for (var element in currentUserPosts) {
           posts.add(Posts.fromJson(element));
         }
-        return GetUserModel(user: user, posts: posts);
+
+        final List<User> followingUsers = [];
+        for (var user in user.following!) {
+          followingUsers.add(User.fromJson(user));
+        }
+        final List<User> followersUsers = [];
+        for (var user in user.followers!) {
+          followersUsers.add(User.fromJson(user));
+        }
+        print("get user following list = $followingUsers");
+        print("get user followers list = $followersUsers");
+        return GetUserModel(
+          user: user,
+          posts: posts,
+          followingUsersList: followingUsers,
+          followersUsersList: followersUsers,
+        );
       } else {
         return null;
       }
@@ -131,31 +163,5 @@ class ApiServiceUser {
     }
   }
 
-  //###################################   extracting the id list of following from the current user        ###########################################
 
-  static Future getFollowingList() async {
-    final client = http.Client();
-
-    try {
-      final String? token = await getToken();
-      final headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
-      };
-      const url = "${ApiEndPoints.baseUrl}${ApiEndPoints.currentUser}";
-      final response = await client.get(Uri.parse(url), headers: headers);
-      final decodedData = jsonDecode(response.body);
-      final userData = decodedData['user'];
-      final user = User.fromJson(userData);
-
-      final List followingUserIds = [];
-      for (var followingUser in user.following!) {
-        followingUserIds.add(followingUser['_id']);
-      }
-      print("user.following = ${followingUserIds}");
-      return followingUserIds;
-    } catch (e) {
-      log(e.toString());
-    }
-  }
 }

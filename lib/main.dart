@@ -4,6 +4,7 @@ import 'package:aura/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:aura/bloc/create_post/bloc/create_post_bloc.dart';
 import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
 import 'package:aura/bloc/delete_post/bloc/delete_post_bloc.dart';
+import 'package:aura/bloc/edit_post/bloc/edit_post_bloc.dart';
 import 'package:aura/bloc/edit_profile/bloc/edit_profile_bloc.dart';
 import 'package:aura/bloc/follow_unfollow/bloc/follow_unfollow_bloc.dart';
 import 'package:aura/bloc/get_user/get_user_bloc.dart';
@@ -16,7 +17,7 @@ import 'package:aura/bloc/searchBloc/bloc/search_bloc.dart';
 import 'package:aura/bloc/signUpbloc/bloc/sign_up_bloc.dart';
 import 'package:aura/cubit/duration_cubit/cubit/duration_cubit.dart';
 import 'package:aura/cubit/explorePage_cubit/explore_page_cubit.dart';
-import 'package:aura/presentation/screens/splash_screen.dart';
+import 'package:aura/presentation/screens/splash_screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => BoolBloc()),
         BlocProvider(create: (context) => ImagePickerBloc()),
         BlocProvider(create: (context) => EditProfileBloc()),
+        BlocProvider(create: (context) => EditPostBloc()),
 
         //cubit
         BlocProvider(create: (context) => ExplorePageCubit()),

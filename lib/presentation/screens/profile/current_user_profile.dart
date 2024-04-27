@@ -4,15 +4,15 @@ import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/profile/edit_profile.dart';
+import 'package:aura/presentation/screens/profile/settings.dart';
 import 'package:aura/presentation/screens/profile/widgets.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MyProfile extends StatefulWidget {
-  final bool me;
-  const MyProfile({super.key, required this.me});
+  
+  const MyProfile({super.key});
 
   @override
   State<MyProfile> createState() => _ProfileState();
@@ -29,14 +29,18 @@ class _ProfileState extends State<MyProfile> {
 
   @override
   Widget build(BuildContext context) {
+    var screenHeight = MediaQuery.of(context).size.height;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-<<<<<<< HEAD
-        appBar:customAppbar(text: "My Profile", context: context, onPressed: (){},leadingIcon: false),
-=======
-        appBar:customAppbar(text: "My Profile", context: context, onPressed: (){},leadingIcon: true),
->>>>>>> ad8c6b731a14c70bd0ee93a4c2ba8367a4ecb5ca
+        appBar: customAppbar(
+            icon: Icon(Icons.menu),
+            text: "My Profile",
+            context: context,
+            onPressed: () {
+              navigatorPush(const SettingsPage(), context);
+            },
+            leadingIcon: true),
         body: BlocConsumer<CurrentUserBloc, CurrentUserState>(
           listener: (context, state) {},
           builder: (context, state) {
@@ -47,18 +51,25 @@ class _ProfileState extends State<MyProfile> {
                   children: [
                     Stack(
                       children: [
-                        Container(
+                        const SizedBox(
                           height: 350,
                           width: double.infinity,
                           // color: Colors.orange,
                         ),
-                      
                         Positioned(
-                            child: Container(
+                            child: SizedBox(
                           height: 200,
                           width: MediaQuery.sizeOf(context).width,
-                          color: Colors.green,
-                          child: state.currentUser.user.coverPic!= ""?Image.network(state.currentUser.user.coverPic!):Image.asset("assets/images/AURAGRAM Cover phot.jpg",fit: BoxFit.cover,),
+                          child: state.currentUser.user.coverPic != ""
+                              ? Image.network(
+                                  state.currentUser.user.coverPic!,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  "assets/images/AURAGRAM Cover phot.jpg",
+                                  fit: BoxFit.fill,
+                                  width: MediaQuery.sizeOf(context).width,
+                                ),
                         )),
                         Positioned(
                           top: 180,
@@ -66,8 +77,8 @@ class _ProfileState extends State<MyProfile> {
                             decoration: BoxDecoration(
                               color: Colors.grey.shade200,
                               borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(30),
-                                topRight: Radius.circular(30),
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
                               ),
                             ),
                             height: 160,
@@ -75,7 +86,7 @@ class _ProfileState extends State<MyProfile> {
                           ),
                         ),
                         Positioned(
-                          top: 150,
+                          top: screenHeight / 6,
                           left: 30,
                           child: CircleAvatar(
                             radius: 50,
@@ -103,16 +114,16 @@ class _ProfileState extends State<MyProfile> {
                           top: 270,
                           child: Text(
                             state.currentUser.user.fullname!,
-                            style: const TextStyle(fontSize: 20),
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w700),
                           ),
                         ),
-                        const Positioned(
+                        Positioned(
                           left: 20,
                           top: 305,
                           child: Text(
-                            // state.currentUser.user.bio!,
-                            "hi",
-                            style: TextStyle(fontSize: 20),
+                            state.currentUser.user.bio!,
+                            style: const TextStyle(fontSize: 15),
                           ),
                         ),
                       ],

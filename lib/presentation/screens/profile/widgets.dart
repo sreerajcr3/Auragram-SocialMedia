@@ -5,6 +5,7 @@ import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/profile/followers_page.dart';
+import 'package:aura/presentation/screens/post/post_detail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,60 +82,42 @@ class ProfileFollowersCountCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Column(
-            children: [
-              profileText1(state.posts.length == 0 ? "0" : state.posts.length),
-              profileCardText2('Post')
-            ],
-          ),
-<<<<<<< HEAD
-          InkWell(
-            onTap: () {
-              navigatorPush(Followers(), context);
-            },
-            child: Column(
+      child: InkWell(
+        onTap: () {
+          navigatorPush(
+              Followers(
+                users: state,
+              ),
+              context);
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              children: [
+                profileText1(
+                    state.posts.length == 0 ? "0" : state.posts.length),
+                profileCardText2('Post')
+              ],
+            ),
+            Column(
               children: [
                 profileText1(state.user.following!.isEmpty
                     ? "0"
                     : state.user.following!.length.toString()),
-                profileCardText2('Followers')
+                profileCardText2('Following')
               ],
             ),
-          ),
-          InkWell(
-             onTap: () {
-              navigatorPush(Followers(), context);
-            },
-            child: Column(
+            Column(
               children: [
                 profileText1(state.user.followers!.isEmpty
                     ? "0"
                     : state.user.followers!.length.toString()),
-                profileCardText2('Following')
+                profileCardText2('Followers')
               ],
             ),
-=======
-          Column(
-            children: [
-              profileText1(state.user.following!.isEmpty
-                  ? "0"
-                  : state.user.following!.length.toString()),
-              profileCardText2('Followers')
-            ],
-          ),
-          Column(
-            children: [
-              profileText1(state.user.followers!.isEmpty
-                  ? "0"
-                  : state.user.followers!.length.toString()),
-              profileCardText2('Following')
-            ],
->>>>>>> ad8c6b731a14c70bd0ee93a4c2ba8367a4ecb5ca
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -182,13 +165,9 @@ class SavedPostGrid extends StatelessWidget {
                       mainAxisSpacing: 1,
                     ),
                     itemBuilder: (context, index) {
-                      return Container(
-                        color: Colors.grey, // Adjust the color as needed
-                        alignment: Alignment.center,
-                        child: Image.network(
-                          savedpostsState.savedPosts.posts[index].mediaURL[0],
-                          fit: BoxFit.cover,
-                        ),
+                      return Image.network(
+                        savedpostsState.savedPosts.posts[index].mediaURL[0],
+                        fit: BoxFit.cover,
                       );
                     },
                   ),
@@ -214,10 +193,10 @@ Container followUnfollowButton(text, follow, {color = kWhite}) {
                 : [kGrey, Colors.greenAccent]),
         borderRadius: BorderRadius.circular(8)),
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
       child: Text(
         text,
-        style: const TextStyle(fontSize: 17),
+        style: const TextStyle(fontSize: 17,color: kWhite),
       ),
     ),
   );
@@ -243,35 +222,40 @@ SizedBox emptyMessage() {
       ));
 }
 
-profileCountCard(GetUsersuccessState getuserstate) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      Column(
-        children: [
-          profileText1(getuserstate.getUserModel.posts.isEmpty
-              ? "0"
-              : getuserstate.getUserModel.posts.length),
-          profileCardText2('Post')
-        ],
-      ),
-      Column(
-        children: [
-          profileText1(getuserstate.getUserModel.user.following!.isEmpty
-              ? "0"
-              : getuserstate.getUserModel.user.following!.length.toString()),
-          profileCardText2('Followers')
-        ],
-      ),
-      Column(
-        children: [
-          profileText1(getuserstate.getUserModel.user.followers!.isEmpty
-              ? "0"
-              : getuserstate.getUserModel.user.followers!.length.toString()),
-          profileCardText2('Following')
-        ],
-      ),
-    ],
+profileCountCard( getuserstate, context,followersLength) {
+  return InkWell(
+    onTap: () {
+      navigatorPush(Followers(users: getuserstate.getUserModel), context);
+    },
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Column(
+          children: [
+            profileText1(getuserstate.getUserModel.posts.isEmpty
+                ? "0"
+                : getuserstate.getUserModel.posts.length),
+            profileCardText2('Post')
+          ],
+        ),
+        Column(
+          children: [
+            profileText1(getuserstate.getUserModel.user.following!.isEmpty
+                ? "0"
+                : getuserstate.getUserModel.user.following!.length.toString()),
+            profileCardText2('Following')
+          ],
+        ),
+        Column(
+          children: [
+            profileText1(getuserstate.getUserModel.user.followers!.isEmpty
+                ? "0"
+                : getuserstate.getUserModel.user.followers!.length.toString()),
+            profileCardText2('Followers')
+          ],
+        ),
+      ],
+    ),
   );
 }
 
@@ -286,7 +270,7 @@ class ProfilePostGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 300, // Adjust the height as needed
+        // height: 300, // Adjust the height as needed
 
         child: state.currentUser.posts.length != 0
             ? Expanded(
@@ -300,12 +284,11 @@ class ProfilePostGrid extends StatelessWidget {
                     mainAxisSpacing: 1,
                   ),
                   itemBuilder: (context, index) {
-                    return Container(
-                      color: Colors.grey, // Adjust the color as needed
-                      alignment: Alignment.center,
+                    return InkWell(
+                      onTap: () => navigatorPush( const PostDetailPage(), context),
                       child: Image.network(
                         state.currentUser.posts[index].mediaURL![0],
-                        fit: BoxFit.fitWidth,
+                        fit: BoxFit.cover,
                       ),
                     );
                   },

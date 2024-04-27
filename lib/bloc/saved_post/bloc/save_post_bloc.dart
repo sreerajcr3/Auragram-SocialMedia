@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:aura/domain/api_repository/savePost_repository/save_post_repository.dart';
-import 'package:aura/domain/model/post_model.dart';
 import 'package:aura/domain/model/saved_post.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
@@ -34,11 +33,11 @@ class SavePostBloc extends Bloc<SavePostEvent, SavePostState> {
 
   FutureOr<void> fetchsavedPostEvent(
       FetchsavedPostEvent event, Emitter<SavePostState> emit) async {
-    final Response result = await ApiServiceSavePost.getSavedPost();
-    final responseBody= jsonDecode(result.body);
-    if (result.statusCode==200) {
-
-      emit(FetchedSavedPostsState(savedPosts:SavedPosts.fromJson(responseBody)));
+    final  result = await ApiServiceSavePost.getSavedPost();
+  
+    if (result != null) {
+     print("saved post = $result");
+      emit(FetchedSavedPostsState(savedPosts:result!));
     } else {
       print("empty    $result");
     }

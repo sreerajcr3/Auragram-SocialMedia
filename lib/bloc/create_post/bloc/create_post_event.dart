@@ -4,11 +4,12 @@ part of 'create_post_bloc.dart';
 sealed class CreatePostEvent {}
 
 class Createpost extends CreatePostEvent {
-  final List<String> images;
+  final List<AssetEntity> selectedAssetList;
   final String description;
   final String location;
+ 
 
 
-  Createpost({required this.images, required this.description, required this.location});}
+  Createpost({required this.selectedAssetList, required this.description, required this.location });}
 
 
