@@ -123,17 +123,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   const NeverScrollableScrollPhysics(),
                                               itemCount: state.posts.length,
                                               itemBuilder: (context, index) {
-                                                for (var element in state
-                                                    .posts[index].likes!) {
-                                                  print(
-                                                      "post$index = $element");
-                                                  likedUsersMap[state
-                                                      .posts[index]
-                                                      .id] = element;
-                                                }
-                                                print(
-                                                    "liked users map = ${likedUsersMap[state.posts[index].id]}");
-
                                                 return Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,

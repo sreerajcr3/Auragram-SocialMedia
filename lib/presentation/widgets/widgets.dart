@@ -5,6 +5,7 @@ import 'package:aura/bloc/get_user/get_user_bloc.dart';
 import 'package:aura/bloc/like_unlike_bloc/bloc/like_unlike_bloc.dart';
 import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
+import 'package:aura/core/commonData/common_data.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/domain/model/user_model.dart';
@@ -129,20 +130,17 @@ class CustomButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-       
         backgroundColor: const MaterialStatePropertyAll(
           kBlack,
         ),
         foregroundColor: const MaterialStatePropertyAll(kWhite),
         fixedSize: MaterialStatePropertyAll(
-          
-         Size( MediaQuery.sizeOf(context).width/1.1 ,65)
-        ),
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10), 
-            ),
+            Size(MediaQuery.sizeOf(context).width / 1.1, 65)),
+        shape: MaterialStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
+        ),
       ),
       child: Text(
         text,
@@ -178,8 +176,8 @@ class AppName extends StatelessWidget {
 }
 
 //----------------------------------------comment widget----------------------------------------
-Future<dynamic> commentBottomSheet(BuildContext context,  state,
-    int index, commentController,  userSuccessState) {
+Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
+    commentController, userSuccessState) {
   return showModalBottomSheet(
     isDismissible: true,
     context: context,
@@ -229,13 +227,27 @@ Future<dynamic> commentBottomSheet(BuildContext context,  state,
                                         postId: state.posts[index].id!,
                                         comment: commentController.text),
                                   );
-                              print("post cliked");
+                              commentController.text.clear();
                             },
-                            child: const Text('Post')),
+                            child: const SizedBox(
+                              width: 60,
+                              child: Row(
+                                children: [
+                                  kwidth10,
+                                  Text(
+                                    'Post',
+                                    style: TextStyle(
+                                        color: Colors.purple,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            )),
                         hintText: 'Add a comment',
                       ),
                     ),
                   ),
+                  kwidth10
                 ],
               );
             },
@@ -260,17 +272,21 @@ Future<dynamic> commentBottomSheet(BuildContext context,  state,
                                   state.posts[index].comments![commentIndex];
 
                               return ListTile(
-                                trailing: IconButton(
-                                  onPressed: () {
-                                    context.read<CommentBloc>().add(
-                                          DeleteCommentEvent(
-                                            postId: state.posts[index].id!,
-                                            commentId: comment.id!,
-                                          ),
-                                        );
-                                  },
-                                  icon: const Icon(Icons.clear),
-                                ),
+                                trailing: comment.user.id ==
+                                        userSuccessState.currentUser.user.id
+                                    ? IconButton(
+                                        onPressed: () {
+                                          context.read<CommentBloc>().add(
+                                                DeleteCommentEvent(
+                                                  postId:
+                                                      state.posts[index].id!,
+                                                  commentId: comment.id!,
+                                                ),
+                                              );
+                                        },
+                                        icon: const Icon(Icons.delete_outlined),
+                                      )
+                                    : const SizedBox(),
                                 leading: CircleAvatar(
                                     backgroundImage: NetworkImage(
                                         user!.profilePic != ''
@@ -280,8 +296,11 @@ Future<dynamic> commentBottomSheet(BuildContext context,  state,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(user.username!,
-                                        style: const TextStyle(fontSize: 20)),
-                                    Text(comment.comment!),
+                                        style: const TextStyle(fontSize: 15)),
+                                    Text(
+                                      comment.comment!,
+                                      style: TextStyle(fontSize: 18),
+                                    ),
                                   ],
                                 ),
                               );
@@ -319,8 +338,7 @@ Future<dynamic> commentBottomSheet(BuildContext context,  state,
 
 Row postIconRow(state, int index, CurrentUserSuccessState userState,
     BuildContext context, commentController) {
-      context.read<SavePostBloc>().add(FetchsavedPostEvent());
-  bool saved = false;
+  context.read<SavePostBloc>().add(FetchsavedPostEvent());
 
   return Row(
     children: [
@@ -356,85 +374,64 @@ Row postIconRow(state, int index, CurrentUserSuccessState userState,
       //   Ionicons.paper_plane_outline,
       // ),
       const Spacer(),
-      BlocConsumer<SavePostBloc, SavePostState>(
-        listener: (context, saveState) {
-          if (saveState is SavePostSuccessState) {
-            context.read<SavePostBloc>().add(FetchsavedPostEvent());
-          }
-        },
-        builder: (context, saveState) {
-          if (saveState is FetchedSavedPostsState) {
-            print("savedpostlist = = ${saveState.savedPosts.posts}");
-            for (var i = 0; i < saveState.savedPosts.posts.length; i++) {
-              if (saveState.savedPosts.posts[i].id == state.posts[index].id) {
-                saved = true;
-              } else {
-                saved = false;
-              }
-            }
-            return saved
-                ? IconButton(
-                    onPressed: () {
-                      saved = false;
-                      context
-                          .read<SavePostBloc>()
-                          .add(UnsavePostEvent(postId: state.posts[index].id!));
-                    },
-                    icon: const Icon(
-                      Icons.bookmark,
-                      size: 27,
-                    ))
-                : IconButton(
-                    onPressed: () {
-                      saved = true;
-                      context
-                          .read<SavePostBloc>()
-                          .add(ToSavePostEvent(postId: state.posts[index].id!));
-                    },
-                    icon: const Icon(
-                      Icons.bookmark_border,
-                      size: 27,
-                    ));
-          }
-          // if (saveState is PostSuccessState) {
-          //   return IconButton(onPressed: (){
-          //      context
-          //                 .read<
-          //                     SavePostBloc>()
-          //                 .add(UnsavePostEvent(
-          //                     postId: state.posts[index].id!));
-          //   }, icon:  const Icon(
-          //               Icons
-          //                   .bookmark_added));
-          // }
-          // else if(state is UnSavePostSuccessState){
-          //    return IconButton(onPressed: (){
-          //      context
-          //                 .read<
-          //                     SavePostBloc>()
-          //                 .add(ToSavePostEvent(
-          //                     postId: state.posts[index].id!));
-          //   }, icon:  const Icon(
-          //               Icons
-          //                   .bookmark_outline));
-          // }
-          return const Padding(
-              padding: EdgeInsets.only(right: 11),
-              child: Icon(
-                Icons.abc,
-                size: 27,
-              ));
-
-          // if (saveState
-          //     is SavePostSuccessState) {
-          //   return const Icon(Icons
-          //       .bookmark);
-          // } else {
-          //   return const Icon(
-          //       Icons.bookmark_outline);
-          // }
+      BlocConsumer<SavePostBloc, SavePostState>(listener: (context, saveState) {
+        if (saveState is SavePostSuccessState) {
+          context.read<SavePostBloc>().add(FetchsavedPostEvent());
         }
-      )
+      }, builder: (context, saveState) {
+        if (saveState is FetchedSavedPostsState) {
+          // bool saved = false;
+
+          if (!savedPosts.containsKey(userState.currentUser.user.id)) {
+            savedPosts[userState.currentUser.user.id!] = {};
+          }
+          // for (var i = 0; i < saveState.savedPosts.posts.length; i++) {
+          //   if (saveState.savedPosts.posts[i].id == state.posts[index].id) {
+
+          //     saved = true;
+          //   } else {
+          //     saved = false;
+          //   }
+          // }
+
+          return savedPosts[userState.currentUser.user.id]!.contains(state.posts[index].id!)
+              ? IconButton(
+                  onPressed: () {
+                    // saved = false;
+                    // savedPostSet.remove(state.posts[index].id!);
+                    savedPosts[userState.currentUser.user.id!]!
+                        .remove(state.posts[index].id!);
+
+                    context
+                        .read<SavePostBloc>()
+                        .add(UnsavePostEvent(postId: state.posts[index].id!));
+                  },
+                  icon: const Icon(
+                    Icons.bookmark,
+                    size: 27,
+                  ))
+              : IconButton(
+                  onPressed: () {
+                    // saved = true;
+                    savedPosts[userState.currentUser.user.id!]!
+                        .add(state.posts[index].id!);
+                    context
+                        .read<SavePostBloc>()
+                        .add(ToSavePostEvent(postId: state.posts[index].id!));
+                  },
+                  icon: const Icon(
+                    Icons.bookmark_border,
+                    size: 27,
+                  ));
+        }
+
+        return const Padding(
+            padding: EdgeInsets.only(right: 11),
+            child: Icon(
+              Icons.bookmark_border,
+              size: 27,
+            ));
+      })
     ],
   );
 }

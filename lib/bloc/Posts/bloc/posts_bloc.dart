@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:aura/domain/api_repository/post_repository/post_repository.dart';
 import 'package:aura/domain/model/post_model.dart';
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'posts_event.dart';
 part 'posts_state.dart';
@@ -25,7 +25,7 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
   // }
   FutureOr<void> postsInitialFetchEvent(
   PostsInitialFetchEvent event, Emitter<PostsState> emit) async {
-    print("loading");
+ 
   emit(PostLoadingState());
   try {
     final List<Posts> result = await ApiServicesPost.getPosts();

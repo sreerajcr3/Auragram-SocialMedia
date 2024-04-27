@@ -8,7 +8,7 @@ import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ionicons/ionicons.dart';
+
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});

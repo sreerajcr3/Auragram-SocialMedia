@@ -1,3 +1,4 @@
+import 'package:aura/core/commonData/common_data.dart';
 import 'package:aura/presentation/screens/bottom_navigation/bottom_navigation.dart';
 import 'package:aura/presentation/screens/auth/log_in.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,7 @@ Future<void> checkLoggedIn(context) async {
 }
 
 Future<void> logOut(context) async {
+  savedPostSet={};
   final sharedprefs = await SharedPreferences.getInstance();
   sharedprefs.setBool(savedkey, false);
   navigatorReplacement(const LogIn(), context);

@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:aura/domain/api_repository/post_repository/post_repository.dart';
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 
 part 'delete_post_event.dart';
 part 'delete_post_state.dart';

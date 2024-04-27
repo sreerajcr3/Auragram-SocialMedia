@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:aura/domain/api_repository/follow_unfollow_repository/follow_unfollow_repo.dart';
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 
 part 'follow_unfollow_event.dart';
 part 'follow_unfollow_state.dart';

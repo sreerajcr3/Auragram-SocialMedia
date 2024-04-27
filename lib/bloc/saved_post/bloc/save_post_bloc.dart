@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:aura/domain/api_repository/savePost_repository/save_post_repository.dart';
 import 'package:aura/domain/model/saved_post.dart';
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'save_post_event.dart';
 part 'save_post_state.dart';
@@ -37,7 +34,7 @@ class SavePostBloc extends Bloc<SavePostEvent, SavePostState> {
   
     if (result != null) {
      print("saved post = $result");
-      emit(FetchedSavedPostsState(savedPosts:result!));
+      emit(FetchedSavedPostsState(savedPosts:result));
     } else {
       print("empty    $result");
     }

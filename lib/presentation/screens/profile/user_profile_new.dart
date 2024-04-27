@@ -9,7 +9,6 @@ import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/domain/model/get_user_model.dart';
 import 'package:aura/domain/model/user_model.dart';
 import 'package:aura/presentation/functions/functions.dart';
-import 'package:aura/presentation/screens/home/widgets.dart';
 import 'package:aura/presentation/screens/profile/get_user_post_detailpage.dart';
 import 'package:aura/presentation/screens/profile/widgets.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
@@ -27,20 +26,14 @@ class UserProfileSccreen extends StatefulWidget {
 }
 
 class _UserProfileSccreenState extends State<UserProfileSccreen> {
-  bool? preesed;
   GetUserModel? fetchedUser;
   List followers = [];
+
   @override
   void initState() {
     context.read<GetUserBloc>().add(GetuserFetchEvent(userId: widget.user.id!));
-
     super.initState();
   }
-  // @override
-  // void dispose() {
-
-  //   super.dispose();
-  // }S
 
   @override
   Widget build(BuildContext context) {
@@ -60,20 +53,11 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
         ],
         buildWhen: null,
         listenWhen: null,
-        listener: (context, state) {
-          if (state[2] is FollowUpdatedState) {
-            // context
-            //     .read<GetUserBloc>()
-            //     .add(GetuserFetchEvent(userId: widget.user.id!));
-            // context.read<CurrentUserBloc>().add(CurrentUserFetchEvent());
-          }
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           if (state is FollowUpdatedState ||
               state is! FollowUpdatedState ||
               state is GetUsersuccessState) {
-            // bool follow = followers.any(
-            //     (element) => element["_id"] == state[0].currentUser.user.id!);
             fetchedUser = state[1].getUserModel;
 
             return SingleChildScrollView(
@@ -174,8 +158,6 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
 
                                 follow = followers.contains(currentuser.id);
 
-                                print("followeers before =  $followers");
-
                                 if (!follow) {
                                   context.read<FollowUnfollowBloc>().add(
                                       TofollowEvent(userId: widget.user.id!));
@@ -206,9 +188,6 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
                                 context
                                     .read<FollowUnfollowBloc>()
                                     .add(FollowUpdateEvent());
-
-                                // follow ? false : true;
-                                print("followeers after = $followers");
                               },
                               child: state[1]
                                           .getUserModel
@@ -237,14 +216,6 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
                       )
                     ],
                   ),
-                  ElevatedButton(
-                      onPressed: () {
-                        pressed = !pressed;
-                        context
-                            .read<FollowUnfollowBloc>()
-                            .add(FollowUpdateEvent());
-                      },
-                      child: Text(pressed ? 'haii' : 'hello')),
                   profileCountCard(state[1], context, followers.length),
                   state[1].getUserModel.posts.isNotEmpty
                       ? Padding(
@@ -289,19 +260,4 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
   }
 }
 
-// class SteppedSlopeClipper1 extends CustomClipper<Path> {
-//   @override
-//   Path getClip(Size size) {
-//     final path = Path();
-//     path.lineTo(0, 0);
-//     path.lineTo(0, size.height / 2.5);
-//     path.lineTo(size.width, 0);
-//     path.close();
-//     return path;
-//   }
 
-//   @override
-//   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-//     return false;
-//   }
-// }
