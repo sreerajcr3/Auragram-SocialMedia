@@ -22,7 +22,7 @@ class FollowUnfollowBloc
       TofollowEvent event, Emitter<FollowUnfollowState> emit) async {
     final result = await ApiServiceFollowUnfollow.follow(event.userId);
     if (result) {
-      emit(FollowSuccesssFullState());
+      emit(FollowUpdatedState());
     } else {
       // emit(FollowUpdatedState());
     }
@@ -32,7 +32,7 @@ class FollowUnfollowBloc
       ToUnfollowEvent event, Emitter<FollowUnfollowState> emit) async {
     final result = await ApiServiceFollowUnfollow.unfollow(event.userId);
     if (result) {
-      emit(UnFollowSuccesssFullState());
+      emit(FollowUpdatedState());
 
     } else {
       // emit(FollowUpdatedState());

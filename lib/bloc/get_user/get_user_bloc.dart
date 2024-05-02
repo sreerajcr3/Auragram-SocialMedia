@@ -11,10 +11,11 @@ part 'get_user_state.dart';
 class GetUserBloc extends Bloc<GetUserEvent, GetUserState> {
   GetUserBloc() : super(GetUserInitial()) {
     on<GetuserFetchEvent>(getuserFetchEvent);
-    emit(GetUserLoading());
+    // emit(GetUserLoading());
   }
 
   FutureOr<void> getuserFetchEvent(GetuserFetchEvent event, Emitter<GetUserState> emit) async{
+     emit(GetUserLoading());
     final result = await ApiServiceUser.getUser(event.userId);
     if (result != null) {
      emit(GetUsersuccessState(getUserModel: result));

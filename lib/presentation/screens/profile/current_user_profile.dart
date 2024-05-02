@@ -5,7 +5,7 @@ import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/profile/edit_profile.dart';
 import 'package:aura/presentation/screens/profile/settings.dart';
-import 'package:aura/presentation/screens/profile/widgets.dart';
+import 'package:aura/presentation/screens/profile/widgets/widgets.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,8 +65,8 @@ class _ProfileState extends State<MyProfile> {
                                   state.currentUser.user.coverPic!,
                                   fit: BoxFit.cover,
                                 )
-                              : Image.asset(
-                                  "assets/images/AURAGRAM Cover phot.jpg",
+                              : Image.network(
+                                 demoCoverPic,
                                   fit: BoxFit.fill,
                                   width: MediaQuery.sizeOf(context).width,
                                 ),
@@ -129,7 +129,7 @@ class _ProfileState extends State<MyProfile> {
                       ],
                     ),
                     ProfileFollowersCountCard(
-                      state: state.currentUser,
+                      state: state.currentUser, currentUser: true,
                     ),
                     DefaultTabController(
                       length: 2,

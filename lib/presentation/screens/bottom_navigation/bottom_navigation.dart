@@ -10,15 +10,15 @@ import 'package:ionicons/ionicons.dart';
 ValueNotifier<int> indexChangeNotifier = ValueNotifier(0);
 
 class CustomBottomNavigationBar extends StatefulWidget {
-  const CustomBottomNavigationBar({super.key});
+ const  CustomBottomNavigationBar({super.key});
 
   @override
-  State<CustomBottomNavigationBar> createState() =>
-      _CustomBottomNavigationBarState();
+  State<CustomBottomNavigationBar> createState() => _CustomBottomNavigationBarState();
 }
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   var selectedIndex = 0;
+
   final pageController = NotchBottomBarController();
 
   @override

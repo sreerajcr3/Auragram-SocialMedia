@@ -2,31 +2,33 @@ import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
 import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
 import 'package:aura/bloc/delete_post/bloc/delete_post_bloc.dart';
 import 'package:aura/bloc/like_unlike_bloc/bloc/like_unlike_bloc.dart';
+import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/cubit/duration_cubit/cubit/duration_cubit.dart';
 import 'package:aura/presentation/screens/bottom_navigation/bottom_navigation.dart';
 import 'package:aura/presentation/screens/home/widgets.dart';
+import 'package:aura/presentation/screens/profile/widgets/widgets.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multi_bloc_builder/multi_bloc_builder.dart';
 
-class PostDetailPage extends StatefulWidget {
-  const PostDetailPage({
+class SavedPostDetailPage extends StatefulWidget {
+  const SavedPostDetailPage({
     super.key,
   });
 
   @override
-  State<PostDetailPage> createState() => _PostDetailPageState();
+  State<SavedPostDetailPage> createState() => _SavedPostDetailPageState();
 }
 
-class _PostDetailPageState extends State<PostDetailPage> {
+class _SavedPostDetailPageState extends State<SavedPostDetailPage> {
   @override
   void initState() {
     super.initState();
-    print("DETAIL PAGE WORKED");
+
     context.read<CurrentUserBloc>().add(CurrentUserFetchEvent());
     context.read<PostsBloc>().add(PostsInitialFetchEvent());
   }
@@ -63,23 +65,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              // AppName(),
-                              // finished
-                              //     ? SingleChildScrollView(
-                              //         scrollDirection: Axis.horizontal,
-                              //         child: Row(
-                              //           children:
-                              //               List.generate(10, (index) => storyCircle()),
-                              //         ),
-                              //       )
-                              //     : skeltonStory(),
                               finished
-                                  ? BlocConsumer<PostsBloc, PostsState>(
-                                      listener: (context, state) {
-                                        // context
-                                        //     .read<PostsBloc>()
-                                        //     .add(PostsInitialFetchEvent());
-                                      },
+                                  ? BlocConsumer<SavePostBloc, SavePostState>(
+                                      listener: (context, state) {},
                                       builder: (context, state) {
                                         if (state is PostErrorState) {
                                           return Column(
@@ -91,18 +79,20 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                           );
                                         } else if (state is PostLoadingState) {
                                           return shimmer();
-                                        } else if (state is PostSuccessState) {
+                                        } else if (state
+                                            is FetchedSavedPostsState) {
                                           return ListView.builder(
-                                            
                                             shrinkWrap: true,
                                             physics:
                                                 const NeverScrollableScrollPhysics(),
-                                            itemCount: multistate[1]
-                                                .currentUser
-                                                .posts
-                                                .length,
+                                            itemCount:
+                                                state.savedPosts.posts.length,
                                             itemBuilder: (context, index) {
-                                              return Column(
+                                              if (state.savedPosts.posts
+                                                     .isEmpty) {
+                                                return emptyMessage();
+                                              }else{
+                                               return Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
@@ -113,13 +103,16 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                                         radius: 20,
                                                         backgroundImage:
                                                             NetworkImage(
-                                                          multistate[1]
-                                                                      .currentUser
+                                                          state
+                                                                      .savedPosts
+                                                                      .posts[
+                                                                          index]
                                                                       .user
-                                                                      .profilePic !=
+                                                                      .profilePic! !=
                                                                   ''
-                                                              ? multistate[1]
-                                                                  .currentUser
+                                                              ? state
+                                                                  .savedPosts
+                                                                  .posts[index]
                                                                   .user
                                                                   .profilePic!
                                                               : demoProPic,
@@ -128,7 +121,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                                       kwidth10,
 
                                                       //#########################  navigating the page to the user profile    ##########################################
-                                                       
+
                                                       // ######################################   Post Icon Row #####################################
 
                                                       InkWell(
@@ -141,8 +134,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                                                   .start,
                                                           children: [
                                                             Text(
-                                                              multistate[1]
-                                                                  .currentUser
+                                                              state
+                                                                  .savedPosts
+                                                                  .posts[index]
                                                                   .user
                                                                   .username!,
                                                               style: const TextStyle(
@@ -152,8 +146,8 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                                                           .w500),
                                                             ),
                                                             Text(
-                                                              multistate[1]
-                                                                  .currentUser
+                                                              state
+                                                                  .savedPosts
                                                                   .posts[index]
                                                                   .location
                                                                   .toString(),
@@ -178,8 +172,9 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                                   Container(
                                                     constraints: BoxConstraints(
                                                       maxHeight: state
+                                                              .savedPosts
                                                               .posts[index]
-                                                              .mediaURL![0]
+                                                              .mediaURL[0]
                                                               .contains("image")
                                                           ? 300
                                                           : 200,
@@ -188,8 +183,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                                     // ###################################        whole  post card ###########################################
 
                                                     child: postPageView(
-                                                        multistate[1]
-                                                            .currentUser,
+                                                        state.savedPosts,
                                                         index),
                                                   ),
                                                   BlocBuilder<CurrentUserBloc,
@@ -201,8 +195,7 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                                         // ######################################   Post Icon Row #####################################
 
                                                         return postIconRow(
-                                                            multistate[1]
-                                                                .currentUser,
+                                                            state.savedPosts,
                                                             index,
                                                             userState,
                                                             context,
@@ -213,31 +206,31 @@ class _PostDetailPageState extends State<PostDetailPage> {
                                                     },
                                                   ),
                                                   Text(
-                                                    multistate[1]
-                                                        .currentUser
-                                                        .user
-                                                        .username,
+                                                    state.savedPosts.user
+                                                        .username!,
                                                     style: const TextStyle(
                                                         fontSize: 20),
                                                   ),
                                                   kheight5,
                                                   Text(
-                                                    multistate[1]
-                                                        .currentUser
+                                                    state
+                                                        .savedPosts
                                                         .posts[index]
-                                                        .description!,
+                                                        .description,
                                                     style: const TextStyle(
                                                         fontSize: 16),
                                                   ),
                                                   kheight5,
                                                   Date(
-                                                      date: multistate[1]
-                                                          .currentUser
+                                                      date: state
+                                                          .savedPosts
                                                           .posts[index]
-                                                          .createdAt!),
+                                                          .createdAt),
                                                   kheight15
                                                 ],
                                               );
+                                              }
+                                              
                                             },
                                           );
                                         } else {

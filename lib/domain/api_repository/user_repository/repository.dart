@@ -146,8 +146,7 @@ class ApiServiceUser {
         for (var user in user.followers!) {
           followersUsers.add(User.fromJson(user));
         }
-        print("get user following list = $followingUsers");
-        print("get user followers list = $followersUsers");
+ 
         return GetUserModel(
           user: user,
           posts: posts,

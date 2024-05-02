@@ -1,19 +1,22 @@
-//-----------------------profile following text----------------
-import 'package:aura/bloc/get_user/get_user_bloc.dart';
 import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/presentation/functions/functions.dart';
+import 'package:aura/presentation/screens/post/saved_post_detail_page.dart';
 import 'package:aura/presentation/screens/profile/followers_page.dart';
 import 'package:aura/presentation/screens/post/post_detail.dart';
+import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:shimmer/shimmer.dart';
+
+//-----------------------profile following text----------------
 
 profileCardText2(text) => Text(
       text,
-      style: TextStyle(fontSize: 16),
+      style: const TextStyle(fontSize: 16),
     );
 
 profileText1(text) {
@@ -74,9 +77,11 @@ class UserProfileButton extends StatelessWidget {
 
 class ProfileFollowersCountCard extends StatelessWidget {
   final dynamic state;
+  final bool currentUser;
   const ProfileFollowersCountCard({
     super.key,
     required this.state,
+    required this.currentUser,
   });
 
   @override
@@ -87,6 +92,7 @@ class ProfileFollowersCountCard extends StatelessWidget {
           navigatorPush(
               Followers(
                 users: state,
+                currentUser: currentUser,
               ),
               context);
         },
@@ -149,8 +155,9 @@ class SavedPostGrid extends StatelessWidget {
       listener: (context, savedpostsState) {},
       builder: (context, savedpostsState) {
         if (savedpostsState is FetchedSavedPostsState) {
-          return SizedBox(
-            height: 500, // Adjust the height as needed
+      
+          return     savedpostsState.savedPosts.posts.isNotEmpty? SizedBox(
+            height: MediaQuery.sizeOf(context).height, // Adjust the height as needed
             child: Expanded(
               child: Column(
                 children: [
@@ -165,9 +172,13 @@ class SavedPostGrid extends StatelessWidget {
                       mainAxisSpacing: 1,
                     ),
                     itemBuilder: (context, index) {
-                      return Image.network(
-                        savedpostsState.savedPosts.posts[index].mediaURL[0],
-                        fit: BoxFit.cover,
+                      return InkWell(
+                        onTap: () =>
+                            navigatorPush(const SavedPostDetailPage(), context),
+                        child: Image.network(
+                          savedpostsState.savedPosts.posts[index].mediaURL[0],
+                          fit: BoxFit.cover,
+                        ),
                       );
                     },
                   ),
@@ -175,7 +186,7 @@ class SavedPostGrid extends StatelessWidget {
                 ],
               ),
             ),
-          );
+          ): emptyMessage();
         } else {
           return Container();
         }
@@ -188,15 +199,16 @@ Container followUnfollowButton(text, follow, {color = kWhite}) {
   return Container(
     decoration: BoxDecoration(
         gradient: LinearGradient(
-            colors: !follow
-                ? [Colors.blueAccent, Colors.lightBlueAccent]
-                : [kGrey, Colors.greenAccent]),
+          colors: !follow
+              ? [Colors.blueAccent, Colors.lightBlueAccent]
+              : [Colors.greenAccent, Colors.greenAccent],
+        ),
         borderRadius: BorderRadius.circular(8)),
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
       child: Text(
         text,
-        style: const TextStyle(fontSize: 17,color: kWhite),
+        style: const TextStyle(fontSize: 17, color: kWhite),
       ),
     ),
   );
@@ -216,16 +228,21 @@ SizedBox emptyMessage() {
           Center(
               child: Text(
             'No Post available',
-            style: TextStyle(fontSize: 22, fontFamily: 'kanit'),
+            style: TextStyle(fontSize: 22, fontFamily: 'kanit',),
           )),
         ],
       ));
 }
 
-profileCountCard( getuserstate, context,followersLength) {
+profileCountCard(getuserstate, context, followersLength, currentUserbool) {
   return InkWell(
     onTap: () {
-      navigatorPush(Followers(users: getuserstate.getUserModel), context);
+      navigatorPush(
+          Followers(
+            users: getuserstate.getUserModel,
+            currentUser: currentUserbool,
+          ),
+          context);
     },
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -250,7 +267,8 @@ profileCountCard( getuserstate, context,followersLength) {
           children: [
             profileText1(getuserstate.getUserModel.user.followers!.isEmpty
                 ? "0"
-                : getuserstate.getUserModel.user.followers!.length.toString()),
+                : getuserstate.getUserModel.followersUsersList.length
+                    .toString()),
             profileCardText2('Followers')
           ],
         ),
@@ -285,7 +303,8 @@ class ProfilePostGrid extends StatelessWidget {
                   ),
                   itemBuilder: (context, index) {
                     return InkWell(
-                      onTap: () => navigatorPush( const PostDetailPage(), context),
+                      onTap: () =>
+                          navigatorPush(const PostDetailPage(), context),
                       child: Image.network(
                         state.currentUser.posts[index].mediaURL![0],
                         fit: BoxFit.cover,
@@ -313,5 +332,132 @@ class ProfilePostGrid extends StatelessWidget {
                   )),
                 ],
               )));
+  }
+}
+
+Shimmer shimmerProfile() {
+  return Shimmer.fromColors(
+    direction: ShimmerDirection.ttb,
+    enabled: true,
+    baseColor: kGrey,
+    highlightColor: Colors.white,
+    child: ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: 10,
+      itemBuilder: (ctx, index) {
+        return const SkeletonProfilel();
+      },
+    ),
+  );
+}
+
+class SkeletonProfilel extends StatelessWidget {
+  const SkeletonProfilel({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
+    return Scaffold(
+      appBar: customAppbar(text: "Profile", context: context, onPressed: () {}),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                Container(
+                  height: MediaQuery.sizeOf(context).height,
+                  color: kWhite,
+                ),
+                Positioned(
+                  top: 200,
+                  child: Container(
+                    height: MediaQuery.sizeOf(context).height / 1.4,
+                    width: MediaQuery.sizeOf(context).width,
+                    decoration: const BoxDecoration(
+                      color: kWhite,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                    ),
+                  ),
+                ),
+                const Positioned(
+                    top: 150,
+                    left: 40,
+                    child: CircleAvatar(
+                      radius: 50,
+                    )),
+                Positioned(
+                  left: 20,
+                  top: 270,
+                  child: Container(
+                    height: 20,
+                    width: 150,
+                    decoration: BoxDecoration(
+                      color: kWhite,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 20,
+                  top: 310,
+                  child: Container(
+                    height: 20,
+                    width: 240,
+                    decoration: BoxDecoration(
+                      color: kWhite,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 20,
+                  top: 360,
+                  child: Container(
+                    height: 80,
+                    width: width - 50,
+                    decoration: BoxDecoration(
+                      color: kWhite,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 20,
+                  top: 480,
+                  child: Container(
+                    height: 40,
+                    width: width - 50,
+                    decoration: BoxDecoration(
+                      color: kWhite,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                ),
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return Container(
+                    height: 80,
+                    width: 80,
+                    color: kWhite,
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

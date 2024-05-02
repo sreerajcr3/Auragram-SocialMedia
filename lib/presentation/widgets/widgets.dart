@@ -1,21 +1,18 @@
 import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
 import 'package:aura/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
-import 'package:aura/bloc/get_user/get_user_bloc.dart';
 import 'package:aura/bloc/like_unlike_bloc/bloc/like_unlike_bloc.dart';
 import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/commonData/common_data.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/core/constants/user_demo_pic.dart';
-import 'package:aura/domain/model/user_model.dart';
-import 'package:aura/presentation/screens/Image_picker/functions/functions_and_widgets.dart';
 import 'package:aura/presentation/screens/home/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:multi_bloc_builder/builders/multi_bloc_consumer.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class TextformField extends StatelessWidget {
   final String labelText;
@@ -177,7 +174,7 @@ class AppName extends StatelessWidget {
 
 //----------------------------------------comment widget----------------------------------------
 Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
-    commentController, userSuccessState) {
+    TextEditingController commentController, userSuccessState) {
   return showModalBottomSheet(
     isDismissible: true,
     context: context,
@@ -200,7 +197,6 @@ Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
             listenWhen: null,
             listener: (context, multistate) {
               if (multistate is CommentUpdateState) {
-                context.read<CurrentUserBloc>().add(CurrentUserFetchEvent());
                 context.read<PostsBloc>().add(PostsInitialFetchEvent());
               }
             },
@@ -227,7 +223,7 @@ Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
                                         postId: state.posts[index].id!,
                                         comment: commentController.text),
                                   );
-                              commentController.text.clear();
+                              commentController.clear();
                             },
                             child: const SizedBox(
                               width: 60,
@@ -250,6 +246,9 @@ Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
                   kwidth10
                 ],
               );
+              // }else{
+              //   return Container();
+              // }
             },
           ),
           Expanded(
@@ -263,6 +262,10 @@ Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
                             shrinkWrap: true,
                             itemCount: state.posts[index].comments!.length,
                             itemBuilder: (context, commentIndex) {
+                              DateTime dateTime = DateTime.parse(state
+                                  .posts[index]
+                                  .comments![commentIndex]
+                                  .createdAt);
                               //user in comments
                               final user = state
                                   .posts[index].comments![commentIndex].user;
@@ -272,21 +275,6 @@ Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
                                   state.posts[index].comments![commentIndex];
 
                               return ListTile(
-                                trailing: comment.user.id ==
-                                        userSuccessState.currentUser.user.id
-                                    ? IconButton(
-                                        onPressed: () {
-                                          context.read<CommentBloc>().add(
-                                                DeleteCommentEvent(
-                                                  postId:
-                                                      state.posts[index].id!,
-                                                  commentId: comment.id!,
-                                                ),
-                                              );
-                                        },
-                                        icon: const Icon(Icons.delete_outlined),
-                                      )
-                                    : const SizedBox(),
                                 leading: CircleAvatar(
                                     backgroundImage: NetworkImage(
                                         user!.profilePic != ''
@@ -299,8 +287,36 @@ Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
                                         style: const TextStyle(fontSize: 15)),
                                     Text(
                                       comment.comment!,
-                                      style: TextStyle(fontSize: 18),
+                                      style: const TextStyle(fontSize: 18),
                                     ),
+                                  ],
+                                ),
+                                subtitle: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      timeago.format(dateTime, locale: 'en'),
+                                    ),
+                                    comment.user.id ==
+                                            userSuccessState.currentUser.user.id
+                                        ? GestureDetector(
+                                            onTap: () =>
+                                                context.read<CommentBloc>().add(
+                                                      DeleteCommentEvent(
+                                                        postId: state
+                                                            .posts[index].id!,
+                                                        commentId: comment.id!,
+                                                      ),
+                                                    ),
+                                            child: const Text(
+                                              'Delete',
+                                              style:
+                                                  TextStyle(color: Colors.blue),
+                                            ))
+                                        : Container(),
+                                    kwidth20
                                   ],
                                 ),
                               );
@@ -394,7 +410,8 @@ Row postIconRow(state, int index, CurrentUserSuccessState userState,
           //   }
           // }
 
-          return savedPosts[userState.currentUser.user.id]!.contains(state.posts[index].id!)
+          return savedPosts[userState.currentUser.user.id]!
+                  .contains(state.posts[index].id!)
               ? IconButton(
                   onPressed: () {
                     // saved = false;
@@ -425,12 +442,13 @@ Row postIconRow(state, int index, CurrentUserSuccessState userState,
                   ));
         }
 
-        return const Padding(
-            padding: EdgeInsets.only(right: 11),
-            child: Icon(
-              Icons.bookmark_border,
-              size: 27,
-            ));
+        return loading2();
+        // return const Padding(
+        //     padding: EdgeInsets.only(right: 11),
+        //     child: Icon(
+        //       Icons.bookmark_border,
+        //       size: 27,
+        //     ));
       })
     ],
   );
@@ -520,6 +538,15 @@ loading() {
       child: LoadingAnimationWidget.dotsTriangle(color: kBlack, size: 35));
 }
 
+loading2() {
+  return Center(
+      child: Padding(
+    padding: const EdgeInsets.only(right: 10),
+    child:
+        LoadingAnimationWidget.horizontalRotatingDots(color: kBlack, size: 25),
+  ));
+}
+
 containerButton(text, Function() onTap, bg, {textColor = Colors.black}) {
   return InkWell(
     onTap: onTap,
@@ -537,5 +564,21 @@ containerButton(text, Function() onTap, bg, {textColor = Colors.black}) {
         ),
       )),
     ),
+  );
+}
+
+Column topRowPostCard(PostSuccessState state, int index) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        state.posts[index].user!.username!,
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+      ),
+      Text(
+        state.posts[index].location.toString(),
+        style: const TextStyle(fontSize: 12, color: kGreyDark),
+      )
+    ],
   );
 }

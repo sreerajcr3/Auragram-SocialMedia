@@ -16,3 +16,7 @@ class DeleteCommentEvent extends CommentEvent {
 
   DeleteCommentEvent({required this.postId, required this.commentId});
 }
+class CommentUpdateEvent extends CommentEvent {
+
+  CommentUpdateEvent();
+}

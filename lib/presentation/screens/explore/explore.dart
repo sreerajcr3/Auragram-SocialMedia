@@ -59,7 +59,7 @@ class _ExplorePageState extends State<ExplorePage> {
                           Stack(
                             children: [
                               SizedBox(
-                                height: 45,
+                                height: 53,
                                 child: TextFormField(
                                   decoration: InputDecoration(
                                       hintText: "Search",
@@ -84,7 +84,8 @@ class _ExplorePageState extends State<ExplorePage> {
                               ),
                             ],
                           ),
-                          kheight20
+                          kheight5,
+                          kheight5,
                         ],
                       ),
                       if (state[1] is PostLoadingState) loading(),
@@ -95,19 +96,18 @@ class _ExplorePageState extends State<ExplorePage> {
                                     MediaQuery.of(context).size.height * 0.8,
                                 child: Expanded(
                                     child: MasonryGridView.builder(
+                                  crossAxisSpacing: 3,
+                                  mainAxisSpacing: 3,
                                   gridDelegate:
                                       const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 3),
                                   itemCount: state[1].posts.length,
                                   itemBuilder: (context, index) {
                                     final post = state[1];
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: SizedBox(
-                                        child: Image.network(
-                                          post.posts[index].mediaURL![0],
-                                          fit: BoxFit.cover,
-                                        ),
+                                    return SizedBox(
+                                      child: Image.network(
+                                        post.posts[index].mediaURL![0],
+                                        fit: BoxFit.cover,
                                       ),
                                     );
                                   },
@@ -132,7 +132,6 @@ class _ExplorePageState extends State<ExplorePage> {
                                                 child: InkWell(
                                                   onTap: () => navigatorPush(
                                                       UserProfileSccreen(
-                                                        
                                                           user: state.usersList[
                                                               index]),
                                                       context),

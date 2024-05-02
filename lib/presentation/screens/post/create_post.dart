@@ -73,14 +73,14 @@ class _CreatePostState extends State<CreatePost> {
                       location: locationController.text),
                 );
           },
-          icon: Text(
+          icon: const Text(
             "Post",
             style: TextStyle(color: kblue, fontSize: 20),
           )),
       body: BlocConsumer<CreatePostBloc, CreatePostState>(
         listener: (context, state) {
           if (state is CreatePostSuccessState) {
-            navigatorReplacement(const CustomBottomNavigationBar(), context);
+            navigatorReplacement( const CustomBottomNavigationBar(), context);
           } else if (state is CreatePostOopsState) {
             snackBar("Oops..! Please try again", context);
           } else if (state is CreatePostErrorState) {

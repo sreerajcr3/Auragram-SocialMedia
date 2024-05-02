@@ -1,10 +1,16 @@
+import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
+import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
 import 'package:aura/bloc/delete_post/bloc/delete_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/commonData/common_data.dart';
 import 'package:aura/core/constants/measurements.dart';
+import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/presentation/functions/functions.dart';
+import 'package:aura/presentation/screens/bottom_navigation/bottom_navigation.dart';
 import 'package:aura/presentation/screens/post/edit_post.dart';
 import 'package:aura/presentation/screens/post/post_detail.dart';
+import 'package:aura/presentation/screens/profile/user_profile_new.dart';
+import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -287,7 +293,8 @@ IconButton postDeleteIcon(BuildContext context, state, int index) {
                                 "Do you want to delete this post",
                               ),
                               onPressed: () {
-                                if (editedList.contains(state.posts[index].id)) {
+                                if (editedList
+                                    .contains(state.posts[index].id)) {
                                   editedList.remove(state.posts[index].id);
                                 }
                                 context.read<DeletePostBloc>().add(
@@ -368,5 +375,101 @@ logoutFunction(BuildContext context) {
         logOut(context);
       },
     ),
+  );
+}
+
+CircleAvatar postUserProPic(PostSuccessState state, int index,) {
+  return CircleAvatar(
+    radius: 20,
+    backgroundImage: NetworkImage(
+      state.posts[index].user!.profilePic!.isNotEmpty
+          ? state.posts[index].user!.profilePic!
+          : demoProPic,
+    ),
+  );
+}
+
+Column homePageMainContents(PostSuccessState state, int index,TextEditingController commentController ) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          kwidth10,
+          postUserProPic(state, index),
+
+          kwidth10,
+
+          //#########################  navigating the page to the user profile    ##########################################
+          BlocBuilder<CurrentUserBloc, CurrentUserState>(
+            builder: (context, userState) {
+              if (userState is CurrentUserSuccessState) {
+                // ######################################   Post Icon Row #####################################
+
+                return InkWell(
+                  onTap: () => state.posts[index].user!.id ==
+                          userState.currentUser.user.id
+                      ? indexChangeNotifier.value = 3
+                      : navigatorPush(
+                          UserProfileSccreen(
+                            user: state.posts[index].user!,
+                          ),
+                          context),
+                  child: topRowPostCard(state, index),
+                );
+              } else {
+                return Container();
+              }
+            },
+          ),
+
+          // const Spacer(),
+          // postDeleteIcon(context,
+          //     state, index)
+        ],
+      ),
+      kheight5,
+      Container(
+        constraints: BoxConstraints(
+          maxHeight:
+              state.posts[index].mediaURL![0].contains("image") ? 300 : 200,
+        ), // Adjust as needed
+
+        // ###################################        whole  post card ###########################################
+
+        child: postPageView(state, index),
+      ),
+      BlocBuilder<CurrentUserBloc, CurrentUserState>(
+        builder: (context, userState) {
+          if (userState is CurrentUserSuccessState) {
+            // ######################################   Post Icon Row #####################################
+
+            return postIconRow(
+                state, index, userState, context, commentController);
+          } else {
+            return Container();
+          }
+        },
+      ),
+      Text(
+        state.posts[index].user!.username!,
+        style: const TextStyle(fontSize: 20),
+      ),
+      kheight5,
+      Text(
+        state.posts[index].description!,
+        style: const TextStyle(fontSize: 16),
+      ),
+      kheight5,
+      Date(date: state.posts[index].createdAt!),
+      kheight5,
+      editedList.contains(state.posts[index].id!)
+          ? const Text(
+              'edited',
+              style: TextStyle(color: kGreyDark),
+            )
+          : Container(),
+      kheight15
+    ],
   );
 }
