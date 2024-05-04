@@ -163,4 +163,37 @@ class ApiServiceUser {
   }
 
 
+  //######################################## get all users ##########################
+
+static  getAllUsers()async{
+
+  final client = http.Client();
+  const url = "${ApiEndPoints.baseUrl}${ApiEndPoints.getAllUsers}";
+
+   final String? token = await getToken();
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      };
+
+      List allUsers = [];
+
+      try {
+        final response =await client.get(Uri.parse(url),headers: headers);
+        debugPrint("response body getAllUsers = ${response.body}");
+        final responseBody = jsonDecode(response.body);
+      final result =  responseBody['user'];
+      print("result = $result");
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          for (var user in result) {
+            allUsers.add(User.fromJson(user));
+          }
+          return allUsers;
+        }
+      } catch (e) {
+        log(e.toString());
+      }
+
+}
+
 }

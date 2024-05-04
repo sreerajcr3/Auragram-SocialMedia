@@ -34,7 +34,7 @@ class _ProfileState extends State<MyProfile> {
       length: 2,
       child: Scaffold(
         appBar: customAppbar(
-            icon: Icon(Icons.menu),
+            icon:const Icon(Icons.menu),
             text: "My Profile",
             context: context,
             onPressed: () {

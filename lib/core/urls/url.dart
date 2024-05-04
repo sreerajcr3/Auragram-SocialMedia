@@ -22,6 +22,8 @@ class ApiEndPoints {
   static const unFollow = "/unfollow";
   static const editProfile = "/profile/edit";
   static const editPost = "/post/";
+  static const getAllUsers = "/users";
+  static const getAllChat = "/chat";
 
 
   // static const coludinaryUrl = "http://api.cloudinary.com/v1_1/"

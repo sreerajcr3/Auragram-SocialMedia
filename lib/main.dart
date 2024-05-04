@@ -1,5 +1,6 @@
 import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
 import 'package:aura/bloc/bool_update/bloc/bool_bloc.dart';
+import 'package:aura/bloc/chat/bloc/chat_bloc.dart';
 import 'package:aura/bloc/comment_bloc/bloc/comment_bloc.dart';
 import 'package:aura/bloc/create_post/bloc/create_post_bloc.dart';
 import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => OtpBloc()),
-        BlocProvider(create: (context) => SignUpBloc()),  
+        BlocProvider(create: (context) => SignUpBloc()),
         BlocProvider(create: (context) => LogInBloc()),
         BlocProvider(create: (context) => CreatePostBloc()),
         BlocProvider(create: (context) => PostsBloc()),
@@ -43,12 +44,13 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => LikeUnlikeBloc()),
         BlocProvider(create: (context) => CommentBloc()),
         BlocProvider(create: (context) => SavePostBloc()),
-        BlocProvider(create: (context) => GetUserBloc()),
         BlocProvider(create: (context) => FollowUnfollowBloc()),
         BlocProvider(create: (context) => BoolBloc()),
         BlocProvider(create: (context) => ImagePickerBloc()),
         BlocProvider(create: (context) => EditProfileBloc()),
         BlocProvider(create: (context) => EditPostBloc()),
+        BlocProvider(create: (context) => GetUserBloc()),
+        BlocProvider(create: (context) => ChatBloc()),
 
         //cubit
         BlocProvider(create: (context) => ExplorePageCubit()),

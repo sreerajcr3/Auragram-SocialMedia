@@ -1,4 +1,5 @@
 import 'package:aura/core/commonData/common_data.dart';
+import 'package:aura/domain/socket/socket.dart';
 import 'package:aura/presentation/screens/bottom_navigation/bottom_navigation.dart';
 import 'package:aura/presentation/screens/auth/log_in.dart';
 import 'package:flutter/material.dart';
@@ -38,14 +39,22 @@ userLoggedIn(context) async {
   await sharedprefs.setBool(savedkey, true);
 }
 
-saveToken(userId) async {
+saveToken(token) async {
   final sharedprefs = await SharedPreferences.getInstance();
-  await sharedprefs.setString('token', userId);
+  await sharedprefs.setString('token', token);
+}
+saveUsername(username) async {
+  final sharedprefs = await SharedPreferences.getInstance();
+  await sharedprefs.setString('username', username);
 }
 
 Future<String?> getToken() async {
   final sharedPrefs = await SharedPreferences.getInstance();
   return sharedPrefs.getString('token');
+}
+Future<String?> getUsername() async {
+  final sharedPrefs = await SharedPreferences.getInstance();
+  return sharedPrefs.getString('username');
 }
 
 Future<void> checkLoggedIn(context) async {
@@ -60,6 +69,7 @@ Future<void> checkLoggedIn(context) async {
 
 Future<void> logOut(context) async {
   savedPostSet={};
+  SocketService().disconnectSocket();
   final sharedprefs = await SharedPreferences.getInstance();
   sharedprefs.setBool(savedkey, false);
   navigatorReplacement(const LogIn(), context);
@@ -75,7 +85,7 @@ Future<void> unlike() async {
   sharedprefs.setBool('liked', false);
 }
 
-Future<void> checkLike() async {
-  final sharedprefs = await SharedPreferences.getInstance();
-  sharedprefs.getBool('liked');
-}
+// Future<void> checkLike() async {
+//   final sharedprefs = await SharedPreferences.getInstance();
+//   sharedprefs.getBool('liked');
+// }

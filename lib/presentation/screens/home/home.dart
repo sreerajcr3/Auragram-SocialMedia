@@ -7,6 +7,8 @@ import 'package:aura/bloc/like_unlike_bloc/bloc/like_unlike_bloc.dart';
 import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/core/commonData/common_data.dart';
 import 'package:aura/cubit/duration_cubit/cubit/duration_cubit.dart';
+import 'package:aura/domain/socket/socket.dart';
+import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/home/widgets.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -31,17 +33,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    final userID = getTheUserId();
+    SocketService().connectSocket(context);
+    
+    print("userIdd === ${userID}");
     final durationCubit = DurationCubit();
-    Timer(const Duration(seconds: 20), () {
+    Timer(const Duration(seconds: 3), () {
       durationCubit.loading(true);
     });
     context.read<PostsBloc>().add(PostsInitialFetchEvent());
     context.read<CurrentUserBloc>().add(CurrentUserFetchEvent());
     context.read<SavePostBloc>().add(FetchsavedPostEvent());
 
-    print("saved post map = ${savedPosts}");
-
     super.initState();
+  }
+
+  getTheUserId() async {
+    // final id = await getUserID();
+    // print('id is-$id');
+    // return id;
   }
 
   Future<void> refresh() async {
@@ -67,9 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, deleteState) {
             //######################       to update the state after delete    ##########################
 
-            if (deleteState is DeletePostSuccessState) {
-              // context.read<PostsBloc>().add(PostsInitialFetchEvent());
-            }
             return SafeArea(
               child: BlocBuilder<LikeUnlikeBloc, LikeUnlikeState>(
                 builder: (context, _) {
@@ -82,23 +89,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                // AppName(),
-                                // finished
-                                //     ? SingleChildScrollView(
-                                //         scrollDirection: Axis.horizontal,
-                                //         child: Row(
-                                //           children:
-                                //               List.generate(10, (index) => storyCircle()),
-                                //         ),
-                                //       )
-                                //     : skeltonStory(),
                                 finished
                                     ? BlocConsumer<PostsBloc, PostsState>(
-                                        listener: (context, state) {
-                                          // context
-                                          //     .read<PostsBloc>()
-                                          //     .add(PostsInitialFetchEvent());
-                                        },
+                                        listener: (context, state) {},
                                         builder: (context, state) {
                                           if (state is PostErrorState) {
                                             return Column(

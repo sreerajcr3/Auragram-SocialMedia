@@ -1,5 +1,6 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:aura/core/colors/colors.dart';
+import 'package:aura/presentation/screens/chat/message_list.dart';
 import 'package:aura/presentation/screens/post/create_post.dart';
 import 'package:aura/presentation/screens/explore/explore.dart';
 import 'package:aura/presentation/screens/home/home.dart';
@@ -27,13 +28,14 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       const HomeScreen(),
       const ExplorePage(),
       const CreatePost(),
+      const MessageList(),
       const MyProfile()
     ];
     return Scaffold(
       body: ValueListenableBuilder(
         valueListenable: indexChangeNotifier,
         builder: (context, value, child) {
-          return pages[value];
+          return IndexedStack(index: value,children: pages,);
         },
       ),
       // bottomNavigationBar: ValueListenableBuilder(
@@ -115,6 +117,14 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           ),
           BottomBarItem(
             inActiveItem: Icon(Ionicons.add, color: Colors.blueGrey,),
+            activeItem: Icon(
+              Ionicons.add,
+              color: kBlack,
+            ),
+            //  itemLabel: 'New Post ',
+          ),
+          BottomBarItem(
+            inActiveItem: Icon(Ionicons.chatbox_ellipses_outline, color: Colors.blueGrey,),
             activeItem: Icon(
               Ionicons.add,
               color: kBlack,

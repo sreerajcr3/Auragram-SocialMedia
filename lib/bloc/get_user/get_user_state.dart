@@ -12,3 +12,9 @@ final class GetUsersuccessState extends GetUserState {
 }
 
 final class GetUserLoading extends GetUserState {}
+
+final class GetAllUsersSuccessState extends GetUserState {
+  final List allUsers;
+
+  GetAllUsersSuccessState({required this.allUsers});
+}

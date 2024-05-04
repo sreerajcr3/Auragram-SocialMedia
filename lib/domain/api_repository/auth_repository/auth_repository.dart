@@ -36,7 +36,9 @@ class ApiServicesAuth {
       final responseBody = jsonDecode(response.body);
       if (response.statusCode == 201) {
         final token = responseBody['token'].toString();
+        final currentUsername = responseBody['username'].toString();
         saveToken(token);
+         saveUsername(currentUsername);
         return 'Success';
       } else if (responseBody['error'] ==
           "Username Already Taken. Please Choose different one or login instead") {
@@ -97,11 +99,16 @@ class ApiServicesAuth {
 
       final responseBody = jsonDecode(response.body);
 
-      debugPrint(response.body);
+      debugPrint("logged in user : ${response.body}");
       final token = responseBody['token'].toString();
+      final currentUsername = responseBody['username'].toString();
+      print("Auth repo id = $currentUsername");
 
       //------store token in sharedpreference--------
       saveToken(token);
+
+      //------store username in sharedpreference--------
+      saveUsername(currentUsername);
 
       debugPrint("log in statuscode == ${response.statusCode}");
       if (response.statusCode == 200 || response.statusCode == 201) {

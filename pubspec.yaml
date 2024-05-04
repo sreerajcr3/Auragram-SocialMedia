@@ -34,7 +34,6 @@ dependencies:
   awesome_bottom_bar: ^1.2.4
   cloudinary: ^1.2.0
   cupertino_icons: ^1.0.2
-  
   expandable_page_view: ^1.0.17
   flick_video_player: ^0.7.0
   flutter:
@@ -45,6 +44,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   http: ^1.2.0
   image_picker: ^1.0.7
+  intl: ^0.19.0
   ionicons: ^0.2.2
   loading_animation_widget: ^1.2.1
   multi_bloc_builder: ^1.0.0
@@ -52,6 +52,7 @@ dependencies:
   photo_manager: ^3.0.0
   shared_preferences: ^2.2.2
   shimmer: ^3.0.0
+  socket_io_client: ^2.0.3+1
   timeago: ^3.6.1
   video_player: ^2.8.3
   wechat_assets_picker: ^9.0.2
