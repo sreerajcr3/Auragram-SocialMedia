@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:aura/bloc/chat/bloc/chat_bloc.dart';
-import 'package:aura/core/commonData/common_data.dart';
 import 'package:aura/domain/model/chat_model.dart';
 import 'package:aura/domain/model/user_model.dart';
 import 'package:aura/presentation/functions/functions.dart';

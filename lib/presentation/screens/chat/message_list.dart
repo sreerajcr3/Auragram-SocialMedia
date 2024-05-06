@@ -1,4 +1,5 @@
-import 'package:aura/bloc/get_user/get_user_bloc.dart';
+import 'package:aura/bloc/message_list.dart/bloc/message_list_bloc.dart';
+import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/chat/chat.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
@@ -16,7 +17,8 @@ class MessageList extends StatefulWidget {
 class _MessageListState extends State<MessageList> {
   @override
   void initState() {
-    context.read<GetUserBloc>().add(GetAllUsersEvent());
+    context.read<MessageListBloc>().add(GetUsersFromChat());
+    // context.read<CurrentUserBloc>().add(CurrentUserFetchEvent());
     super.initState();
   }
 
@@ -26,18 +28,21 @@ class _MessageListState extends State<MessageList> {
       appBar: customAppbar(text: "Message", context: context, onPressed: () {}),
       body: MultiBlocConsumer(
         buildWhen: null,
-        blocs: [context.watch<GetUserBloc>()],
+        blocs: [context.watch<MessageListBloc>(),],
         builder: (p0, state) {
-          if (state[0] is GetAllUsersSuccessState) {
-            
-          return ListView.builder(
-            itemCount: state[0].allUsers.length,
-            itemBuilder: (ctx, index) {
-            return InkWell(
-              onTap: () => navigatorPush(ChatScreen(user: state[0].allUsers[index]), context),
-              child: ListTile(title: Text(state[0].allUsers[index].username),));
-          });
-          }else{
+          if (state[0] is UsersListFromChatSuccefullState) {
+            return ListView.builder(
+                itemCount: state[0].usersList.length,
+                itemBuilder: (ctx, index) {
+                  return InkWell(
+                      onTap: () => navigatorPush(
+                          ChatScreen(user: state[0].usersList[index]), context),
+                      child: ListTile(
+                        leading: CircleAvatar(backgroundImage: NetworkImage(state[0].usersList[index].profilePic!=''?state[0].usersList[index].profilePic:demoProPic),),
+                        title: Text(state[0].usersList[index].username),
+                      ));
+                });
+          } else {
             return loading();
           }
         },

@@ -72,6 +72,7 @@ class ApiServiceSavePost {
     final response = await client.get(Uri.parse(url), headers: headers);
 
     print("saved post statuscode = ${response.statusCode}");
+    debugPrint("saved post status code = ${response.statusCode}");
     if (response.statusCode == 200 || response.statusCode == 201) {
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
       print("saved post response body $responseBody");

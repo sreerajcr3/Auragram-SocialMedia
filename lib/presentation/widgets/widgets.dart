@@ -7,6 +7,7 @@ import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/commonData/common_data.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/core/constants/user_demo_pic.dart';
+import 'package:aura/cubit/password_cubit/password_cubit.dart';
 import 'package:aura/presentation/screens/home/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,12 +20,14 @@ class TextformField extends StatelessWidget {
   final String? valueText;
   final TextEditingController controller;
   final IconData? prefixIcon;
+  final IconData? suffixIcon;
   const TextformField({
     super.key,
     required this.labelText,
     required this.controller,
     this.valueText,
     this.prefixIcon,
+    this.suffixIcon,
   });
 
   @override
@@ -42,6 +45,7 @@ class TextformField extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
             prefixIcon: Icon(prefixIcon) ?? null,
+            suffixIcon: Icon(suffixIcon ?? null),
             focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(color: Colors.red)),
@@ -57,6 +61,78 @@ class TextformField extends StatelessWidget {
                     const BorderSide()), // border: const OutlineInputBorder(),
             labelText: labelText),
       ),
+    );
+  }
+}
+
+class PasswordTextFormFeild extends StatefulWidget {
+  final String labelText;
+  final String? valueText;
+  final TextEditingController controller;
+  final IconData? prefixIcon;
+  final IconData? suffixIcon;
+  PasswordTextFormFeild({
+    super.key,
+    required this.labelText,
+    required this.controller,
+    this.valueText,
+    this.prefixIcon,
+    this.suffixIcon,
+  });
+
+  @override
+  State<PasswordTextFormFeild> createState() => _PasswordTextFormFeildState();
+}
+
+class _PasswordTextFormFeildState extends State<PasswordTextFormFeild> {
+  bool obscureText = true;
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<PasswordCubit, bool>(
+      listener: (context, state) {
+        // TODO: implement listener
+      },
+      builder: (context, state) {
+                 
+
+        return SizedBox(
+          width: MediaQuery.sizeOf(context).width * 0.9,
+          child: TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return '${widget.valueText} is required*';
+              }
+              return null;
+            },
+            controller: widget.controller,
+            obscureText: obscureText,
+            decoration: InputDecoration(
+                prefixIcon: Icon(widget.prefixIcon) ?? null,
+                suffixIcon: IconButton(
+                    onPressed: () {
+                   setState(() {
+                     obscureText =!obscureText;
+                   });
+                    },
+                    icon: Icon(obscureText?Ionicons.eye:Ionicons.eye_off)),
+                focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Colors.red)),
+                errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(color: Colors.red)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide()),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide:
+                        const BorderSide()), // border: const OutlineInputBorder(),
+                labelText: widget.labelText),
+          ),
+        );
+      },
     );
   }
 }
@@ -547,22 +623,41 @@ loading2() {
   ));
 }
 
-containerButton(text, Function() onTap, bg, {textColor = Colors.black}) {
+containerButton(icon, Function() onTap, bg, {textColor = Colors.black}) {
+  return InkWell(
+    onTap: onTap,
+    child: Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [Colors.blue, Colors.lightBlueAccent]),
+        borderRadius: BorderRadius.circular(5),
+        // border: Border.
+      ),
+      child: Center(
+          child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+              child: Icon(
+                icon,
+                color: Colors.white,
+              ))),
+    ),
+  );
+}
+
+containerTextButton(text, Function() onTap, bg, {textColor = Colors.black}) {
   return InkWell(
     onTap: onTap,
     child: Container(
       decoration: BoxDecoration(
           color: bg,
-          borderRadius: BorderRadius.circular(7),
+          borderRadius: BorderRadius.circular(5),
           border: Border.all()),
       child: Center(
           child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 20),
-        child: Text(
-          text,
-          style: TextStyle(color: textColor, fontSize: 16),
-        ),
-      )),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+              child: Text(
+                text,
+                style: TextStyle(color: textColor),
+              ))),
     ),
   );
 }

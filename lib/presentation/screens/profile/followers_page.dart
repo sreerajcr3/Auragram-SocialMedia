@@ -157,6 +157,7 @@ class _FollowersState extends State<Followers> {
                                                               .followingUsersList[
                                                                   index]
                                                               .id);
+                                                              Navigator.pop(context);
                                                 },
                                                 child: const Text("Ok"))
                                           ],

@@ -4,14 +4,16 @@ import 'package:aura/bloc/edit_profile/bloc/edit_profile_bloc.dart';
 import 'package:aura/bloc/image_picker/bloc/image_picker_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
+import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/domain/model/user_model.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/bottom_navigation/bottom_navigation.dart';
-import 'package:aura/presentation/screens/profile/user_profile_new.dart';
+import 'package:aura/presentation/screens/profile/current_user_profile.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ionicons/ionicons.dart';
 
 class EditProfile extends StatefulWidget {
   final User user;
@@ -47,12 +49,8 @@ class _EditProfileState extends State<EditProfile> {
             context.read<EditProfileBloc>().add(AddDetailsEditProfileEvent(
                 username: usernameController.text,
                 fullname: fullnameeController.text,
-                profilePic: profileImage == null
-                    ? widget.user.profilePic
-                    : profileImage,
-                coverPic:coverImage == null
-                    ? widget.user.coverPic
-                    : coverImage,
+                profilePic: profileImage ?? widget.user.profilePic,
+                coverPic:coverImage ?? widget.user.coverPic,
                 bio: bioController.text));
           },
           icon: const Text(
@@ -64,6 +62,10 @@ class _EditProfileState extends State<EditProfile> {
           if (state is EditProfileSuccessState) {
           indexChangeNotifier.value = 3;
             snackBar("Profile Edited", context);
+            navigatorPush(const MyProfile(), context);
+          }
+          else if(state is EditProfileLoadingState){
+              loading();
           }
         },
         builder: (context, state) {
@@ -94,14 +96,14 @@ class _EditProfileState extends State<EditProfile> {
                               height: 150,
                               width: MediaQuery.sizeOf(context).width,
                               color: Colors.grey.shade200,
-                              child: coverImage == null
+                              child:widget.user.coverPic!=""? coverImage == null
                                   ? Image.network(
                                       widget.user.coverPic!,
                                       fit: BoxFit.cover,
                                     )
                                   : Image.file(
                                       coverImage!,fit: BoxFit.cover,
-                                    )),
+                                    ):const Icon(Ionicons.camera))
                         ),
                         Positioned(
                           top: 100,
@@ -111,9 +113,9 @@ class _EditProfileState extends State<EditProfile> {
                             children: [
                               CircleAvatar(
                                   radius: 70,
-                                  backgroundImage: profileImage == null
+                                  backgroundImage:widget.user.profilePic !=""? profileImage == null
                                       ? NetworkImage(widget.user.profilePic!)
-                                      : Image.file(profileImage!).image),
+                                      : Image.file(profileImage!).image:const NetworkImage(demoProPic)),
                             ],
                           ),
                         ),
@@ -123,14 +125,14 @@ class _EditProfileState extends State<EditProfile> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        containerButton("Edit Profile pic", () async {
+                        containerTextButton("Edit Profile pic", () async {
                           final image = await pickProfilePic();
                           // ignore: use_build_context_synchronously
                           context.read<ImagePickerBloc>().add(
                                 AddProfilePicEvent(image: image!),
                               );
                         }, kWhite),
-                        containerButton("Edit Cover pic", () async {
+                        containerTextButton("Edit Cover pic", () async {
                           final image = await pickCoverPic();
                           context
                               .read<ImagePickerBloc>()

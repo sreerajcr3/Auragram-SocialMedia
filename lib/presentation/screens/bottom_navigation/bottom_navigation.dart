@@ -38,50 +38,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           return IndexedStack(index: value,children: pages,);
         },
       ),
-      // bottomNavigationBar: ValueListenableBuilder(
-      //   valueListenable: indexChangeNotifier,
-      //   builder: (context, value, child) {
-      //     return Padding(
-      //       padding: const EdgeInsets.all(8.0),
-      //       child: Container(
-      //         decoration:
-      //             BoxDecoration(borderRadius: BorderRadius.circular(20)),
-      //         child: BottomNavigationBar(
-      //           type: BottomNavigationBarType.shifting,
-      //           selectedItemColor: Colors.cyan,
-      //           unselectedItemColor: kBlack,
-      //           // margin: const EdgeInsets.all(20),
-      //           // marginR: EdgeInsets.all(20),
-      //           // curve: Curves.bounceIn,
-      //           // itemPadding: const EdgeInsets.all(10),
-      //           // enableFloatingNavBar: true,
-      //           currentIndex: indexChangeNotifier.value,
-      //           onTap: (value) {
-      //             indexChangeNotifier.value = value;
-      //           },
-      //           items: const [
-      //             BottomNavigationBarItem(
-      //               icon: Icon(Icons.home),
-      //               label: "Home",
-      //             ),
-      //             BottomNavigationBarItem(
-      //               icon: Icon(CupertinoIcons.search),
-      //               label: "Search",
-      //             ),
-      //             BottomNavigationBarItem(
-      //               icon: Icon(Ionicons.add),
-      //               label: "NEW Post",
-      //             ),
-      //             BottomNavigationBarItem(
-      //               icon: Icon(Ionicons.person_outline),
-      //               label: "Profile",
-      //             )
-      //           ],
-      //         ),
-      //       ),
-      //     );
-      //   },
-      // ),
+     
       bottomNavigationBar: AnimatedNotchBottomBar(
         showBlurBottomBar: true,
         blurOpacity: 0.2,
@@ -126,7 +83,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           BottomBarItem(
             inActiveItem: Icon(Ionicons.chatbox_ellipses_outline, color: Colors.blueGrey,),
             activeItem: Icon(
-              Ionicons.add,
+              Ionicons.chatbox_ellipses,
               color: kBlack,
             ),
             //  itemLabel: 'New Post ',

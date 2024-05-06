@@ -16,7 +16,7 @@ import 'package:shimmer/shimmer.dart';
 
 profileCardText2(text) => Text(
       text,
-      style: const TextStyle(fontSize: 16),
+      style: const TextStyle(fontSize: 16,color: Colors.black54),
     );
 
 profileText1(text) {
@@ -25,7 +25,7 @@ profileText1(text) {
     child: Text(
       text.toString(),
       style: const TextStyle(
-          fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black54),
+          fontSize: 20, fontWeight: FontWeight.bold, color:kBlack),
     ),
   );
 }
@@ -86,44 +86,42 @@ class ProfileFollowersCountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        onTap: () {
-          navigatorPush(
-              Followers(
-                users: state,
-                currentUser: currentUser,
-              ),
-              context);
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
-              children: [
-                profileText1(
-                    state.posts.length == 0 ? "0" : state.posts.length),
-                profileCardText2('Post')
-              ],
+    return InkWell(
+      onTap: () {
+        navigatorPush(
+            Followers(
+              users: state,
+              currentUser: currentUser,
             ),
-            Column(
-              children: [
-                profileText1(state.user.following!.isEmpty
-                    ? "0"
-                    : state.user.following!.length.toString()),
-                profileCardText2('Following')
-              ],
-            ),
-            Column(
-              children: [
-                profileText1(state.user.followers!.isEmpty
-                    ? "0"
-                    : state.user.followers!.length.toString()),
-                profileCardText2('Followers')
-              ],
-            ),
-          ],
-        ),
+            context);
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Column(
+            children: [
+              profileText1(
+                  state.posts.length == 0 ? "0" : state.posts.length),
+              profileCardText2('Post')
+            ],
+          ),
+          Column(
+            children: [
+              profileText1(state.user.following!.isEmpty
+                  ? "0"
+                  : state.user.following!.length.toString()),
+              profileCardText2('Following')
+            ],
+          ),
+          Column(
+            children: [
+              profileText1(state.user.followers!.isEmpty
+                  ? "0"
+                  : state.user.followers!.length.toString()),
+              profileCardText2('Followers')
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -203,9 +201,9 @@ Container followUnfollowButton(text, follow, {color = kWhite}) {
               ? [Colors.blueAccent, Colors.lightBlueAccent]
               : [Colors.greenAccent, Colors.greenAccent],
         ),
-        borderRadius: BorderRadius.circular(8)),
+        borderRadius: BorderRadius.circular(5)),
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 6),
       child: Text(
         text,
         style: const TextStyle(fontSize: 17, color: kWhite),
@@ -461,3 +459,18 @@ class SkeletonProfilel extends StatelessWidget {
     );
   }
 }
+  Text bioProfileScreen(text ) {
+    return Text(
+                   text,
+                    style: const TextStyle(fontSize: 15),
+                  );
+  }
+
+  Text fullNameUserProfile(text ) {
+    return Text(text,
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w700));
+  }
+
+    Text usernameUserProfile(text) => Text("@$text",style:const TextStyle(color: kGreyDark),);
+

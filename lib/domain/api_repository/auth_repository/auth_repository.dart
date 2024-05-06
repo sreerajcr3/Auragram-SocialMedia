@@ -11,10 +11,9 @@ import 'package:http/http.dart' as http;
 
 class ApiServicesAuth {
   static dynamic client = http.Client();
-   //-------------------------------------sign up---------------------------
+  //-------------------------------------sign up---------------------------
 
   static Future<String> signUp(User user) async {
-    
     const String url = '${ApiEndPoints.baseUrl}${ApiEndPoints.signup}';
     try {
       final data = {
@@ -37,8 +36,9 @@ class ApiServicesAuth {
       if (response.statusCode == 201) {
         final token = responseBody['token'].toString();
         final currentUsername = responseBody['username'].toString();
+
         saveToken(token);
-         saveUsername(currentUsername);
+        saveUsername(currentUsername);
         return 'Success';
       } else if (responseBody['error'] ==
           "Username Already Taken. Please Choose different one or login instead") {
@@ -63,8 +63,6 @@ class ApiServicesAuth {
 //-----------------------------------------otp---------------------------------
 
   static Future<bool> createOtp(String email) async {
-    
-
     const String url = "${ApiEndPoints.baseUrl}${ApiEndPoints.otp}";
 
     try {
@@ -91,7 +89,6 @@ class ApiServicesAuth {
   //********---------------------------log in-----------------------**********
 
   static Future<String> logIn(String username, String password) async {
-    
     var url = '${ApiEndPoints.baseUrl}${ApiEndPoints.login}';
     try {
       final data = {"username": username, "password": password};
@@ -134,7 +131,6 @@ class ApiServicesAuth {
 
   static Future<String> forgotPassword(
       String email, String password, String otp) async {
-    
     var url = "${ApiEndPoints.baseUrl}${ApiEndPoints.forgotPassword}";
     try {
       final data = {"email": email, "otp": otp, "password": password};
@@ -159,7 +155,6 @@ class ApiServicesAuth {
   //------------------------------------forgot password---------------------------------------
 
   static Future<String> forgotPasswordotp(String email) async {
-    
     var url = "${ApiEndPoints.baseUrl}${ApiEndPoints.forgotPasswordOtp}";
     try {
       final data = {"email": email};
@@ -181,5 +176,4 @@ class ApiServicesAuth {
       return 'Server unreachable';
     }
   }
-
 }

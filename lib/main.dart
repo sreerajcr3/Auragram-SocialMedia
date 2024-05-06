@@ -12,12 +12,14 @@ import 'package:aura/bloc/get_user/get_user_bloc.dart';
 import 'package:aura/bloc/image_picker/bloc/image_picker_bloc.dart';
 import 'package:aura/bloc/like_unlike_bloc/bloc/like_unlike_bloc.dart';
 import 'package:aura/bloc/logIn_bloc/bloc/log_in_bloc.dart';
+import 'package:aura/bloc/message_list.dart/bloc/message_list_bloc.dart';
 import 'package:aura/bloc/otpBloc/bloc/otp_bloc.dart';
 import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/bloc/searchBloc/bloc/search_bloc.dart';
 import 'package:aura/bloc/signUpbloc/bloc/sign_up_bloc.dart';
 import 'package:aura/cubit/duration_cubit/cubit/duration_cubit.dart';
 import 'package:aura/cubit/explorePage_cubit/explore_page_cubit.dart';
+import 'package:aura/cubit/password_cubit/password_cubit.dart';
 import 'package:aura/presentation/screens/splash_screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,10 +53,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => EditPostBloc()),
         BlocProvider(create: (context) => GetUserBloc()),
         BlocProvider(create: (context) => ChatBloc()),
+        BlocProvider(create: (context) => MessageListBloc()),
 
         //cubit
         BlocProvider(create: (context) => ExplorePageCubit()),
         BlocProvider(create: (context) => DurationCubit()),
+        BlocProvider(create: (context) => PasswordCubit()),
       ],
       child: MaterialApp(
           title: 'Flutter Demo',

@@ -24,6 +24,7 @@ class ApiEndPoints {
   static const editPost = "/post/";
   static const getAllUsers = "/users";
   static const getAllChat = "/chat";
+  static const getChatWithUser = "/chat/me/";
 
 
   // static const coludinaryUrl = "http://api.cloudinary.com/v1_1/"

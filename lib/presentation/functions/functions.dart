@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const savedkey = 'userLoggedin';
+
 
 //-------------------------------snackbar--------------------------
 
@@ -23,13 +23,17 @@ snackBar(String text, context) {
 //------------------------------navigator-------------------------
 
 navigatorReplacement(page, context) {
-  Navigator.of(context).pushReplacement(
-      PageTransition(child: page, type: PageTransitionType.fade,duration: const Duration(seconds: 1)));
+  Navigator.of(context).pushReplacement(PageTransition(
+      child: page,
+      type: PageTransitionType.fade,
+      duration: const Duration(seconds: 1)));
 }
 
 navigatorPush(page, context) {
-  Navigator.of(context)
-      .push(PageTransition(child: page, type: PageTransitionType.fade,duration:const Duration(milliseconds: 1000)));
+  Navigator.of(context).push(PageTransition(
+      child: page,
+      type: PageTransitionType.fade,
+      duration: const Duration(milliseconds: 1000)));
 }
 
 //-----------------------shared preference---------------------
@@ -43,6 +47,7 @@ saveToken(token) async {
   final sharedprefs = await SharedPreferences.getInstance();
   await sharedprefs.setString('token', token);
 }
+
 saveUsername(username) async {
   final sharedprefs = await SharedPreferences.getInstance();
   await sharedprefs.setString('username', username);
@@ -52,6 +57,7 @@ Future<String?> getToken() async {
   final sharedPrefs = await SharedPreferences.getInstance();
   return sharedPrefs.getString('token');
 }
+
 Future<String?> getUsername() async {
   final sharedPrefs = await SharedPreferences.getInstance();
   return sharedPrefs.getString('username');
@@ -68,7 +74,7 @@ Future<void> checkLoggedIn(context) async {
 }
 
 Future<void> logOut(context) async {
-  savedPostSet={};
+  savedPostSet = {};
   SocketService().disconnectSocket();
   final sharedprefs = await SharedPreferences.getInstance();
   sharedprefs.setBool(savedkey, false);
@@ -80,6 +86,7 @@ Future<void> like() async {
   final sharedprefs = await SharedPreferences.getInstance();
   sharedprefs.setBool('liked', true);
 }
+
 Future<void> unlike() async {
   final sharedprefs = await SharedPreferences.getInstance();
   sharedprefs.setBool('liked', false);

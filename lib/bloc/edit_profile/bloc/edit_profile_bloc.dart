@@ -14,6 +14,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
 
   FutureOr<void> addDetailsEditProfileEvent(
       AddDetailsEditProfileEvent event, Emitter<EditProfileState> emit) async {
+        emit(EditProfileLoadingState());
     print("edit profile worked");
     final result = await ApiServiceEditProfile.editprofile(event.username!,
         event.fullname!, event.bio, event.profilePic, event.coverPic);

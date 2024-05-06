@@ -8,11 +8,13 @@ import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/domain/model/user_model.dart';
 import 'package:aura/presentation/functions/functions.dart';
+import 'package:aura/presentation/screens/chat/chat.dart';
 import 'package:aura/presentation/screens/profile/get_user_post_detailpage.dart';
 import 'package:aura/presentation/screens/profile/widgets/widgets.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:multi_bloc_builder/builders/multi_bloc_consumer.dart';
 
 class UserProfileSccreen extends StatefulWidget {
@@ -37,7 +39,7 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.sizeOf(context).height;
-    // var width = MediaQuery.sizeOf(context).width;
+    var width = MediaQuery.sizeOf(context).width;
     return Scaffold(
       appBar: customAppbar(
         text: "Profile",
@@ -64,24 +66,22 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
             return shimmerProfile();
             // return Container();
           } else if (state[1] is GetUsersuccessState) {
-            print(" foillowers worked");
-            print("foillowers = $followers");
-
             followers = state[1].getUserModel.followersUsersList;
             follow = followers
                 .any((element) => element.id == state[0].currentUser.user.id);
 
             return SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Stack(
                     children: [
                       SizedBox(
                         width: MediaQuery.sizeOf(context).width,
-                        height: height / 2.6,
+                        height: height / 4,
                         child: Column(
                           children: [
-                            Container(
+                            SizedBox(
                               width: MediaQuery.sizeOf(context).width,
                               height: height / 5,
                               child: Image.network(
@@ -99,10 +99,9 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
                           child: Container(
                             width: MediaQuery.sizeOf(context).width,
                             height: height,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(colors: [kGrey, kWhite]),
-                              // color: Colors.yellow,
-                              borderRadius: const BorderRadius.only(
+                            decoration: const BoxDecoration(
+                              color: kWhite,
+                              borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(20),
                                 topRight: Radius.circular(20),
                               ),
@@ -110,23 +109,26 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
                           )),
                       Positioned(
                           top: height / 8,
-                          left: 30,
+                          left: width / 3,
+                          right: width / 3,
                           child: CircleAvatar(
                             backgroundImage: NetworkImage(
-                                widget.user.profilePic ?? demoProPic),
+                                widget.user.profilePic == ''
+                                    ? demoProPic
+                                    : widget.user.profilePic!),
                             radius: 50,
                           )),
-                      Positioned(
-                        top: height / 3.7,
-                        left: 20,
-                        child: Text(
-                          state2.getUserModel.user.username,
-                          style: const TextStyle(
-                            fontFamily: "JosefinSans",
-                            fontSize: 22,
-                          ),
-                        ),
-                      ),
+                      // Positioned(
+                      //   top: height / 3.7,
+                      //   left: 20,
+                      //   child: Text(
+                      //     state2.getUserModel.user.username,
+                      //     style: const TextStyle(
+                      //       fontFamily: "JosefinSans",
+                      //       fontSize: 22,
+                      //     ),
+                      //   ),
+                      // ),
                       Positioned(
                         top: height / 3.2,
                         left: 20,
@@ -138,79 +140,135 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
                           ),
                         ),
                       ),
-                      Positioned(
-                        top: height / 4.9,
-                        right: MediaQuery.sizeOf(context).width * .03,
-                        child: Row(
-                          children: [
-                            InkWell(
-                              onTap: () async {
-                                final User currentuser =
-                                    state[0].currentUser.user;
+                      // Positioned(
+                      //   top: height / 4.9,
+                      //   right: MediaQuery.sizeOf(context).width * .03,
+                      //   child: Row(
+                      //     children: [
+                      //       InkWell(
+                      //         onTap: () async {
+                      //           final User currentuser =
+                      //               state[0].currentUser.user;
 
-                                final user = User(
-                                  id: currentuser.id,
-                                  username: currentuser.username,
-                                  fullname: currentuser.fullname,
-                                  followers: currentuser.followers,
-                                  following: currentuser.following,
-                                );
+                      //           final user = User(
+                      //             id: currentuser.id,
+                      //             username: currentuser.username,
+                      //             fullname: currentuser.fullname,
+                      //             followers: currentuser.followers,
+                      //             following: currentuser.following,
+                      //           );
 
-                                if (!follow!) {
-                                  followers.add(user);
+                      //           if (!follow!) {
+                      //             followers.add(user);
 
-                                  context.read<FollowUnfollowBloc>().add(
-                                      TofollowEvent(userId: widget.user.id!));
-                                } else {
-                                  followers.removeWhere((element) =>
-                                      element.id == currentuser.id);
+                      //             context.read<FollowUnfollowBloc>().add(
+                      //                 TofollowEvent(userId: widget.user.id!));
+                      //           } else {
+                      //             followers.removeWhere((element) =>
+                      //                 element.id == currentuser.id);
 
-                                  context.read<FollowUnfollowBloc>().add(
-                                      ToUnfollowEvent(userId: widget.user.id!));
-                                }
-                                StreamSubscription<FollowUnfollowState>
-                                    subscription = context
-                                        .read<FollowUnfollowBloc>()
-                                        .stream
-                                        .listen((state) {
-                                  if (state is FollowSuccesssFullState) {
-                                    // followers.add(currentuser.id);
-                                    // context.read<GetUserBloc>().add(
-                                    //     GetuserFetchEvent(
-                                    //         userId: widget.user.id!));
-                                  } else if (state
-                                      is UnFollowSuccesssFullState) {
-                                    // followers.remove(currentuser.id);
-                                    // context.read<GetUserBloc>().add(
-                                    //     GetuserFetchEvent(
-                                    //         userId: widget.user.id!));
-                                  }
-                                });
+                      //             context.read<FollowUnfollowBloc>().add(
+                      //                 ToUnfollowEvent(userId: widget.user.id!));
+                      //           }
+                      //           StreamSubscription<FollowUnfollowState>
+                      //               subscription = context
+                      //                   .read<FollowUnfollowBloc>()
+                      //                   .stream
+                      //                   .listen((state) {
+                      //             if (state is FollowSuccesssFullState) {
+                      //             } else if (state
+                      //                 is UnFollowSuccesssFullState) {}
+                      //           });
 
-                                context
-                                    .read<FollowUnfollowBloc>()
-                                    .add(FollowUpdateEvent());
-                              },
-                              child: follow!
-                                  ? followUnfollowButton(
-                                      "Following", color: kgreen, true)
-                                  : followUnfollowButton("Follow", false),
-                            ),
-                            kwidth10,
-                            Container(
-                                alignment: Alignment.topCenter,
-                                decoration: BoxDecoration(
-                                    border: Border.all(),
-                                    // color: kBlack,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: containerButton(
-                                    "Message", () => null, Colors.transparent))
-                          ],
-                        ),
-                      )
+                      //           context
+                      //               .read<FollowUnfollowBloc>()
+                      //               .add(FollowUpdateEvent());
+                      //         },
+                      //         child: follow!
+                      //             ? followUnfollowButton(
+                      //                 "Following", color: kgreen, true)
+                      //             : followUnfollowButton("Follow", false),
+                      //       ),
+                      //       kwidth10,
+                      //       Container(
+                      //           alignment: Alignment.topCenter,
+                      //           decoration: BoxDecoration(
+                      //               border: Border.all(),
+                      //               // color: kBlack,
+                      //               borderRadius: BorderRadius.circular(10)),
+                      //           child: containerButton(
+                      //               "Message", () => null, Colors.transparent))
+                      //     ],
+                      //   ),
+                      // )
                     ],
                   ),
+                  kheight15,
+                  fullNameUserProfile(
+                    widget.user.username,
+                  ),
+                  usernameUserProfile(widget.user.username),
+
+                  kheight15,
+                  bioProfileScreen(
+                    widget.user.bio!,
+                  ),
+
+                  kheight15,
                   profileCountCard(state[1], context, followers.length, false),
+                  kheight15,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        onTap: () async {
+                          final User currentuser = state[0].currentUser.user;
+
+                          final user = User(
+                            id: currentuser.id,
+                            username: currentuser.username,
+                            fullname: currentuser.fullname,
+                            followers: currentuser.followers,
+                            following: currentuser.following,
+                          );
+
+                          if (!follow!) {
+                            followers.add(user);
+
+                            context
+                                .read<FollowUnfollowBloc>()
+                                .add(TofollowEvent(userId: widget.user.id!));
+                          } else {
+                            followers.removeWhere(
+                                (element) => element.id == currentuser.id);
+
+                            context
+                                .read<FollowUnfollowBloc>()
+                                .add(ToUnfollowEvent(userId: widget.user.id!));
+                          }
+                          StreamSubscription<FollowUnfollowState> subscription =
+                              context
+                                  .read<FollowUnfollowBloc>()
+                                  .stream
+                                  .listen((state) {
+                            if (state is FollowSuccesssFullState) {
+                            } else if (state is UnFollowSuccesssFullState) {}
+                          });
+
+                          context
+                              .read<FollowUnfollowBloc>()
+                              .add(FollowUpdateEvent());
+                        },
+                        child: follow!
+                            ? followUnfollowButton(
+                                "Following", color: kgreen, true)
+                            : followUnfollowButton("Follow", false),
+                      ),
+                      kwidth20,
+                      containerButton(
+                          Ionicons.chatbox_ellipses, () =>navigatorPush(ChatScreen(user: widget.user), context) , Colors.blue)
+                    ],
+                  ),
                   state[1].getUserModel.posts.isNotEmpty
                       ? Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -248,11 +306,9 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
           } else {
             return loading();
           }
-          // } else {
-          //   return loading();
-          // }
         },
       ),
     );
   }
+
 }

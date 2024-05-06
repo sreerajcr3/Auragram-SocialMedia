@@ -8,6 +8,7 @@ import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ionicons/ionicons.dart';
 
 
 class LogIn extends StatefulWidget {
@@ -64,11 +65,12 @@ class _LogInState extends State<LogIn> {
                           controller: usernameController,
                           valueText: "Username"),
                       kheight30,
-                      TextformField(
+                      PasswordTextFormFeild(
                           prefixIcon: Icons.lock,
                           labelText: 'Password',
                           controller: passwordController,
-                          valueText: "Password"),
+                          valueText: "Password",
+                          suffixIcon: Ionicons.eye_off,),
                       kheight20,
                       CustomButton(
                         text: "Log In",

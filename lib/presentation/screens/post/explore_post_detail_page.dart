@@ -13,16 +13,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multi_bloc_builder/multi_bloc_builder.dart';
 
-class PostDetailPage extends StatefulWidget {
-  const PostDetailPage({
+class ExplorePostDetailPage extends StatefulWidget {
+  const ExplorePostDetailPage({
     super.key,
   });
 
   @override
-  State<PostDetailPage> createState() => _PostDetailPageState();
+  State<ExplorePostDetailPage> createState() => _ExplorePostDetailPageState();
 }
 
-class _PostDetailPageState extends State<PostDetailPage> {
+class _ExplorePostDetailPageState extends State<ExplorePostDetailPage> {
   @override
   void initState() {
     super.initState();
