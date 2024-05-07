@@ -14,8 +14,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:multi_bloc_builder/multi_bloc_builder.dart';
 
 class ExplorePostDetailPage extends StatefulWidget {
+  final int intialIndex;
   const ExplorePostDetailPage({
-    super.key,
+    super.key, required this.intialIndex,
   });
 
   @override
@@ -93,14 +94,11 @@ class _ExplorePostDetailPageState extends State<ExplorePostDetailPage> {
                                           return shimmer();
                                         } else if (state is PostSuccessState) {
                                           return ListView.builder(
-                                            
+                                            controller: ScrollController(initialScrollOffset: widget.intialIndex==0?0:widget.intialIndex*550.0),
                                             shrinkWrap: true,
                                             physics:
                                                 const NeverScrollableScrollPhysics(),
-                                            itemCount: multistate[1]
-                                                .currentUser
-                                                .posts
-                                                .length,
+                                            itemCount: state.posts.length,
                                             itemBuilder: (context, index) {
                                               return Column(
                                                 crossAxisAlignment:
@@ -113,14 +111,15 @@ class _ExplorePostDetailPageState extends State<ExplorePostDetailPage> {
                                                         radius: 20,
                                                         backgroundImage:
                                                             NetworkImage(
-                                                          multistate[1]
-                                                                      .currentUser
-                                                                      .user
+                                                          state
+                                                                      .posts[
+                                                                          index]
+                                                                      .user!
                                                                       .profilePic !=
                                                                   ''
-                                                              ? multistate[1]
-                                                                  .currentUser
-                                                                  .user
+                                                              ? state
+                                                                  .posts[index]
+                                                                  .user!
                                                                   .profilePic!
                                                               : demoProPic,
                                                         ),
@@ -128,7 +127,7 @@ class _ExplorePostDetailPageState extends State<ExplorePostDetailPage> {
                                                       kwidth10,
 
                                                       //#########################  navigating the page to the user profile    ##########################################
-                                                       
+
                                                       // ######################################   Post Icon Row #####################################
 
                                                       InkWell(
@@ -141,9 +140,9 @@ class _ExplorePostDetailPageState extends State<ExplorePostDetailPage> {
                                                                   .start,
                                                           children: [
                                                             Text(
-                                                              multistate[1]
-                                                                  .currentUser
-                                                                  .user
+                                                              state
+                                                                  .posts[index]
+                                                                  .user!
                                                                   .username!,
                                                               style: const TextStyle(
                                                                   fontSize: 18,
@@ -152,9 +151,7 @@ class _ExplorePostDetailPageState extends State<ExplorePostDetailPage> {
                                                                           .w500),
                                                             ),
                                                             Text(
-                                                              multistate[1]
-                                                                  .currentUser
-                                                                  .posts[index]
+                                                              state.posts[index]
                                                                   .location
                                                                   .toString(),
                                                               style: const TextStyle(
@@ -188,9 +185,7 @@ class _ExplorePostDetailPageState extends State<ExplorePostDetailPage> {
                                                     // ###################################        whole  post card ###########################################
 
                                                     child: postPageView(
-                                                        multistate[1]
-                                                            .currentUser,
-                                                        index),
+                                                        state, index),
                                                   ),
                                                   BlocBuilder<CurrentUserBloc,
                                                       CurrentUserState>(
@@ -201,8 +196,7 @@ class _ExplorePostDetailPageState extends State<ExplorePostDetailPage> {
                                                         // ######################################   Post Icon Row #####################################
 
                                                         return postIconRow(
-                                                            multistate[1]
-                                                                .currentUser,
+                                                            state,
                                                             index,
                                                             userState,
                                                             context,
@@ -213,26 +207,22 @@ class _ExplorePostDetailPageState extends State<ExplorePostDetailPage> {
                                                     },
                                                   ),
                                                   Text(
-                                                    multistate[1]
-                                                        .currentUser
-                                                        .user
-                                                        .username,
+                                                    state.posts[index].user!
+                                                        .username!,
                                                     style: const TextStyle(
                                                         fontSize: 20),
                                                   ),
                                                   kheight5,
                                                   Text(
-                                                    multistate[1]
-                                                        .currentUser
-                                                        .posts[index]
+                                                    state.posts[index]
                                                         .description!,
                                                     style: const TextStyle(
                                                         fontSize: 16),
                                                   ),
                                                   kheight5,
                                                   Date(
-                                                      date: multistate[1]
-                                                          .currentUser
+                                                      date: state
+                                                          
                                                           .posts[index]
                                                           .createdAt!),
                                                   kheight15

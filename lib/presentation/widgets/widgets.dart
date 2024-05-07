@@ -8,6 +8,8 @@ import 'package:aura/core/commonData/common_data.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/cubit/password_cubit/password_cubit.dart';
+import 'package:aura/domain/model/comment_model.dart';
+import 'package:aura/domain/model/user_model.dart';
 import 'package:aura/presentation/screens/home/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -93,8 +95,6 @@ class _PasswordTextFormFeildState extends State<PasswordTextFormFeild> {
         // TODO: implement listener
       },
       builder: (context, state) {
-                 
-
         return SizedBox(
           width: MediaQuery.sizeOf(context).width * 0.9,
           child: TextFormField(
@@ -111,11 +111,11 @@ class _PasswordTextFormFeildState extends State<PasswordTextFormFeild> {
                 prefixIcon: Icon(widget.prefixIcon) ?? null,
                 suffixIcon: IconButton(
                     onPressed: () {
-                   setState(() {
-                     obscureText =!obscureText;
-                   });
+                      setState(() {
+                        obscureText = !obscureText;
+                      });
                     },
-                    icon: Icon(obscureText?Ionicons.eye:Ionicons.eye_off)),
+                    icon: Icon(obscureText ? Ionicons.eye : Ionicons.eye_off)),
                 focusedErrorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: const BorderSide(color: Colors.red)),
@@ -251,8 +251,10 @@ class AppName extends StatelessWidget {
 //----------------------------------------comment widget----------------------------------------
 Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
     TextEditingController commentController, userSuccessState) {
+  List<CommentModel> commentList = [];
   return showModalBottomSheet(
     isDismissible: true,
+    isScrollControlled: true,
     context: context,
     builder: (ctx) {
       return Column(
@@ -273,82 +275,103 @@ Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
             listenWhen: null,
             listener: (context, multistate) {
               if (multistate is CommentUpdateState) {
-                context.read<PostsBloc>().add(PostsInitialFetchEvent());
+                // context.read<PostsBloc>().add(PostsInitialFetchEvent());
               }
             },
             builder: (context, multistate) {
-              return Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            userSuccessState.currentUser.user.profilePic != ''
-                                ? userSuccessState.currentUser.user.profilePic!
-                                : demoProPic)),
-                  ),
-                  kwidth10,
-                  Expanded(
-                    child: TextFormField(
-                      controller: commentController,
-                      decoration: InputDecoration(
-                        suffix: InkWell(
-                            onTap: () {
-                              context.read<CommentBloc>().add(
-                                    AddCommentEvent(
-                                        postId: state.posts[index].id!,
-                                        comment: commentController.text),
-                                  );
-                              commentController.clear();
-                            },
-                            child: const SizedBox(
-                              width: 60,
-                              child: Row(
-                                children: [
-                                  kwidth10,
-                                  Text(
-                                    'Post',
-                                    style: TextStyle(
-                                        color: Colors.purple,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            )),
-                        hintText: 'Add a comment',
+              commentList = state.posts[index].comments;
+            
+                return Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              userSuccessState.currentUser.user.profilePic != ''
+                                  ? userSuccessState
+                                      .currentUser.user.profilePic!
+                                  : demoProPic)),
+                    ),
+                    kwidth10,
+                    Expanded(
+                      child: TextFormField(
+                        controller: commentController,
+                        decoration: InputDecoration(
+                          suffix: InkWell(
+                              onTap: () {
+                                final comment = CommentModel(
+                                    id: state.posts[index].id!,
+                                    comment: commentController.text,
+                                    createdAt: DateTime.now().toString(),
+                                    user: User(
+                                        username: userSuccessState
+                                            .currentUser.user.username,
+                                        id: userSuccessState
+                                            .currentUser.user.id,
+                                        profilePic: userSuccessState
+                                            .currentUser.user.profilePic));
+                                commentList.add(comment);
+                                context.read<CommentBloc>().add(
+                                      AddCommentEvent(
+                                          postId: state.posts[index].id!,
+                                          comment: commentController.text),
+                                    );
+
+                                print(
+                                    "commentlist = ${commentList[0].comment}");
+
+                                context
+                                    .read<CommentBloc>()
+                                    .add(CommentUpdateEvent());
+
+                                commentController.clear();
+                              },
+                              child: const SizedBox(
+                                width: 60,
+                                child: Row(
+                                  children: [
+                                    kwidth10,
+                                    Text(
+                                      'Post',
+                                      style: TextStyle(
+                                          color: Colors.purple,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                          hintText: 'Add a comment',
+                        ),
                       ),
                     ),
-                  ),
-                  kwidth10
-                ],
-              );
-              // }else{
-              //   return Container();
+                    kwidth10
+                  ],
+                );
+              // } else {
+              //   return loading();
               // }
             },
           ),
           Expanded(
             child: SingleChildScrollView(
-              child: state.posts[index].comments!.length != 0
+              child: commentList.isNotEmpty
                   ? BlocBuilder<CommentBloc, CommentState>(
                       builder: (context, _) {
-                        if (_ is CommentUpdateState) {
+                        // if (_ is CommentUpdateState) {
                           return ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: state.posts[index].comments!.length,
+                            itemCount: commentList.length,
                             itemBuilder: (context, commentIndex) {
                               DateTime dateTime = DateTime.parse(state
                                   .posts[index]
                                   .comments![commentIndex]
                                   .createdAt);
                               //user in comments
-                              final user = state
-                                  .posts[index].comments![commentIndex].user;
+                              final user = commentList[commentIndex].user;
 
                               //comments
-                              final comment =
-                                  state.posts[index].comments![commentIndex];
+                              final comment = commentList[commentIndex];
 
                               return ListTile(
                                 leading: CircleAvatar(
@@ -375,17 +398,24 @@ Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
                                     Text(
                                       timeago.format(dateTime, locale: 'en'),
                                     ),
-                                    comment.user.id ==
+                                    comment.user!.id! ==
                                             userSuccessState.currentUser.user.id
                                         ? GestureDetector(
-                                            onTap: () =>
-                                                context.read<CommentBloc>().add(
-                                                      DeleteCommentEvent(
-                                                        postId: state
-                                                            .posts[index].id!,
-                                                        commentId: comment.id!,
-                                                      ),
+                                            onTap: () {
+                                              context.read<PostsBloc>().add(
+                                                  PostsInitialFetchEvent());
+
+                                              context.read<CommentBloc>().add(
+                                                    DeleteCommentEvent(
+                                                      postId: state
+                                                          .posts[index].id!,
+                                                      commentId: comment.id!,
                                                     ),
+                                                  );
+                                              commentList.removeWhere(
+                                                  (element) =>
+                                                      element.id == comment.id);
+                                            },
                                             child: const Text(
                                               'Delete',
                                               style:
@@ -398,9 +428,9 @@ Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
                               );
                             },
                           );
-                        } else {
-                          return Container();
-                        }
+                        // } else {
+                        //   return Container();
+                        // }
                       },
                     )
                   : const SizedBox(
@@ -518,13 +548,20 @@ Row postIconRow(state, int index, CurrentUserSuccessState userState,
                   ));
         }
 
-        return loading2();
-        // return const Padding(
-        //     padding: EdgeInsets.only(right: 11),
-        //     child: Icon(
-        //       Icons.bookmark_border,
-        //       size: 27,
-        //     ));
+        return  IconButton(
+                  onPressed: () {
+                    // saved = true;
+                    savedPosts[userState.currentUser.user.id!]!
+                        .add(state.posts[index].id!);
+                    context
+                        .read<SavePostBloc>()
+                        .add(ToSavePostEvent(postId: state.posts[index].id!));
+                  },
+                  icon: const Icon(
+                    Icons.bookmark_border,
+                    size: 27,
+                  ));
+       
       })
     ],
   );

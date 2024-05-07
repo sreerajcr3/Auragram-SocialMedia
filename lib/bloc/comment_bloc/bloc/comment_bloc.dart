@@ -12,7 +12,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
     on<AddCommentEvent>(addCommentEvent);
     on<DeleteCommentEvent>(deleteCommentEvent);
     on<CommentUpdateEvent>(commentUpdateEvent);
-    emit(CommentUpdateState());
+    // emit(CommentUpdateState());
   }
 
   FutureOr<void> addCommentEvent(
@@ -21,8 +21,8 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
         await ApiServiceComment.addComment(event.postId, event.comment);
     if (result == 'success') {
       print('update worked');
-      // emit(CommentSuccessState());
-      emit(CommentUpdateState());
+      emit(CommentSuccessState());
+      // emit(CommentUpdateState());
     } else if (result == 'failed') {
       // emit(CommentFailedState());
       emit(CommentUpdateState());
@@ -38,10 +38,10 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
         await ApiServiceComment.deleteComment(event.postId, event.commentId);
     if (result) {
       emit(CommentDeleteSuccessState());
-      emit(CommentUpdateState());
+      // emit(CommentUpdateState());
     } else {
       emit(CommentDeleteErrorState());
-      emit(CommentUpdateState());
+      // emit(CommentUpdateState());
     }
   }
 

@@ -4,7 +4,7 @@ import 'package:aura/domain/model/user_model.dart';
 class SavedPosts {
   final String id;
   final User user;
-  final List<PostModelSavePost> posts;
+  final List posts;
   final String createdAt;
   final String updatedAt;
 

@@ -1,5 +1,5 @@
 class ApiEndPoints {
-  static const baseUrl = "http://10.0.2.2:5000";
+  static const baseUrl = "https://fhkdl79d-5000.inc1.devtunnels.ms";
   static const signup = "/signup";
   static const otp = "/signup-send-otp";
   static const login = "/login";

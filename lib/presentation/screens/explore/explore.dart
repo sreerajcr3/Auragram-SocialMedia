@@ -3,6 +3,7 @@ import 'package:aura/bloc/searchBloc/bloc/search_bloc.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/cubit/explorePage_cubit/explore_page_cubit.dart';
 import 'package:aura/presentation/functions/functions.dart';
+import 'package:aura/presentation/screens/post/explore_post_detail_page.dart';
 import 'package:aura/presentation/screens/profile/user_profile_new.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -104,7 +105,8 @@ class _ExplorePageState extends State<ExplorePage> {
                                   itemCount: state[1].posts.length,
                                   itemBuilder: (context, index) {
                                     final post = state[1];
-                                    return SizedBox(
+                                    return InkWell(
+                                      onTap: () => navigatorPush( ExplorePostDetailPage(intialIndex: index,), context),
                                       child: Image.network(
                                         post.posts[index].mediaURL![0],
                                         fit: BoxFit.cover,

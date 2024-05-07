@@ -20,7 +20,7 @@ class ApiServiceComment {
       final response =
           await client.post(Uri.parse(url), body: data, headers: headers);
       print(response.body);
-      print(response.statusCode);
+      print("add comment statuscode = ${response.statusCode}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return 'success';

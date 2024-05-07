@@ -2,6 +2,7 @@ import 'package:aura/bloc/chat/bloc/chat_bloc.dart';
 import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/core/constants/user_demo_pic.dart';
+import 'package:aura/domain/model/chat_model.dart';
 import 'package:aura/domain/model/user_model.dart';
 import 'package:aura/domain/socket/socket.dart';
 import 'package:aura/presentation/screens/chat/widgets/widgets.dart';
@@ -40,13 +41,26 @@ class _ChatScreenState extends State<ChatScreen> {
       buildWhen: null,
       listener: (context, state) {},
       builder: (context, state) {
+        var state1 = state[1];
         if (state[0] is CurrentUserSuccessState) {
-          if (state[1] is ChatLoadingState) {
+          if (state1 is ChatLoadingState) {
             return loading();
           }
-          if (state[1] is GetChatSuccefullState) {
-            // print("conversations from bloc = ${state[1].chat.sender.id}");
-            // conversations = state[1].chat;
+          if (state1 is GetChatSuccefullState) {
+            List<DateTime> dates = [];
+            List<List<Chat>> messgeByDate = [];
+            for (Chat message in state1.chat) {
+            DateTime  createdAt = DateTime.parse(message.createdAt);
+              DateTime date = DateTime(createdAt.year,createdAt.month,createdAt.day);
+              if (!dates.contains(date)) {
+                dates.add(date);
+                messgeByDate.add([message]);
+              }else{
+                messgeByDate.last.add(message);
+              }
+            }
+            // dates =dates.reversed.toList();
+            // messgeByDate = messgeByDate.reversed.toList();
             return Scaffold(
               appBar: AppBar(
                 title: Row(
@@ -71,21 +85,35 @@ class _ChatScreenState extends State<ChatScreen> {
                     SizedBox(
                       height: height / 1.26,
                       child: ListView.builder(
-                          itemCount: state[1].chat.length,
+                          itemCount: dates.length,
                           reverse: true,
                           itemBuilder: (context, index) {
-                            
-                            final chat = state[1].chat[index];
-                            if (chat.sender.id ==
+                            final reversedIndex = dates.length - 1 - index; 
+                            return Column(children: [ 
+                               DateDivider(date: dates[reversedIndex]),...messgeByDate[reversedIndex].map((e) {
+                                if (e.sender.id ==
                                 state[0].currentUser.user.id) {
                               return OwnMessage(
-                                chat: chat,
+                                chat: e,
                               );
                             } else {
                               return UserMessage(
-                                chat: chat,
+                                chat: e,
                               );
                             }
+                               })
+                            ],);
+                            // final chat = state[1].chat[index];
+                            // if (chat.sender.id ==
+                            //     state[0].currentUser.user.id) {
+                            //   return OwnMessage(
+                            //     chat: chat,
+                            //   );
+                            // } else {
+                            //   return UserMessage(
+                            //     chat: chat,
+                            //   );
+                            // }
                           }),
                     ),
                     Align(
@@ -151,22 +179,4 @@ class _ChatScreenState extends State<ChatScreen> {
       },
     );
   }
-
-  // updateMessages(
-  //     {required String senderId,
-  //     required String senderUsername,
-  //     required String recieverId,
-  //     required String recieverUsername}) {
-  //   final chat = Chat(
-  //       id: '',
-  //       sender: User(id: senderId, username: senderUsername),
-  //       receiver: User(id: recieverId, username: recieverUsername),
-  //       message: messagecontroller.text,
-  //       createdAt: '',
-  //       updatedAt: '');
-
-  // setState(() {
-  //   conversations.add(chat);
-  // });
-  // }
 }

@@ -20,3 +20,4 @@ final class ChatWithUserEvent extends ChatEvent {
 final class GetMyChatEvent extends ChatEvent {
   
 }
+

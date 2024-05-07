@@ -15,6 +15,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<AddReceivedChatEvent>(addReceivedChatEvent);
     on<ChatWithUserEvent>(chatWithUserEvent);
     on<GetMyChatEvent>(getMyChatEvent);
+   
   }
 
   FutureOr<void> chatUpdateEvent(
@@ -25,7 +26,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   FutureOr<void> addReceivedChatEvent(
       AddReceivedChatEvent event, Emitter<ChatState> emit) async {
     messageList.add(event.chat);
-    messageList.sort(((a, b) => b.createdAt.compareTo(a.createdAt)));
+    messageList.sort(((a, b) => a.createdAt.compareTo(b.createdAt)));
     emit(GetChatSuccefullState(chat: messageList));
   }
 
@@ -35,7 +36,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     final List result = await ApiServiceChat.getChatWithUser(event.userId);
     print("chat = $result");
     messageList = result;
-    messageList.sort(((a, b) => b.createdAt.compareTo(a.createdAt)));
+    messageList.sort(((a, b) => a.createdAt.compareTo(b.createdAt)));
     emit(GetChatSuccefullState(chat: messageList));
     if (result.isEmpty) {
       emit(GetChatSuccefullState(chat: result));
@@ -49,4 +50,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(ChatWithCurrentUserState(users: result));
    }
   }
+
+ 
 }

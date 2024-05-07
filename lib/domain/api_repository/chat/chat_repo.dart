@@ -100,4 +100,27 @@ class ApiServiceChat {
       return [];
     }
   }
+  static getAllChatWithMe()async{
+    List messages =[];
+    const url = "${ApiEndPoints.baseUrl}${ApiEndPoints.getChatWithUser}";
+    final token= await getToken();
+    final headers =  {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token'
+    };
+    final response = await client.get(Uri.parse(url),headers: headers);
+    debugPrint("get all chat with me statuscode = ${response.statusCode}");
+    debugPrint("get all chat with me response body = ${response.body}");
+    try {
+      if (response.statusCode == 200) {
+          final responsebody = jsonDecode(response.body)['data'];
+        for (var chat in responsebody) {
+          messages.add(Chat.fromJson(chat));
+        }
+        return messages;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 }

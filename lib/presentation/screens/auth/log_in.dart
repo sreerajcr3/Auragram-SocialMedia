@@ -1,4 +1,5 @@
 import 'package:aura/bloc/logIn_bloc/bloc/log_in_bloc.dart';
+import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/bottom_navigation/bottom_navigation.dart';
@@ -9,7 +10,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
-
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -66,11 +66,29 @@ class _LogInState extends State<LogIn> {
                           valueText: "Username"),
                       kheight30,
                       PasswordTextFormFeild(
-                          prefixIcon: Icons.lock,
-                          labelText: 'Password',
-                          controller: passwordController,
-                          valueText: "Password",
-                          suffixIcon: Ionicons.eye_off,),
+                        prefixIcon: Icons.lock,
+                        labelText: 'Password',
+                        controller: passwordController,
+                        valueText: "Password",
+                        suffixIcon: Ionicons.eye_off,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                                onPressed: () {
+                                  navigatorPush(
+                                      const ForgotPassword(), context);
+                                },
+                                child: const Text(
+                                  'Forgot Password ?',
+                                  style: TextStyle(color: kBlack),
+                                )),
+                          ],
+                        ),
+                      ),
                       kheight20,
                       CustomButton(
                         text: "Log In",
@@ -83,16 +101,21 @@ class _LogInState extends State<LogIn> {
                           }
                         },
                       ),
+                      kheight30,
                       TextButton(
                           onPressed: () {
                             navigatorPush(const SignUpScreen(), context);
                           },
-                          child: const Text('Sign up')),
-                      TextButton(
-                          onPressed: () {
-                            navigatorPush(const ForgotPassword(), context);
-                          },
-                          child: const Text('Forgot Password'))
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Don't have an account? "),
+                              Text(
+                                "Sign Up ",
+                                style: TextStyle(color: kBlack),
+                              ),
+                            ],
+                          )),
                     ],
                   ),
                 )

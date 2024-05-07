@@ -86,7 +86,7 @@ class _SavedPostDetailPageState extends State<SavedPostDetailPage> {
                                             physics:
                                                 const NeverScrollableScrollPhysics(),
                                             itemCount:
-                                                state.savedPosts.posts.length,
+                                                state.savedPosts.posts.length!,
                                             itemBuilder: (context, index) {
                                               if (state.savedPosts.posts
                                                      .isEmpty) {

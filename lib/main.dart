@@ -1,4 +1,5 @@
 import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
+import 'package:aura/bloc/all_mesages/bloc/all_messages_bloc.dart';
 import 'package:aura/bloc/bool_update/bloc/bool_bloc.dart';
 import 'package:aura/bloc/chat/bloc/chat_bloc.dart';
 import 'package:aura/bloc/comment_bloc/bloc/comment_bloc.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => GetUserBloc()),
         BlocProvider(create: (context) => ChatBloc()),
         BlocProvider(create: (context) => MessageListBloc()),
+        BlocProvider(create: (context) => AllMessagesBloc()),
 
         //cubit
         BlocProvider(create: (context) => ExplorePageCubit()),
