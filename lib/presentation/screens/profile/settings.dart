@@ -20,12 +20,10 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Settings"),
+        title: const Text("Settings"),
       ),
       body: BlocConsumer<CurrentUserBloc, CurrentUserState>(
-        listener: (context, state) {
-          // TODO: implement listener
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           if (state is CurrentUserSuccessState) {
             return Stack(
@@ -45,21 +43,21 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     InkWell(
                       onTap: () => navigatorPush(
-                          PrivacyTermsAndCondition(value: true), context),
+                          const PrivacyTermsAndCondition(value: true), context),
                       child: const ListTile(
                         title: Text("Privacy Policy"),
                       ),
                     ),
                     InkWell(
                       onTap: () => navigatorPush(
-                          PrivacyTermsAndCondition(value: false), context),
+                          const PrivacyTermsAndCondition(value: false),
+                          context),
                       child: const ListTile(
                         title: Text("Terms and condition"),
                       ),
                     ),
                     InkWell(
-                      onTap: () => navigatorPush(
-                        const  AboutUs(), context),
+                      onTap: () => navigatorPush(const AboutUs(), context),
                       child: const ListTile(
                         title: Text("About Us"),
                       ),
@@ -73,9 +71,9 @@ class _SettingsPageState extends State<SettingsPage> {
                         text: "Log Out",
                         onPressed: () {
                           logoutFunction(context);
-                        
                         })),
-                const Positioned(bottom: 15, right: 160, child: Text("version 1.0"))
+                const Positioned(
+                    bottom: 15, right: 160, child: Text("version 1.0"))
               ],
             );
           } else {
