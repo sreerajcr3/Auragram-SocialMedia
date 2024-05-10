@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:aura/domain/api_repository/chat/chat_repo.dart';
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 
 part 'message_list_event.dart';
 part 'message_list_state.dart';

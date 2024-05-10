@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
 import 'package:aura/bloc/follow_unfollow/bloc/follow_unfollow_bloc.dart';
@@ -61,7 +60,7 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
           }
         },
         builder: (context, state) {
-          var state2 = state[1];
+          
           if (state[1] is GetUserLoading) {
             return shimmerProfile();
             // return Container();
@@ -100,7 +99,7 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
                             width: MediaQuery.sizeOf(context).width,
                             height: height,
                             decoration: const BoxDecoration(
-                              color: kWhite,
+                              // color: kBlack,
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(20),
                                 topRight: Radius.circular(20),
@@ -112,23 +111,16 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
                           left: width / 3,
                           right: width / 3,
                           child: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                widget.user.profilePic == ''
-                                    ? demoProPic
-                                    : widget.user.profilePic!),
-                            radius: 50,
+                            radius: 51,
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  widget.user.profilePic == ''
+                                      ? demoProPic
+                                      : widget.user.profilePic!),
+                              radius: 48,
+                            ),
                           )),
-                      // Positioned(
-                      //   top: height / 3.7,
-                      //   left: 20,
-                      //   child: Text(
-                      //     state2.getUserModel.user.username,
-                      //     style: const TextStyle(
-                      //       fontFamily: "JosefinSans",
-                      //       fontSize: 22,
-                      //     ),
-                      //   ),
-                      // ),
+                     
                       Positioned(
                         top: height / 3.2,
                         left: 20,
@@ -140,78 +132,18 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
                           ),
                         ),
                       ),
-                      // Positioned(
-                      //   top: height / 4.9,
-                      //   right: MediaQuery.sizeOf(context).width * .03,
-                      //   child: Row(
-                      //     children: [
-                      //       InkWell(
-                      //         onTap: () async {
-                      //           final User currentuser =
-                      //               state[0].currentUser.user;
-
-                      //           final user = User(
-                      //             id: currentuser.id,
-                      //             username: currentuser.username,
-                      //             fullname: currentuser.fullname,
-                      //             followers: currentuser.followers,
-                      //             following: currentuser.following,
-                      //           );
-
-                      //           if (!follow!) {
-                      //             followers.add(user);
-
-                      //             context.read<FollowUnfollowBloc>().add(
-                      //                 TofollowEvent(userId: widget.user.id!));
-                      //           } else {
-                      //             followers.removeWhere((element) =>
-                      //                 element.id == currentuser.id);
-
-                      //             context.read<FollowUnfollowBloc>().add(
-                      //                 ToUnfollowEvent(userId: widget.user.id!));
-                      //           }
-                      //           StreamSubscription<FollowUnfollowState>
-                      //               subscription = context
-                      //                   .read<FollowUnfollowBloc>()
-                      //                   .stream
-                      //                   .listen((state) {
-                      //             if (state is FollowSuccesssFullState) {
-                      //             } else if (state
-                      //                 is UnFollowSuccesssFullState) {}
-                      //           });
-
-                      //           context
-                      //               .read<FollowUnfollowBloc>()
-                      //               .add(FollowUpdateEvent());
-                      //         },
-                      //         child: follow!
-                      //             ? followUnfollowButton(
-                      //                 "Following", color: kgreen, true)
-                      //             : followUnfollowButton("Follow", false),
-                      //       ),
-                      //       kwidth10,
-                      //       Container(
-                      //           alignment: Alignment.topCenter,
-                      //           decoration: BoxDecoration(
-                      //               border: Border.all(),
-                      //               // color: kBlack,
-                      //               borderRadius: BorderRadius.circular(10)),
-                      //           child: containerButton(
-                      //               "Message", () => null, Colors.transparent))
-                      //     ],
-                      //   ),
-                      // )
+                   
                     ],
                   ),
                   kheight15,
                   fullNameUserProfile(
-                    widget.user.username,
+                    widget.user.username,context
                   ),
                   usernameUserProfile(widget.user.username),
 
                   kheight15,
                   bioProfileScreen(
-                    widget.user.bio!,
+                    widget.user.bio!,context
                   ),
 
                   kheight15,
@@ -246,14 +178,14 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
                                 .read<FollowUnfollowBloc>()
                                 .add(ToUnfollowEvent(userId: widget.user.id!));
                           }
-                          StreamSubscription<FollowUnfollowState> subscription =
-                              context
-                                  .read<FollowUnfollowBloc>()
-                                  .stream
-                                  .listen((state) {
-                            if (state is FollowSuccesssFullState) {
-                            } else if (state is UnFollowSuccesssFullState) {}
-                          });
+                          // StreamSubscription<FollowUnfollowState> subscription =
+                          //     context
+                          //         .read<FollowUnfollowBloc>()
+                          //         .stream
+                          //         .listen((state) {
+                          //   if (state is FollowSuccesssFullState) {
+                          //   } else if (state is UnFollowSuccesssFullState) {}
+                          // });
 
                           context
                               .read<FollowUnfollowBloc>()

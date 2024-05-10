@@ -33,7 +33,6 @@ class SavePostBloc extends Bloc<SavePostEvent, SavePostState> {
     final result = await ApiServiceSavePost.getSavedPost();
 
     if (result != null) {
-      print("saved post = $result");
       emit(FetchedSavedPostsState(savedPosts: result));
     } else {
       emit(FetchedSavedPostsState(savedPosts: SavedPosts(id: '', user: User(), posts: [], createdAt: '', updatedAt: '')));

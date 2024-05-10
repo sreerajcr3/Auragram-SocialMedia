@@ -48,12 +48,10 @@ class ApiServiceChat {
     debugPrint("getChatwithuser statusdcode = ${response.statusCode}");
     try {
       if (response.statusCode == 200) {
-        print("chat with user = $list");
         final responsebody = jsonDecode(response.body)['data'];
         for (var chat in responsebody) {
           list.add(Chat.fromJson(chat));
         }
-        print("chat with user after= $list");
 
         return list;
       } else {

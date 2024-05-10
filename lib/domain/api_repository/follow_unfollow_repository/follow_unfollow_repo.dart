@@ -12,7 +12,7 @@ class ApiServiceFollowUnfollow {
     final url = "${ApiEndPoints.baseUrl}${ApiEndPoints.follow}/$userId";
 
     final token = await getToken();
-    print("token = $token");
+    debugPrint("token = $token");
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'
@@ -36,7 +36,7 @@ class ApiServiceFollowUnfollow {
     final url = "${ApiEndPoints.baseUrl}${ApiEndPoints.unFollow}/$userId";
 
     final token = await getToken();
-    print("token = $token");
+    debugPrint("token = $token");
     final headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'

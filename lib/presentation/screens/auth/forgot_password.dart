@@ -50,45 +50,43 @@ class ForgotPassword extends StatelessWidget {
                     ),
                     kheight20,
                     Center(
-                      child: Container(
-                        child: Column(
-                          children: [
-                            TextformField(
-                                labelText: "Email address",
-                                controller: emailController,
-                                valueText: "Email address"),
-                            kheight20,
-                            TextformField(
-                                labelText: " Password",
-                                controller: passwordController,
-                                valueText: "Password"),
-                            kheight20,
-                            TextformField(
-                                labelText: "Confirm Password",
-                                controller: confirmPasswordController,
-                                valueText: " Password"),
-                            kheight20,
-                            kheight20,
-                            CustomButton(
-                              text: "Change Password",
-                              onPressed: () {
-                                if (key.currentState!.validate()) {
-                                  if (passwordController.text ==
-                                      confirmPasswordController.text) {
-                                    context.read<LogInBloc>().add(
-                                          ForgotPasswordOtpEvent(
-                                            email: emailController.text,
-                                          ),
-                                        );
-                                  } else {
-                                    snackBar(
-                                        "Passwords are not same....!", context);
-                                  }
+                      child: Column(
+                        children: [
+                          TextformField(
+                              labelText: "Email address",
+                              controller: emailController,
+                              valueText: "Email address"),
+                          kheight20,
+                          TextformField(
+                              labelText: " Password",
+                              controller: passwordController,
+                              valueText: "Password"),
+                          kheight20,
+                          TextformField(
+                              labelText: "Confirm Password",
+                              controller: confirmPasswordController,
+                              valueText: " Password"),
+                          kheight20,
+                          kheight20,
+                          CustomButton(
+                            text: "Change Password",
+                            onPressed: () {
+                              if (key.currentState!.validate()) {
+                                if (passwordController.text ==
+                                    confirmPasswordController.text) {
+                                  context.read<LogInBloc>().add(
+                                        ForgotPasswordOtpEvent(
+                                          email: emailController.text,
+                                        ),
+                                      );
+                                } else {
+                                  snackBar(
+                                      "Passwords are not same....!", context);
                                 }
-                              },
-                            ),
-                          ],
-                        ),
+                              }
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ],

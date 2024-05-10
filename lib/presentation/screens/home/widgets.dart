@@ -10,9 +10,9 @@ import 'package:aura/presentation/screens/bottom_navigation/bottom_navigation.da
 import 'package:aura/presentation/screens/post/edit_post.dart';
 import 'package:aura/presentation/screens/post/post_detail.dart';
 import 'package:aura/presentation/screens/profile/user_profile_new.dart';
+import 'package:aura/presentation/screens/profile/widgets/widgets.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart';
@@ -30,8 +30,7 @@ class Date extends StatelessWidget {
   Widget build(BuildContext context) {
     DateTime dateTime = DateTime.parse(date);
 
-    // DateFormat formattedDate = DateFormat.yMMMd();
-    // String finaldate = formattedDate.format(dateTime);
+
 
     return Text(
       timeago.format(dateTime, locale: 'en'),
@@ -99,7 +98,7 @@ class SkeletonCard extends StatelessWidget {
                 kwidth10,
                 Container(
                   decoration: BoxDecoration(
-                      color: kWhite, borderRadius: BorderRadius.circular(20)),
+                      color: Theme.of(context).colorScheme.secondary, borderRadius: BorderRadius.circular(20)),
                   width: 100,
                   height: 20,
                 ),
@@ -109,7 +108,7 @@ class SkeletonCard extends StatelessWidget {
           Container(
             height: 300,
             decoration: BoxDecoration(
-                color: kWhite, borderRadius: BorderRadius.circular(30)),
+                color: Theme.of(context).colorScheme.primary, borderRadius: BorderRadius.circular(30)),
           ),
           kheight15,
           Padding(
@@ -118,7 +117,7 @@ class SkeletonCard extends StatelessWidget {
               width: 150,
               height: 30,
               decoration: BoxDecoration(
-                  color: kWhite, borderRadius: BorderRadius.circular(20)),
+                  color: Theme.of(context).colorScheme.secondary, borderRadius: BorderRadius.circular(20)),
             ),
           ),
           Padding(
@@ -127,7 +126,7 @@ class SkeletonCard extends StatelessWidget {
               width: 150,
               height: 12,
               decoration: BoxDecoration(
-                  color: kWhite, borderRadius: BorderRadius.circular(10)),
+                   color: Theme.of(context).colorScheme.secondary, borderRadius: BorderRadius.circular(10)),
             ),
           ),
           Padding(
@@ -136,7 +135,7 @@ class SkeletonCard extends StatelessWidget {
               width: 250,
               height: 12,
               decoration: BoxDecoration(
-                  color: kWhite, borderRadius: BorderRadius.circular(10)),
+                   color: Theme.of(context).colorScheme.secondary, borderRadius: BorderRadius.circular(10)),
             ),
           ),
           kheight15
@@ -147,7 +146,7 @@ class SkeletonCard extends StatelessWidget {
 }
 
 class VideoPlayerWIdget extends StatefulWidget {
-  final mediaUrl;
+  final String mediaUrl;
   const VideoPlayerWIdget({super.key, required this.mediaUrl});
 
   @override
@@ -378,7 +377,10 @@ logoutFunction(BuildContext context) {
   );
 }
 
-CircleAvatar postUserProPic(PostSuccessState state, int index,) {
+CircleAvatar postUserProPic(
+  PostSuccessState state,
+  int index,
+) {
   return CircleAvatar(
     radius: 20,
     backgroundImage: NetworkImage(
@@ -389,7 +391,8 @@ CircleAvatar postUserProPic(PostSuccessState state, int index,) {
   );
 }
 
-Column homePageMainContents(PostSuccessState state, int index,TextEditingController commentController ) {
+ homePageMainContents(PostSuccessState state, int index,
+    TextEditingController commentController,context) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -397,15 +400,15 @@ Column homePageMainContents(PostSuccessState state, int index,TextEditingControl
         children: [
           kwidth10,
           postUserProPic(state, index),
-
+  
           kwidth10,
-
+  
           //#########################  navigating the page to the user profile    ##########################################
           BlocBuilder<CurrentUserBloc, CurrentUserState>(
             builder: (context, userState) {
               if (userState is CurrentUserSuccessState) {
                 // ######################################   Post Icon Row #####################################
-
+  
                 return InkWell(
                   onTap: () => state.posts[index].user!.id ==
                           userState.currentUser.user.id
@@ -415,35 +418,32 @@ Column homePageMainContents(PostSuccessState state, int index,TextEditingControl
                             user: state.posts[index].user!,
                           ),
                           context),
-                  child: topRowPostCard(state, index),
+                  child: topRowPostCard(state, index,context),
                 );
               } else {
                 return Container();
               }
             },
           ),
-
-          // const Spacer(),
-          // postDeleteIcon(context,
-          //     state, index)
         ],
       ),
-      kheight5,
+      kheight15,
       Container(
         constraints: BoxConstraints(
           maxHeight:
-              state.posts[index].mediaURL![0].contains("image") ? 300 : 200,
+              !state.posts[index].mediaURL![0].contains("image") ?200  : MediaQuery.sizeOf(context).height/2
         ), // Adjust as needed
-
+      
         // ###################################        whole  post card ###########################################
-
+      
         child: postPageView(state, index),
       ),
+      kheight5,
       BlocBuilder<CurrentUserBloc, CurrentUserState>(
         builder: (context, userState) {
           if (userState is CurrentUserSuccessState) {
             // ######################################   Post Icon Row #####################################
-
+  
             return postIconRow(
                 state, index, userState, context, commentController);
           } else {
@@ -451,15 +451,9 @@ Column homePageMainContents(PostSuccessState state, int index,TextEditingControl
           }
         },
       ),
-      Text(
-        state.posts[index].user!.username!,
-        style: const TextStyle(fontSize: 20),
-      ),
+        fullNameUserPostCard( state.posts[index].user!.username!,context),
       kheight5,
-      Text(
-        state.posts[index].description!,
-        style: const TextStyle(fontSize: 16),
-      ),
+      descriptionPostCard(state, index,state.posts[index].description!,context),
       kheight5,
       Date(date: state.posts[index].createdAt!),
       kheight5,
@@ -473,3 +467,6 @@ Column homePageMainContents(PostSuccessState state, int index,TextEditingControl
     ],
   );
 }
+
+
+

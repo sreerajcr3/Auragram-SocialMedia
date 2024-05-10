@@ -183,7 +183,6 @@ static  getAllUsers()async{
         debugPrint("response body getAllUsers = ${response.body}");
         final responseBody = jsonDecode(response.body);
       final result =  responseBody['user'];
-      print("result = $result");
         if (response.statusCode == 200 || response.statusCode == 201) {
           for (var user in result) {
             allUsers.add(User.fromJson(user));

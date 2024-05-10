@@ -99,7 +99,6 @@ class ApiServicesAuth {
       debugPrint("logged in user : ${response.body}");
       final token = responseBody['token'].toString();
       final currentUsername = responseBody['username'].toString();
-      print("Auth repo id = $currentUsername");
 
       //------store token in sharedpreference--------
       saveToken(token);

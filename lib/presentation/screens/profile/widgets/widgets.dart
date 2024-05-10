@@ -1,22 +1,31 @@
+import 'dart:io';
+
+import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
+import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
+import 'package:aura/bloc/get_user/get_user_bloc.dart';
 import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
+import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/post/saved_post_detail_page.dart';
+import 'package:aura/presentation/screens/profile/edit_profile.dart';
 import 'package:aura/presentation/screens/profile/followers_page.dart';
 import 'package:aura/presentation/screens/post/post_detail.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:multi_bloc_builder/builders/multi_bloc_consumer.dart';
 import 'package:shimmer/shimmer.dart';
 
 //-----------------------profile following text----------------
 
 profileCardText2(text) => Text(
       text,
-      style: const TextStyle(fontSize: 16,color: Colors.black54),
+      style: const TextStyle(fontSize: 16,),
     );
 
 profileText1(text) {
@@ -25,7 +34,7 @@ profileText1(text) {
     child: Text(
       text.toString(),
       style: const TextStyle(
-          fontSize: 20, fontWeight: FontWeight.bold, color:kBlack),
+          fontSize: 20, fontWeight: FontWeight.bold,),
     ),
   );
 }
@@ -100,8 +109,7 @@ class ProfileFollowersCountCard extends StatelessWidget {
         children: [
           Column(
             children: [
-              profileText1(
-                  state.posts.length == 0 ? "0" : state.posts.length),
+              profileText1(state.posts.length == 0 ? "0" : state.posts.length),
               profileCardText2('Post')
             ],
           ),
@@ -153,38 +161,41 @@ class SavedPostGrid extends StatelessWidget {
       listener: (context, savedpostsState) {},
       builder: (context, savedpostsState) {
         if (savedpostsState is FetchedSavedPostsState) {
-      
-          return     savedpostsState.savedPosts.posts.isNotEmpty? SizedBox(
-            height: MediaQuery.sizeOf(context).height, // Adjust the height as needed
-            child: Expanded(
-              child: Column(
-                children: [
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: savedpostsState.savedPosts.posts.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 1,
-                      mainAxisSpacing: 1,
-                    ),
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () =>
-                            navigatorPush(const SavedPostDetailPage(), context),
-                        child: Image.network(
-                          savedpostsState.savedPosts.posts[index].mediaURL[0],
-                          fit: BoxFit.cover,
+          return savedpostsState.savedPosts.posts.isNotEmpty
+              ? SizedBox(
+                  height: MediaQuery.sizeOf(context)
+                      .height, // Adjust the height as needed
+                  child: Expanded(
+                    child: Column(
+                      children: [
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: savedpostsState.savedPosts.posts.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 1,
+                            mainAxisSpacing: 1,
+                          ),
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () => navigatorPush(
+                                  const SavedPostDetailPage(), context),
+                              child: Image.network(
+                                savedpostsState
+                                    .savedPosts.posts[index].mediaURL[0],
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
+                        kheight30
+                      ],
+                    ),
                   ),
-                  kheight30
-                ],
-              ),
-            ),
-          ): emptyMessage();
+                )
+              : emptyMessage();
         } else {
           return Container();
         }
@@ -193,7 +204,8 @@ class SavedPostGrid extends StatelessWidget {
   }
 }
 
-Container followUnfollowButton(text, follow, {color = kWhite}) {
+Container followUnfollowButton(text, follow,
+    {color = kWhite, horizontal = 60.0, vertical = 6.0}) {
   return Container(
     decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -203,7 +215,7 @@ Container followUnfollowButton(text, follow, {color = kWhite}) {
         ),
         borderRadius: BorderRadius.circular(5)),
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 6),
+      padding:  EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
       child: Text(
         text,
         style: const TextStyle(fontSize: 17, color: kWhite),
@@ -226,7 +238,10 @@ SizedBox emptyMessage() {
           Center(
               child: Text(
             'No Post available',
-            style: TextStyle(fontSize: 22, fontFamily: 'kanit',),
+            style: TextStyle(
+              fontSize: 22,
+              fontFamily: 'kanit',
+            ),
           )),
         ],
       ));
@@ -356,7 +371,6 @@ class SkeletonProfilel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.sizeOf(context).width;
-    var height = MediaQuery.sizeOf(context).height;
     return Scaffold(
       appBar: customAppbar(text: "Profile", context: context, onPressed: () {}),
       body: SingleChildScrollView(
@@ -459,18 +473,190 @@ class SkeletonProfilel extends StatelessWidget {
     );
   }
 }
-  Text bioProfileScreen(text ) {
-    return Text(
-                   text,
-                    style: const TextStyle(fontSize: 15),
-                  );
+
+Text bioProfileScreen(text,context) {
+  return Text(
+    text,
+    style:  TextStyle(fontSize: 15,color: Theme.of(context).colorScheme.primary,),
+  );
+}
+
+Text fullNameUserProfile(text,context) {
+  return Text(text,
+      style:  TextStyle(fontSize: 20, fontWeight: FontWeight.w700,color: Theme.of(context).colorScheme.secondary,));
+}
+Text fullNameUserPostCard(text,context) {
+  return Text(text,
+      style:  TextStyle(fontSize: 20,color: Theme.of(context).colorScheme.secondary, ));
+}
+Text descriptionPostCard( state, int index,text,context) {
+  return Text(
+      text,
+      style:  TextStyle(fontSize: 16,color: Theme.of(context).colorScheme.secondary,),
+    );
+}
+
+Text usernameUserProfile(text) => Text(
+      "@$text",
+      style: const TextStyle(color: kGreyDark),
+    );
+
+Column entireProfileContent(BuildContext context, CurrentUserSuccessState state,
+    double screenHeight, double screenWidth) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Stack(
+        children: [
+          const SizedBox(
+            height: 250,
+          ),
+          Positioned(
+              child: SizedBox(
+            height: 200,
+            width: MediaQuery.sizeOf(context).width,
+            child: state.currentUser.user.coverPic != ""
+                ? Image.network(
+                    state.currentUser.user.coverPic!,
+                    fit: BoxFit.cover,
+                  )
+                : Image.network(
+                    demoCoverPic,
+                    fit: BoxFit.fill,
+                    width: MediaQuery.sizeOf(context).width,
+                  ),
+          )),
+          Positioned(
+            top: 180,
+            child: Container(
+              decoration: const BoxDecoration(
+                // color: Theme.of(context).colorScheme.onSecondary,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              height: 50,
+              width: MediaQuery.sizeOf(context).width,
+            ),
+          ),
+          Positioned(
+            top: screenHeight / 6,
+            left: screenWidth / 3,
+            right: screenWidth / 3,
+            child: CircleAvatar(
+              radius: 51,
+              backgroundColor: kWhite,
+              child: CircleAvatar(
+                radius: 48,
+                backgroundImage: state.currentUser.user.profilePic != ""
+                    ? NetworkImage(state.currentUser.user.profilePic!)
+                    : const NetworkImage(demoProPic),
+              ),
+            ),
+          ),
+        ],
+      ),
+      fullNameUserProfile(state.currentUser.user.fullname!,context),
+      usernameUserProfile(state.currentUser.user.username),
+      kheight15,
+      bioProfileScreen(state.currentUser.user.bio!,context),
+      kheight15,
+      ProfileFollowersCountCard(
+        state: state.currentUser,
+        currentUser: true,
+      ),
+      kheight15,
+      Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 30,
+        ),
+        child: containerTextButton(
+            "Edit Profile",
+            () => navigatorPush(
+                EditProfile(user: state.currentUser.user), context),
+            Theme.of(context).colorScheme.secondary,context,
+            textColor:  Theme.of(context).colorScheme.primary,),
+      ),
+      kheight20,
+      DefaultTabController(
+        length: 2,
+        child: Column(
+          children: [
+            const TabBar(
+              indicatorSize: TabBarIndicatorSize.tab,
+              tabs: [
+                Tab(
+                  icon: Icon(Ionicons.grid),
+                ),
+                Tab(
+                  icon: Icon(Ionicons.bookmark),
+                ),
+              ],
+            ),
+            // TabBarView
+            SizedBox(
+              height: 400,
+              child: TabBarView(
+                children: [
+                  ProfilePostGrid(state: state),
+                  SavedPostGrid(state: state),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+pickProfilePic() async {
+  final XFile? pickedImage =
+      await ImagePicker().pickImage(source: ImageSource.gallery);
+  return File(pickedImage!.path);
+}
+
+pickCoverPic() async {
+  final XFile? pickedImage =
+      await ImagePicker().pickImage(source: ImageSource.gallery);
+  return File(pickedImage!.path);
+}
+
+class FollowersFollowingCard extends StatelessWidget {
+  const FollowersFollowingCard({
+    super.key,
+    required this.widget,
+    required this.index,
+  });
+
+  final Followers widget;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocConsumer(
+      blocs: [context.watch<CurrentUserBloc>(), context.watch<GetUserBloc>()],
+      buildWhen: null,
+      builder: (p0, state) {
+        if (state[1] is GetUsersuccessState) {
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(state[1]
+                          .getUserModel
+                          .followersUsersList[index]
+                          .profilePic ==
+                      ""
+                  ? demoProPic
+                  : state[1].getUserModel.followersUsersList[index].profilePic),
+            ),
+            title:
+                Text(state[1].getUserModel.followersUsersList[index].username),
+          );
+        } else {
+          return loading();
+        }
+      },
+    );
   }
-
-  Text fullNameUserProfile(text ) {
-    return Text(text,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w700));
-  }
-
-    Text usernameUserProfile(text) => Text("@$text",style:const TextStyle(color: kGreyDark),);
-
+}

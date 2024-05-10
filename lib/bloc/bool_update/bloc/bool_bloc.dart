@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+
 
 part 'bool_event.dart';
 part 'bool_state.dart';
@@ -16,10 +18,10 @@ class BoolBloc extends Bloc<BoolEvent, BoolState> {
    final result = event.value;
    if (result) {
      emit(BoolTrue());
-     print("event is true");
+     debugPrint("event is true");
    }else{
     emit(BoolFalse());
-    print("event is false");
+    debugPrint("event is false");
    }
   }
 }

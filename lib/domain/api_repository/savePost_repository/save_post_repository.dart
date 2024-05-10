@@ -12,7 +12,6 @@ class ApiServiceSavePost {
 
   static Future<bool> savePost(postId) async {
     final url = "${ApiEndPoints.baseUrl}${ApiEndPoints.savePost}$postId";
-        print("save url = $url");
 
     final token = await getToken();
     final headers = {
@@ -37,7 +36,6 @@ class ApiServiceSavePost {
 
   static Future<bool> unSavePost(postId) async {
     final url = "${ApiEndPoints.baseUrl}${ApiEndPoints.unSavePost}$postId";
-    print("unsave url = $url");
     final token = await getToken();
     final headers = {
       'Content-Type': 'application/json',
@@ -71,21 +69,21 @@ class ApiServiceSavePost {
 
     final response = await client.get(Uri.parse(url), headers: headers);
 
-    print("saved post statuscode = ${response.statusCode}");
+    debugPrint("saved post statuscode = ${response.statusCode}");
     debugPrint("saved post status code = ${response.statusCode}");
     if (response.statusCode == 200 || response.statusCode == 201) {
       final Map<String, dynamic> responseBody = jsonDecode(response.body);
-      print("saved post response body $responseBody");
+      debugPrint("saved post response body $responseBody");
     final savedPosts = SavedPosts.fromJson(responseBody['saved-posts']);
 
       return savedPosts;
       
     } else {
-      print("Failed to fetch saved posts. Status code: ${response.statusCode}");
+      debugPrint("Failed to fetch saved posts. Status code: ${response.statusCode}");
       return null; 
     }
   } catch (e) {
-    print("Error fetching saved posts: $e");
+    debugPrint("Error fetching saved posts: $e");
     return null; 
   }
 }

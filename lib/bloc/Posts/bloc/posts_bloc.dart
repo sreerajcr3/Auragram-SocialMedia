@@ -31,12 +31,11 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
     final List<Posts> result = await ApiServicesPost.getPosts();
     if (result.isNotEmpty) {
       emit(PostSuccessState(posts: result));
-     print("resultttt=====${result.length}");
       // emit(PostUpdatedState());
 
     } else {
       emit(PostErrorState());
-      print("error fetching - post bloc");
+      debugPrint("error fetching - post bloc");
       //  emit(PostUpdatedState());
     }
   } catch (e) {

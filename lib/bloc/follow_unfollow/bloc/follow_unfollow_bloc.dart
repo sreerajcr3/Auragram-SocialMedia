@@ -41,7 +41,6 @@ class FollowUnfollowBloc
 
   FutureOr<void> followUpdateEvent(
       FollowUpdateEvent event, Emitter<FollowUnfollowState> emit) {
-        print("follow bloc worked");
     emit(FollowUpdatedState());
     // Timer(Duration(seconds: 2), () {
     //   emit(FollowfailedFullState());

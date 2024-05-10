@@ -34,7 +34,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       ChatWithUserEvent event, Emitter<ChatState> emit) async {
     emit(ChatLoadingState());
     final List result = await ApiServiceChat.getChatWithUser(event.userId);
-    print("chat = $result");
+    debugPrint("chat = $result");
     messageList = result;
     messageList.sort(((a, b) => a.createdAt.compareTo(b.createdAt)));
     emit(GetChatSuccefullState(chat: messageList));

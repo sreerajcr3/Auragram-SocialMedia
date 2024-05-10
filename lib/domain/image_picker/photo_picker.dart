@@ -17,7 +17,7 @@ class MediaServices {
         type: requestType,
       );
     } else {
-      PhotoManager.openSetting();
+      // PhotoManager.openSetting();
     }
     return albumList;
   }

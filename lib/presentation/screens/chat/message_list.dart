@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:aura/bloc/all_mesages/bloc/all_messages_bloc.dart';
 import 'package:aura/bloc/message_list.dart/bloc/message_list_bloc.dart';
 import 'package:aura/core/constants/user_demo_pic.dart';
@@ -53,7 +55,8 @@ class _MessageListState extends State<MessageList> {
                   if (state[1] is GetAllChatWithMeSuccessState) {
                     final user = state[0].usersList[index];
                     final lastMessage = getLastMessage(user.id, state[1].chat);
-                   final DateTime finalDate = DateTime.parse(lastMessage.lastmessageTime);
+                    final DateTime finalDate =
+                        DateTime.parse(lastMessage.lastmessageTime);
                     return InkWell(
                       onTap: () => navigatorPush(
                           ChatScreen(user: state[0].usersList[index]), context),
@@ -65,20 +68,20 @@ class _MessageListState extends State<MessageList> {
                                   : demoProPic),
                         ),
                         title: Text(
-                          state[0].usersList[index].username,
+                          state[0].usersList[index].fullname,
                           style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(
                           lastMessage.lastMessage,
                           style: const TextStyle(fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        trailing: Text(timeago
-                            .format(finalDate, locale: 'en')),
+                        trailing: Text(timeago.format(finalDate, locale: 'en')),
                       ),
                     );
                   } else {
-                    return loading2();
+                    return loading2(context);
                   }
                 },
               );

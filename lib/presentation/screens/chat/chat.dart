@@ -50,33 +50,20 @@ class _ChatScreenState extends State<ChatScreen> {
             List<DateTime> dates = [];
             List<List<Chat>> messgeByDate = [];
             for (Chat message in state1.chat) {
-            DateTime  createdAt = DateTime.parse(message.createdAt);
-              DateTime date = DateTime(createdAt.year,createdAt.month,createdAt.day);
+              DateTime createdAt = DateTime.parse(message.createdAt);
+              DateTime date =
+                  DateTime(createdAt.year, createdAt.month, createdAt.day);
               if (!dates.contains(date)) {
                 dates.add(date);
                 messgeByDate.add([message]);
-              }else{
+              } else {
                 messgeByDate.last.add(message);
               }
             }
             // dates =dates.reversed.toList();
             // messgeByDate = messgeByDate.reversed.toList();
             return Scaffold(
-              appBar: AppBar(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundImage: NetworkImage(widget.user.profilePic != ""
-                          ? widget.user.profilePic!
-                          : demoProPic),
-                    ),
-                    kwidth20,
-                    Text(widget.user.fullname!),
-                  ],
-                ),
-              ),
+              appBar: customAppbarChatPage(fullname: widget.user.fullname!, context: context, profilePic: widget.user.profilePic!),
               body: SizedBox(
                 height: height,
                 width: width,
@@ -88,21 +75,24 @@ class _ChatScreenState extends State<ChatScreen> {
                           itemCount: dates.length,
                           reverse: true,
                           itemBuilder: (context, index) {
-                            final reversedIndex = dates.length - 1 - index; 
-                            return Column(children: [ 
-                               DateDivider(date: dates[reversedIndex]),...messgeByDate[reversedIndex].map((e) {
-                                if (e.sender.id ==
-                                state[0].currentUser.user.id) {
-                              return OwnMessage(
-                                chat: e,
-                              );
-                            } else {
-                              return UserMessage(
-                                chat: e,
-                              );
-                            }
-                               })
-                            ],);
+                            final reversedIndex = dates.length - 1 - index;
+                            return Column(
+                              children: [
+                                DateDivider(date: dates[reversedIndex]),
+                                ...messgeByDate[reversedIndex].map((e) {
+                                  if (e.sender.id ==
+                                      state[0].currentUser.user.id) {
+                                    return OwnMessage(
+                                      chat: e,
+                                    );
+                                  } else {
+                                    return UserMessage(
+                                      chat: e,
+                                    );
+                                  }
+                                })
+                              ],
+                            );
                             // final chat = state[1].chat[index];
                             // if (chat.sender.id ==
                             //     state[0].currentUser.user.id) {
@@ -171,10 +161,10 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             );
           } else {
-            return loading2();
+            return loading2(context);
           }
         } else {
-          return loading2();
+          return loading2(context);
         }
       },
     );

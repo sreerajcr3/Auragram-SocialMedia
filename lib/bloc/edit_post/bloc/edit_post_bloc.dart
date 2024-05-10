@@ -15,8 +15,7 @@ class EditPostBloc extends Bloc<EditPostEvent, EditPostState> {
 
   FutureOr<void> postEditEvent(
       PostEditEvent event, Emitter<EditPostState> emit)async {
-        print("description :${event.description}");
-        print("location :${event.location}");
+      
     final  result =await ApiServicesPost.editPost(
         event.postId, event.description, event.location);
         if (result) {

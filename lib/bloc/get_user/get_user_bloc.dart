@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:aura/domain/api_repository/user_repository/repository.dart';
 import 'package:aura/domain/model/get_user_model.dart';
-import 'package:aura/domain/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,18 +22,17 @@ class GetUserBloc extends Bloc<GetUserEvent, GetUserState> {
     if (result != null) {
       emit(GetUsersuccessState(getUserModel: result));
     } else {
-      print("failed");
+      debugPrint("failed getUserfetchEvent");
     }
   }
 
   FutureOr<void> getAllUsersEvent(
       GetAllUsersEvent event, Emitter<GetUserState> emit) async {
-        print("object");
     final result = await ApiServiceUser.getAllUsers();
     if (result != null) {
       emit(GetAllUsersSuccessState(allUsers: result));
     } else {
-      print("failed");
+      debugPrint("getAllUsersEvent failed");
     }
   }
 }

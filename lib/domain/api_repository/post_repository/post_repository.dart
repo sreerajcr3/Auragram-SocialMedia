@@ -16,7 +16,6 @@ class ApiServicesPost {
 
   static Future<List<String>> uploadImage(
       List<AssetEntity> selectedAssets) async {
-    print("cloudinary function worked");
     File? image;
     List<String> imagePath = [];
     final url = Uri.parse('https://api.cloudinary.com/v1_1/dsqdeuryl/upload');
@@ -34,7 +33,6 @@ class ApiServicesPost {
         imagePath.add(url);
       }
     }
-    print("imagepath====$imagePath");
     return imagePath;
   }
 
@@ -65,7 +63,6 @@ class ApiServicesPost {
     List<AssetEntity> selectedAssetList,
     location,
   ) async {
-    print("create post function worked");
     const String url = "${ApiEndPoints.baseUrl}${ApiEndPoints.createpost}";
 
     try {

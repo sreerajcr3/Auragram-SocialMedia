@@ -11,6 +11,7 @@ import 'package:aura/cubit/password_cubit/password_cubit.dart';
 import 'package:aura/domain/model/comment_model.dart';
 import 'package:aura/domain/model/user_model.dart';
 import 'package:aura/presentation/screens/home/widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ionicons/ionicons.dart';
@@ -46,8 +47,8 @@ class TextformField extends StatelessWidget {
         },
         controller: controller,
         decoration: InputDecoration(
-            prefixIcon: Icon(prefixIcon) ?? null,
-            suffixIcon: Icon(suffixIcon ?? null),
+            prefixIcon: Icon(prefixIcon),
+            suffixIcon: Icon(suffixIcon),
             focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(color: Colors.red)),
@@ -73,7 +74,7 @@ class PasswordTextFormFeild extends StatefulWidget {
   final TextEditingController controller;
   final IconData? prefixIcon;
   final IconData? suffixIcon;
-  PasswordTextFormFeild({
+  const PasswordTextFormFeild({
     super.key,
     required this.labelText,
     required this.controller,
@@ -91,9 +92,7 @@ class _PasswordTextFormFeildState extends State<PasswordTextFormFeild> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PasswordCubit, bool>(
-      listener: (context, state) {
-        // TODO: implement listener
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         return SizedBox(
           width: MediaQuery.sizeOf(context).width * 0.9,
@@ -108,7 +107,7 @@ class _PasswordTextFormFeildState extends State<PasswordTextFormFeild> {
             controller: widget.controller,
             obscureText: obscureText,
             decoration: InputDecoration(
-                prefixIcon: Icon(widget.prefixIcon) ?? null,
+                prefixIcon: Icon(widget.prefixIcon),
                 suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
@@ -225,9 +224,12 @@ class CustomButton extends StatelessWidget {
 
 demoButton(context) {
   return Container(
-    width: MediaQuery.sizeOf(context).width * 0.9,
-    height: 10,
+    width: MediaQuery.sizeOf(context).width / 1.1,
+    height: 65,
     color: kBlack,
+    child: Center(
+      child: loading2(context),
+    ),
   );
 }
 
@@ -259,6 +261,7 @@ Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
     builder: (ctx) {
       return Column(
         children: [
+          kheight20,
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -270,6 +273,7 @@ Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
               ),
             ),
           ),
+          kheight20,
           BlocConsumer<CommentBloc, CommentState>(
             buildWhen: null,
             listenWhen: null,
@@ -280,73 +284,68 @@ Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
             },
             builder: (context, multistate) {
               commentList = state.posts[index].comments;
-            
-                return Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              userSuccessState.currentUser.user.profilePic != ''
-                                  ? userSuccessState
-                                      .currentUser.user.profilePic!
-                                  : demoProPic)),
-                    ),
-                    kwidth10,
-                    Expanded(
-                      child: TextFormField(
-                        controller: commentController,
-                        decoration: InputDecoration(
-                          suffix: InkWell(
-                              onTap: () {
-                                final comment = CommentModel(
-                                    id: state.posts[index].id!,
-                                    comment: commentController.text,
-                                    createdAt: DateTime.now().toString(),
-                                    user: User(
-                                        username: userSuccessState
-                                            .currentUser.user.username,
-                                        id: userSuccessState
-                                            .currentUser.user.id,
-                                        profilePic: userSuccessState
-                                            .currentUser.user.profilePic));
-                                commentList.add(comment);
-                                context.read<CommentBloc>().add(
-                                      AddCommentEvent(
-                                          postId: state.posts[index].id!,
-                                          comment: commentController.text),
-                                    );
 
-                                print(
-                                    "commentlist = ${commentList[0].comment}");
+              return Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            userSuccessState.currentUser.user.profilePic != ''
+                                ? userSuccessState.currentUser.user.profilePic!
+                                : demoProPic)),
+                  ),
+                  kwidth10,
+                  Expanded(
+                    child: TextFormField(
+                      controller: commentController,
+                      decoration: InputDecoration(
+                        suffix: InkWell(
+                            onTap: () {
+                              final comment = CommentModel(
+                                  id: state.posts[index].id!,
+                                  comment: commentController.text,
+                                  createdAt: DateTime.now().toString(),
+                                  user: User(
+                                      username: userSuccessState
+                                          .currentUser.user.username,
+                                      id: userSuccessState.currentUser.user.id,
+                                      profilePic: userSuccessState
+                                          .currentUser.user.profilePic));
+                              commentList.add(comment);
+                              context.read<CommentBloc>().add(
+                                    AddCommentEvent(
+                                        postId: state.posts[index].id!,
+                                        comment: commentController.text),
+                                  );
 
-                                context
-                                    .read<CommentBloc>()
-                                    .add(CommentUpdateEvent());
+                              context
+                                  .read<CommentBloc>()
+                                  .add(CommentUpdateEvent());
 
-                                commentController.clear();
-                              },
-                              child: const SizedBox(
-                                width: 60,
-                                child: Row(
-                                  children: [
-                                    kwidth10,
-                                    Text(
-                                      'Post',
-                                      style: TextStyle(
-                                          color: Colors.purple,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              )),
-                          hintText: 'Add a comment',
-                        ),
+                              commentController.clear();
+                            },
+                            child: const SizedBox(
+                              width: 60,
+                              child: Row(
+                                children: [
+                                  kwidth10,
+                                  Text(
+                                    'Post',
+                                    style: TextStyle(
+                                        color: Colors.purple,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            )),
+                        hintText: 'Add a comment',
                       ),
                     ),
-                    kwidth10
-                  ],
-                );
+                  ),
+                  kwidth10
+                ],
+              );
               // } else {
               //   return loading();
               // }
@@ -354,26 +353,26 @@ Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
           ),
           Expanded(
             child: SingleChildScrollView(
-              child: commentList.isNotEmpty
+              child: state.posts[index].comments.isNotEmpty
                   ? BlocBuilder<CommentBloc, CommentState>(
                       builder: (context, _) {
                         // if (_ is CommentUpdateState) {
-                          return ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: commentList.length,
-                            itemBuilder: (context, commentIndex) {
-                              DateTime dateTime = DateTime.parse(state
-                                  .posts[index]
-                                  .comments![commentIndex]
-                                  .createdAt);
-                              //user in comments
-                              final user = commentList[commentIndex].user;
+                        return ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: commentList.length,
+                          itemBuilder: (context, commentIndex) {
+                            DateTime dateTime = DateTime.parse(state
+                                .posts[index]
+                                .comments![commentIndex]
+                                .createdAt);
+                            //user in comments
+                            final user = commentList[commentIndex].user;
 
-                              //comments
-                              final comment = commentList[commentIndex];
+                            //comments
+                            final comment = commentList[commentIndex];
 
-                              return ListTile(
+                            return ListTile(
                                 leading: CircleAvatar(
                                     backgroundImage: NetworkImage(
                                         user!.profilePic != ''
@@ -398,39 +397,31 @@ Future<dynamic> commentBottomSheet(BuildContext context, state, int index,
                                     Text(
                                       timeago.format(dateTime, locale: 'en'),
                                     ),
-                                    comment.user!.id! ==
-                                            userSuccessState.currentUser.user.id
-                                        ? GestureDetector(
-                                            onTap: () {
-                                              context.read<PostsBloc>().add(
-                                                  PostsInitialFetchEvent());
-
-                                              context.read<CommentBloc>().add(
-                                                    DeleteCommentEvent(
-                                                      postId: state
-                                                          .posts[index].id!,
-                                                      commentId: comment.id!,
-                                                    ),
-                                                  );
-                                              commentList.removeWhere(
-                                                  (element) =>
-                                                      element.id == comment.id);
-                                            },
-                                            child: const Text(
-                                              'Delete',
-                                              style:
-                                                  TextStyle(color: Colors.blue),
-                                            ))
-                                        : Container(),
-                                    kwidth20
                                   ],
                                 ),
-                              );
-                            },
-                          );
-                        // } else {
-                        //   return Container();
-                        // }
+                                trailing: comment.user!.id! ==
+                                        userSuccessState.currentUser.user.id
+                                    ? IconButton(
+                                        onPressed: () {
+                                          context
+                                              .read<PostsBloc>()
+                                              .add(PostsInitialFetchEvent());
+
+                                          context.read<CommentBloc>().add(
+                                                DeleteCommentEvent(
+                                                  postId:
+                                                      state.posts[index].id!,
+                                                  commentId: comment.id!,
+                                                ),
+                                              );
+                                          commentList.removeWhere((element) =>
+                                              element.id == comment.id);
+                                        },
+                                        icon: const Icon(CupertinoIcons.delete),
+                                      )
+                                    : const SizedBox());
+                          },
+                        );
                       },
                     )
                   : const SizedBox(
@@ -483,18 +474,19 @@ Row postIconRow(state, int index, CurrentUserSuccessState userState,
                   .contains(userState.currentUser.user.id!)
               ? postIconButton(Ionicons.heart_outline)
               : postIconButton(Ionicons.heart, color: kred)),
-
-      postLikeCount(state.posts[index].likes!.length.toString(),
-          state.posts[index].likes!.length > 1 ? "likes" : "like", index),
-
+      postLikeCount(
+          state.posts[index].likes!.length.toString(),
+          state.posts[index].likes!.length > 1 ? "likes" : "like",
+          index,
+          context),
       postIconButton(Ionicons.chatbubble_outline,
           onPressed: () => commentBottomSheet(
               context, state, index, commentController, userState)),
-      postLikeCount(state.posts[index].comments!.length.toString(),
-          state.posts[index].likes!.length > 1 ? "comments" : "comment", index),
-      // postIconButton(
-      //   Ionicons.paper_plane_outline,
-      // ),
+      postLikeCount(
+          state.posts[index].comments!.length.toString(),
+          state.posts[index].likes!.length > 1 ? "comments" : "comment",
+          index,
+          context),
       const Spacer(),
       BlocConsumer<SavePostBloc, SavePostState>(listener: (context, saveState) {
         if (saveState is SavePostSuccessState) {
@@ -502,26 +494,14 @@ Row postIconRow(state, int index, CurrentUserSuccessState userState,
         }
       }, builder: (context, saveState) {
         if (saveState is FetchedSavedPostsState) {
-          // bool saved = false;
-
           if (!savedPosts.containsKey(userState.currentUser.user.id)) {
             savedPosts[userState.currentUser.user.id!] = {};
           }
-          // for (var i = 0; i < saveState.savedPosts.posts.length; i++) {
-          //   if (saveState.savedPosts.posts[i].id == state.posts[index].id) {
-
-          //     saved = true;
-          //   } else {
-          //     saved = false;
-          //   }
-          // }
 
           return savedPosts[userState.currentUser.user.id]!
                   .contains(state.posts[index].id!)
               ? IconButton(
                   onPressed: () {
-                    // saved = false;
-                    // savedPostSet.remove(state.posts[index].id!);
                     savedPosts[userState.currentUser.user.id!]!
                         .remove(state.posts[index].id!);
 
@@ -529,39 +509,39 @@ Row postIconRow(state, int index, CurrentUserSuccessState userState,
                         .read<SavePostBloc>()
                         .add(UnsavePostEvent(postId: state.posts[index].id!));
                   },
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.bookmark,
+                    color: Theme.of(context).colorScheme.primary,
                     size: 27,
                   ))
               : IconButton(
                   onPressed: () {
-                    // saved = true;
                     savedPosts[userState.currentUser.user.id!]!
                         .add(state.posts[index].id!);
                     context
                         .read<SavePostBloc>()
                         .add(ToSavePostEvent(postId: state.posts[index].id!));
                   },
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.bookmark_border,
+                    color: Theme.of(context).colorScheme.primary,
                     size: 27,
                   ));
         }
 
-        return  IconButton(
-                  onPressed: () {
-                    // saved = true;
-                    savedPosts[userState.currentUser.user.id!]!
-                        .add(state.posts[index].id!);
-                    context
-                        .read<SavePostBloc>()
-                        .add(ToSavePostEvent(postId: state.posts[index].id!));
-                  },
-                  icon: const Icon(
-                    Icons.bookmark_border,
-                    size: 27,
-                  ));
-       
+        return IconButton(
+            onPressed: () {
+              savedPosts[userState.currentUser.user.id!]!
+                  .add(state.posts[index].id!);
+              context
+                  .read<SavePostBloc>()
+                  .add(ToSavePostEvent(postId: state.posts[index].id!));
+            },
+            icon: Icon(
+              Icons.bookmark_border,
+              color: Theme.of(context).colorScheme.primary,
+              size: 27,
+            ));
       })
     ],
   );
@@ -575,7 +555,6 @@ AppBar customAppbar(
     bool leadingIcon = false}) {
   List<Widget> appBarActions = [];
 
-  // Add the icon button if the icon is provided
   if (icon != null) {
     appBarActions.add(
       Padding(
@@ -588,6 +567,7 @@ AppBar customAppbar(
     );
   }
   return AppBar(
+      foregroundColor: Theme.of(context).colorScheme.secondary,
       actions: appBarActions,
       title: Text(
         text,
@@ -605,10 +585,36 @@ AppBar customAppbar(
           : Container());
 }
 
-Text postLikeCount(text, item, int index) {
+AppBar customAppbarChatPage({
+  required String fullname,
+  required BuildContext context,
+  required String profilePic,
+}) {
+  return AppBar(
+    foregroundColor: Theme.of(context).colorScheme.secondary,
+    backgroundColor: Colors.transparent,
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        CircleAvatar(
+          radius: 20,
+          backgroundImage:
+              NetworkImage(profilePic != "" ? profilePic : demoProPic),
+        ),
+        kwidth20,
+        Text(fullname),
+      ],
+    ),
+  );
+}
+
+Text postLikeCount(text, item, int index, context) {
   return Text(
     "$text $item",
-    style: const TextStyle(fontSize: 15),
+    style: TextStyle(
+      fontSize: 15,
+      color: Theme.of(context).colorScheme.secondary,
+    ),
   );
 }
 
@@ -617,30 +623,14 @@ PageView postPageView(state, int index) {
     scrollDirection: Axis.horizontal,
     itemCount: state.posts[index].mediaURL!.length,
     itemBuilder: (context, pageIndex) {
-      // postId = state.posts[index].id!;
-      // userId = state.posts[index].user!.id!;
       final mediaUrl = state.posts[index].mediaURL![pageIndex];
       return ClipRRect(
           borderRadius: BorderRadius.circular(5),
-          // decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),color: Colors.green),
           child: mediaUrl.contains("image")
               ? Image.network(
                   mediaUrl,
                   fit: BoxFit.cover,
                 )
-              // : FlickVideoPlayer(
-              //     flickManager: FlickManager(
-              //       videoPlayerController:
-              //           VideoPlayerController
-              //               .networkUrl(
-              //         Uri.parse(mediaUrl),
-              //         httpHeaders: {
-              //           "Authorization":
-              //               "334583943739261"
-              //         },
-              //       ),
-              //     ),
-              //   ),
               : VideoPlayerWIdget(mediaUrl: mediaUrl));
     },
   );
@@ -651,12 +641,12 @@ loading() {
       child: LoadingAnimationWidget.dotsTriangle(color: kBlack, size: 35));
 }
 
-loading2() {
+loading2(context) {
   return Center(
       child: Padding(
     padding: const EdgeInsets.only(right: 10),
     child:
-        LoadingAnimationWidget.horizontalRotatingDots(color: kBlack, size: 25),
+        LoadingAnimationWidget.horizontalRotatingDots(color: kWhite, size: 25),
   ));
 }
 
@@ -665,9 +655,9 @@ containerButton(icon, Function() onTap, bg, {textColor = Colors.black}) {
     onTap: onTap,
     child: Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [Colors.blue, Colors.lightBlueAccent]),
+        gradient:
+            const LinearGradient(colors: [Colors.blue, Colors.lightBlueAccent]),
         borderRadius: BorderRadius.circular(5),
-        // border: Border.
       ),
       child: Center(
           child: Padding(
@@ -680,36 +670,47 @@ containerButton(icon, Function() onTap, bg, {textColor = Colors.black}) {
   );
 }
 
-containerTextButton(text, Function() onTap, bg, {textColor = Colors.black}) {
+containerTextButton(text, Function() onTap, bg, context,
+    {textColor = Colors.black}) {
   return InkWell(
     onTap: onTap,
     child: Container(
       decoration: BoxDecoration(
-          color: bg,
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all()),
+        color: Theme.of(context).colorScheme.primary,
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(),
+      ),
       child: Center(
           child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
               child: Text(
                 text,
-                style: TextStyle(color: textColor),
+                style: const TextStyle(
+                  color: kWhite,
+                ),
               ))),
     ),
   );
 }
 
-Column topRowPostCard(PostSuccessState state, int index) {
+Column topRowPostCard(PostSuccessState state, int index, context) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
         state.posts[index].user!.username!,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: Theme.of(context).colorScheme.secondary,
+        ),
       ),
       Text(
         state.posts[index].location.toString(),
-        style: const TextStyle(fontSize: 12, color: kGreyDark),
+        style: TextStyle(
+          fontSize: 12,
+          color: Theme.of(context).colorScheme.secondary,
+        ),
       )
     ],
   );

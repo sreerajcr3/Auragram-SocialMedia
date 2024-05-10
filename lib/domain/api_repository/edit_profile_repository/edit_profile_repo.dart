@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:aura/core/urls/url.dart';
 import 'package:aura/domain/api_repository/post_repository/post_repository.dart';
 import 'package:aura/presentation/functions/functions.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ApiServiceEditProfile {
@@ -14,7 +15,7 @@ class ApiServiceEditProfile {
     final dynamic profilePicUrl;
     final dynamic coverPicUrl;
     
-    print("edit profile repo worked");
+
 
     if (profilePic is! String) {
       profilePicUrl = await ApiServicesPost.uploadProfilePicture(profilePic);
@@ -27,8 +28,8 @@ class ApiServiceEditProfile {
       coverPicUrl = coverpic;
     }
    
-    print("coverpic url = $coverPicUrl");
-    print("profilePic url = $profilePicUrl");
+    debugPrint("coverpic url = $coverPicUrl");
+    debugPrint("profilePic url = $profilePicUrl");
 
     const url = "${ApiEndPoints.baseUrl}${ApiEndPoints.editProfile}";
     final body = {
@@ -47,8 +48,8 @@ class ApiServiceEditProfile {
     try {
       final response =
           await client.patch(Uri.parse(url), body: encodedbody, headers: headers);
-      print("response statuscode = ${response.statusCode}");
-      print("response body = ${response.body}");
+      debugPrint("response statuscode = ${response.statusCode}");
+      debugPrint("response body = ${response.body}");
       if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
       }

@@ -14,13 +14,11 @@ class OwnMessage extends StatefulWidget {
 class _OwnMessageState extends State<OwnMessage> {
   @override
   void initState() {
-    print("chat time =${widget.chat.createdAt}");
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    DateTime dateTime = DateTime.parse(widget.chat.createdAt);
 
     // Format the DateTime object
     final formattedTime = DateFormat('hh:mm a');
@@ -39,10 +37,10 @@ class _OwnMessageState extends State<OwnMessage> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 10, right: 85, top: 10, bottom: 18),
+                    left: 10, right: 60, top: 10, bottom: 18),
                 child: Text(
                   widget.chat.message,
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16,color: kBlack),
                 ),
               ),
               Positioned(
@@ -53,9 +51,9 @@ class _OwnMessageState extends State<OwnMessage> {
                     Text(
                       formattedTime.format(
                           DateTime.parse(widget.chat.createdAt).toLocal()),
-                      style: TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: 12,color: kBlack),
                     ),
-                    Icon(Icons.done)
+                    // const Icon(Icons.done)
                   ],
                 ),
               )
@@ -92,7 +90,7 @@ class UserMessage extends StatelessWidget {
                     left: 10, right: 60, top: 10, bottom: 20),
                 child: Text(
                   chat.message,
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16,color: kBlack),
                 ),
               ),
               Positioned(
@@ -101,7 +99,7 @@ class UserMessage extends StatelessWidget {
                 child: Text(
                   formattedTime
                       .format(DateTime.parse(chat.createdAt).toLocal()),
-                  style: TextStyle(fontSize: 12),
+                  style: const TextStyle(fontSize: 12,color: kBlack),
                 ),
               )
             ],
@@ -125,7 +123,7 @@ class DateDivider extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Text(
         isToday? 'Today' : DateFormat.yMMMd().format(date),
-        style: const TextStyle(fontSize: 13,fontWeight: FontWeight.bold, color: Colors.black),
+        style: const TextStyle(fontSize: 13,fontWeight: FontWeight.bold,),
      ),
 );
 }

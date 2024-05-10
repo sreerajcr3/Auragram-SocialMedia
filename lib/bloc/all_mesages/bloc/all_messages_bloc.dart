@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:aura/domain/api_repository/chat/chat_repo.dart';
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'all_messages_event.dart';
 part 'all_messages_state.dart';
@@ -18,7 +18,7 @@ class AllMessagesBloc extends Bloc<AllMessagesEvent, AllMessagesState> {
       
       emit(GetAllChatWithMeSuccessState(chat: result));
     }else{
-      print("failed");
+      debugPrint("getAllChatWithMeEvent failed");
     }
   }
   }

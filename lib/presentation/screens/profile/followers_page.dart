@@ -32,7 +32,7 @@ class _FollowersState extends State<Followers> {
     context
         .read<GetUserBloc>()
         .add(GetuserFetchEvent(userId: widget.users.user.id!));
-    Timer(Duration(seconds: 2), () {
+    Timer(const Duration(seconds: 2), () {
       loading = true;
     });
     super.initState();
@@ -54,17 +54,12 @@ class _FollowersState extends State<Followers> {
           if (state[2] is GetUserLoading) {
             return Scaffold(
               body: Center(
-                child: loading2(),
+                child: loading2(context),
               ),
             );
           }
           followingUsers = widget.users.followingUsersList;
-          // follow = state[0]
-          //         .currentUser
-          //         .followingIdsList
-          //         .contains(widget.users.user.id)
-          //     ? true
-          //     : false;
+      
 
           return Scaffold(
             appBar: AppBar(
@@ -165,8 +160,8 @@ class _FollowersState extends State<Followers> {
                                       });
                                 },
                                 child: followUnfollowButton(
-                                    "Following", color: kgreen, true))
-                            : Container(
+                                    "Following", color: kgreen, true,horizontal:30.0 ,vertical: 4.0))
+                            : const SizedBox(
                                 height: 1,
                                 width: 1,
                               ),
@@ -192,58 +187,4 @@ class _FollowersState extends State<Followers> {
   }
 }
 
-class FollowersFollowingCard extends StatelessWidget {
-  const FollowersFollowingCard({
-    super.key,
-    required this.widget,
-    required this.index,
-  });
 
-  final Followers widget;
-  final int index;
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiBlocConsumer(
-      blocs: [context.watch<CurrentUserBloc>(), context.watch<GetUserBloc>()],
-      buildWhen: null,
-      builder: (p0, state) {
-         if (state[1] is GetUsersuccessState) {
-           List followers = state[1].getUserModel.followersUsersList;
-        bool follow = followers
-            .any((element) => element.id == state[0].currentUser.user.id);
-        return ListTile(
-          // trailing: InkWell(
-          //   onTap: () {
-          //     follow
-          //         ? context
-          //             .read<FollowUnfollowBloc>()
-          //             .add(ToUnfollowEvent(userId: widget.users.user.id!))
-          //         : context
-          //             .read<FollowUnfollowBloc>()
-          //             .add(TofollowEvent(userId: widget.users.user.id!));
-          //     follow ? false : true;
-          //   },
-          //   child: !follow
-          //       ? followUnfollowButton("Following", color: kgreen, follow)
-          //       : followUnfollowButton("Follow", follow),
-          // ),
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(
-                state[1].getUserModel.followersUsersList[index].profilePic == ""
-                    ? demoProPic
-                    : state[1]
-                        .getUserModel
-                        .followersUsersList[index]
-                        .profilePic),
-          ),
-          title: Text(state[1].getUserModel.followersUsersList[index].username),
-        );
-         } else {
-           return loading();
-         }
-        
-      },
-    );
-  }
-}

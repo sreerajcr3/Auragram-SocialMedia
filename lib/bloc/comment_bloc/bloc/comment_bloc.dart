@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:aura/domain/api_repository/comment_repository/comment_repostory.dart';
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 
 part 'comment_event.dart';
 part 'comment_state.dart';
@@ -20,7 +21,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
     final result =
         await ApiServiceComment.addComment(event.postId, event.comment);
     if (result == 'success') {
-      print('update worked');
+      debugPrint('update worked');
       emit(CommentSuccessState());
       // emit(CommentUpdateState());
     } else if (result == 'failed') {

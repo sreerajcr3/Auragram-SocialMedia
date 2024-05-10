@@ -64,13 +64,14 @@ class _MediaPickerState extends State<MediaPicker> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Text(
-                          'Loading...'); // Display a loading indicator while waiting for the count
+                          'Loading...');
                     } else if (snapshot.hasError) {
                       return Text(
-                          'Error: ${snapshot.error}'); // Display an error if fetching the count fails
+                          'Error: ${snapshot.error}');
                     } else {
-                      return Text("${album.name} (${snapshot.data})",
-                          style: TextStyle());
+                      return Text(
+                        "${album.name} (${snapshot.data})",
+                      );
                     }
                   },
                 ),
@@ -100,12 +101,12 @@ class _MediaPickerState extends State<MediaPicker> {
           ? const Center(child: CircularProgressIndicator())
           : GridView.builder(
               itemCount: assetList
-                  .length, // Use assetList.length instead of selectedAssetList.length
+                  .length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3, crossAxisSpacing: 5),
               itemBuilder: (context, index) {
                 AssetEntity assetEntity = assetList[
-                    index]; // Use assetList[index] instead of selectedAssetList[index]
+                    index]; 
                 return Stack(
                   children: [
                     Positioned.fill(
@@ -183,7 +184,6 @@ class _MediaPickerState extends State<MediaPicker> {
     } else if (selectedAssetList.length < widget.maxCount) {
       setState(() {
         selectedAssetList.add(assetEntity);
-        print(selectedAssetList);
       });
     }
   }

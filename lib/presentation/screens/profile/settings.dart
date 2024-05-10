@@ -1,6 +1,7 @@
 import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/home/widgets.dart';
+import 'package:aura/presentation/screens/settings/about_us.dart';
 import 'package:aura/presentation/screens/settings/privacy_policies.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
@@ -54,6 +55,13 @@ class _SettingsPageState extends State<SettingsPage> {
                           PrivacyTermsAndCondition(value: false), context),
                       child: const ListTile(
                         title: Text("Terms and condition"),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () => navigatorPush(
+                        const  AboutUs(), context),
+                      child: const ListTile(
+                        title: Text("About Us"),
                       ),
                     ),
                   ],

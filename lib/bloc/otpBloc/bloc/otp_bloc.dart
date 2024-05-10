@@ -15,7 +15,6 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
     emit(OtpLoadingState());
     final result = await ApiServicesAuth.createOtp(event.email);
     if (result) {
-      print('yes otp');
       emit(OtpSuccessState());
     } else {
      emit(OtpErrorState());

@@ -25,23 +25,22 @@ class _LogInState extends State<LogIn> {
     final usernameController = TextEditingController();
     final passwordController = TextEditingController();
     return Scaffold(
-      body: BlocListener<LogInBloc, LogInState>(
-        listener: (context, state) {
-          if (state is LoginSuccessState) {
-            navigatorReplacement(const CustomBottomNavigationBar(), context);
-          } else if (state is LoginInvalidPasswordState) {
-            snackBar("Incorrect password", context);
-          } else if (state is LoginLoadingState) {
-            const Center(child: CircularProgressIndicator());
-          } else if (state is LoginInvalidUsernameState) {
-            snackBar("Incorrect email address", context);
-          } else if (state is LoginParameterMissingState) {
-            snackBar("Username and password are empty", context);
-          } else if (state is LoginErrorState) {
-            snackBar("Server unreachable", context);
-          } else {}
-        },
-        child: SingleChildScrollView(
+      body: BlocConsumer<LogInBloc, LogInState>(listener: (context, state) {
+        if (state is LoginSuccessState) {
+          navigatorReplacement(const CustomBottomNavigationBar(), context);
+        } else if (state is LoginInvalidPasswordState) {
+          snackBar("Incorrect password", context);
+        } else if (state is LoginLoadingState) {
+          const Center(child: CircularProgressIndicator());
+        } else if (state is LoginInvalidUsernameState) {
+          snackBar("Incorrect email address", context);
+        } else if (state is LoginParameterMissingState) {
+          snackBar("Username and password are empty", context);
+        } else if (state is LoginErrorState) {
+          snackBar("Server unreachable", context);
+        } else {}
+      }, builder: (context, state) {
+        return SingleChildScrollView(
           child: Form(
             key: key,
             child: Column(
@@ -82,37 +81,47 @@ class _LogInState extends State<LogIn> {
                                   navigatorPush(
                                       const ForgotPassword(), context);
                                 },
-                                child: const Text(
+                                child: Text(
                                   'Forgot Password ?',
-                                  style: TextStyle(color: kBlack),
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary),
                                 )),
                           ],
                         ),
                       ),
                       kheight20,
-                      CustomButton(
-                        text: "Log In",
-                        onPressed: () {
-                          if (key.currentState!.validate()) {
-                            context.read<LogInBloc>().add(UserLogin(
-                                username: usernameController.text,
-                                password: passwordController.text));
-                            userLoggedIn(context);
-                          }
-                        },
-                      ),
+                      if (state is LoginLoadingState)
+                        // CustomButton(text: "loading.....", onPressed: () {})
+                        demoButton(context)
+                      else
+                        CustomButton(
+                          text: "Log In",
+                          onPressed: () {
+                            if (key.currentState!.validate()) {
+                              context.read<LogInBloc>().add(UserLogin(
+                                  username: usernameController.text,
+                                  password: passwordController.text));
+                              userLoggedIn(context);
+                            }
+                          },
+                        ),
                       kheight30,
                       TextButton(
                           onPressed: () {
                             navigatorPush(const SignUpScreen(), context);
                           },
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("Don't have an account? "),
+                              const Text("Don't have an account? "),
                               Text(
                                 "Sign Up ",
-                                style: TextStyle(color: kBlack),
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary),
                               ),
                             ],
                           )),
@@ -122,8 +131,8 @@ class _LogInState extends State<LogIn> {
               ],
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

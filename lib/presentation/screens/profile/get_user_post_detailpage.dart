@@ -66,16 +66,7 @@ class _GetuserPostDetailPageState extends State<GetuserPostDetailPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              // AppName(),
-                              // finished
-                              //     ? SingleChildScrollView(
-                              //         scrollDirection: Axis.horizontal,
-                              //         child: Row(
-                              //           children:
-                              //               List.generate(10, (index) => storyCircle()),
-                              //         ),
-                              //       )
-                              //     : skeltonStory(),
+                           
                               finished
                                   ? BlocConsumer<PostsBloc, PostsState>(
                                       listener: (context, state) {

@@ -66,7 +66,7 @@ Future<String?> getUsername() async {
 Future<void> checkLoggedIn(context) async {
   final sharedprefs = await SharedPreferences.getInstance();
   final result = sharedprefs.getBool(savedkey);
-  if (result != null && result == false) {
+  if (result == null || result == false) {
     navigatorReplacement(const LogIn(), context);
   } else {
     navigatorReplacement(const CustomBottomNavigationBar(), context);
@@ -74,6 +74,7 @@ Future<void> checkLoggedIn(context) async {
 }
 
 Future<void> logOut(context) async {
+  indexChangeNotifier.value = 0;
   savedPostSet = {};
   SocketService().disconnectSocket();
   final sharedprefs = await SharedPreferences.getInstance();

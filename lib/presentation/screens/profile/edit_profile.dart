@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:aura/bloc/edit_profile/bloc/edit_profile_bloc.dart';
@@ -9,10 +11,10 @@ import 'package:aura/domain/model/user_model.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/bottom_navigation/bottom_navigation.dart';
 import 'package:aura/presentation/screens/profile/current_user_profile.dart';
+import 'package:aura/presentation/screens/profile/widgets/widgets.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 
 class EditProfile extends StatefulWidget {
@@ -127,17 +129,16 @@ class _EditProfileState extends State<EditProfile> {
                       children: [
                         containerTextButton("Edit Profile pic", () async {
                           final image = await pickProfilePic();
-                          // ignore: use_build_context_synchronously
                           context.read<ImagePickerBloc>().add(
                                 AddProfilePicEvent(image: image!),
                               );
-                        }, kWhite),
+                        },  Theme.of(context).colorScheme.secondary,context),
                         containerTextButton("Edit Cover pic", () async {
                           final image = await pickCoverPic();
                           context
                               .read<ImagePickerBloc>()
                               .add(AddCoverPicEvent(image: image));
-                        }, kWhite),
+                        },  Theme.of(context).colorScheme.secondary,context),
                       ],
                     ),
                     kheight30,
@@ -160,15 +161,5 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  pickProfilePic() async {
-    final XFile? pickedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    return File(pickedImage!.path);
-  }
 
-  pickCoverPic() async {
-    final XFile? pickedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    return File(pickedImage!.path);
-  }
 }

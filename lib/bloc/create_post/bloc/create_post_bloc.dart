@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:aura/domain/api_repository/post_repository/post_repository.dart';
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:photo_manager/photo_manager.dart';
 
 part 'create_post_event.dart';
@@ -23,11 +24,11 @@ class CreatePostBloc extends Bloc<CreatePostEvent, CreatePostState> {
     if (result == "Success") {
       emit(CreatePostSuccessState());
     } else if (result == "Oops") {
-      print('create post failed');
+      debugPrint('create post failed');
 
       emit(CreatePostOopsState());
     } else {
-      print('create post failed');
+      debugPrint('create post failed');
 
       emit(CreatePostErrorState());
     }

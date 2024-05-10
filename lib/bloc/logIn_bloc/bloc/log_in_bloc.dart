@@ -19,7 +19,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
     final result = await ApiServicesAuth.logIn(event.username, event.password);
     if (result == "Success") {
       emit(LoginSuccessState());
-      print("success");
+      debugPrint("success");
     } else if (result == "Invalid Password") {
       emit(LoginInvalidPasswordState());
     } else if (result == "Invalid Username") {
@@ -52,7 +52,7 @@ class LogInBloc extends Bloc<LogInEvent, LogInState> {
     } else if (result == 'User not found in this Email') {
       emit(ForgotPasswordOtpErrorState());
     } else {
-      print("failed frgt pswrd");
+      debugPrint("failed frgt pswrd");
     }
   }
 }

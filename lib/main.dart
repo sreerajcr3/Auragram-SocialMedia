@@ -18,6 +18,7 @@ import 'package:aura/bloc/otpBloc/bloc/otp_bloc.dart';
 import 'package:aura/bloc/saved_post/bloc/save_post_bloc.dart';
 import 'package:aura/bloc/searchBloc/bloc/search_bloc.dart';
 import 'package:aura/bloc/signUpbloc/bloc/sign_up_bloc.dart';
+import 'package:aura/core/colors/colors.dart';
 import 'package:aura/cubit/duration_cubit/cubit/duration_cubit.dart';
 import 'package:aura/cubit/explorePage_cubit/explore_page_cubit.dart';
 import 'package:aura/cubit/password_cubit/password_cubit.dart';
@@ -63,15 +64,25 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => PasswordCubit()),
       ],
       child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            fontFamily: "JosefinSans",
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            // scaffoldBackgroundColor: kGrey,
-            useMaterial3: true,
-          ),
-          debugShowCheckedModeBanner: false,
-          home: const SplashScreen()),
+        // themeMode: ThemeMode.light,
+
+        darkTheme: darkMode,
+        theme: ThemeData(
+          primaryColorDark: kBlack,
+          primaryColor: kBlack,
+          primaryColorLight: kWhite,
+          fontFamily: "JosefinSans",
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Color.fromARGB(255, 255, 255, 255,),
+              secondary: kBlack,
+              primary: kBlack
+              ),
+          // scaffoldBackgroundColor: kGrey,
+          useMaterial3: true,
+        ),
+        debugShowCheckedModeBanner: false,
+        home: const SplashScreen(),
+      ),
     );
   }
 }

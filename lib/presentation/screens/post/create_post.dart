@@ -3,10 +3,9 @@
 import 'package:aura/bloc/create_post/bloc/create_post_bloc.dart';
 import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
-import 'package:aura/domain/api_repository/post_repository/post_repository.dart';
 import 'package:aura/domain/image_picker/photo_picker.dart';
 import 'package:aura/presentation/functions/functions.dart';
-import 'package:aura/presentation/screens/Image_picker/mediaPicker.dart';
+import 'package:aura/presentation/screens/Image_picker/media_picker.dart';
 import 'package:aura/presentation/screens/Image_picker/functions/functions_and_widgets.dart';
 import 'package:aura/presentation/screens/bottom_navigation/bottom_navigation.dart';
 import 'package:aura/presentation/widgets/widgets.dart';

@@ -1,6 +1,7 @@
 import 'package:aura/bloc/Posts/bloc/posts_bloc.dart';
 import 'package:aura/bloc/searchBloc/bloc/search_bloc.dart';
 import 'package:aura/core/constants/measurements.dart';
+import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/cubit/explorePage_cubit/explore_page_cubit.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/post/explore_post_detail_page.dart';
@@ -20,6 +21,7 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
+  String onChangedValue = "";
   @override
   void initState() {
     context.read<PostsBloc>().add(PostsInitialFetchEvent());
@@ -36,16 +38,9 @@ class _ExplorePageState extends State<ExplorePage> {
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            title: const Text("Explore"),
-            centerTitle: true,
-            leading: IconButton(
-                onPressed: () {
-                  searchController.clear();
-                  context.read<ExplorePageCubit>().pageChange(false);
-                },
-                icon: const Icon(Ionicons.arrow_back)),
-          ),
+          appBar:
+              customAppbar(text: "Explore", context: context, onPressed: () {}),
+       
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -62,6 +57,17 @@ class _ExplorePageState extends State<ExplorePage> {
                               SizedBox(
                                 height: 53,
                                 child: TextFormField(
+                                  onChanged: (value) {
+                                    onChangedValue = value;
+                                    if (value.isNotEmpty) {
+                                       context.read<SearchBloc>().add(
+                                                GetUserEvent(
+                                                    text:
+                                                      value));
+                                    }else{
+                                          context.read<ExplorePageCubit>().pageChange(false);
+                                    }
+                                  },
                                   decoration: InputDecoration(
                                       hintText: "Search",
                                       suffixIcon: IconButton(
@@ -106,7 +112,11 @@ class _ExplorePageState extends State<ExplorePage> {
                                   itemBuilder: (context, index) {
                                     final post = state[1];
                                     return InkWell(
-                                      onTap: () => navigatorPush( ExplorePostDetailPage(intialIndex: index,), context),
+                                      onTap: () => navigatorPush(
+                                          ExplorePostDetailPage(
+                                            intialIndex: index,
+                                          ),
+                                          context),
                                       child: Image.network(
                                         post.posts[index].mediaURL![0],
                                         fit: BoxFit.cover,
@@ -142,13 +152,17 @@ class _ExplorePageState extends State<ExplorePage> {
                                                         .usersList[index]
                                                         .fullname),
                                                     leading: CircleAvatar(
-                                                        backgroundColor:
-                                                            Colors.grey,
                                                         backgroundImage:
                                                             NetworkImage(state
-                                                                .usersList[
-                                                                    index]
-                                                                .profilePic)),
+                                                                        .usersList[
+                                                                            index]
+                                                                        .profilePic !=
+                                                                    ""
+                                                                ? state
+                                                                    .usersList[
+                                                                        index]
+                                                                    .profilePic
+                                                                : demoProPic)),
                                                     title: Text(
                                                       state.usersList[index]
                                                           .username,
