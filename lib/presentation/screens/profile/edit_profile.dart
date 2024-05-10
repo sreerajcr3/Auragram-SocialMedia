@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:aura/bloc/edit_profile/bloc/edit_profile_bloc.dart';
 import 'package:aura/bloc/image_picker/bloc/image_picker_bloc.dart';
-import 'package:aura/core/colors/colors.dart';
 import 'package:aura/core/constants/measurements.dart';
 import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/domain/model/user_model.dart';
