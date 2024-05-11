@@ -13,6 +13,7 @@ import 'package:aura/presentation/screens/profile/widgets/widgets.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:multi_bloc_builder/multi_bloc_builder.dart';
 
 class SavedPostDetailPage extends StatefulWidget {
@@ -90,7 +91,10 @@ class _SavedPostDetailPageState extends State<SavedPostDetailPage> {
                                             itemBuilder: (context, index) {
                                               if (state.savedPosts.posts
                                                      .isEmpty) {
-                                                return emptyMessage();
+                                                return emptyMessage('No Post available',  const Icon(
+            Ionicons.camera_outline,
+            size: 30,
+          ),);
                                               }else{
                                                return Column(
                                                 crossAxisAlignment:

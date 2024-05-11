@@ -25,7 +25,9 @@ import 'package:shimmer/shimmer.dart';
 
 profileCardText2(text) => Text(
       text,
-      style: const TextStyle(fontSize: 16,),
+      style: const TextStyle(
+        fontSize: 16,
+      ),
     );
 
 profileText1(text) {
@@ -34,7 +36,9 @@ profileText1(text) {
     child: Text(
       text.toString(),
       style: const TextStyle(
-          fontSize: 20, fontWeight: FontWeight.bold,),
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
     ),
   );
 }
@@ -195,7 +199,13 @@ class SavedPostGrid extends StatelessWidget {
                     ),
                   ),
                 )
-              : emptyMessage();
+              : emptyMessage(
+                  'No Post available',
+                  const Icon(
+                    Ionicons.camera_outline,
+                    size: 30,
+                  ),
+                );
         } else {
           return Container();
         }
@@ -215,7 +225,7 @@ Container followUnfollowButton(text, follow,
         ),
         borderRadius: BorderRadius.circular(5)),
     child: Padding(
-      padding:  EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
+      padding: EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
       child: Text(
         text,
         style: const TextStyle(fontSize: 17, color: kWhite),
@@ -224,21 +234,18 @@ Container followUnfollowButton(text, follow,
   );
 }
 
-SizedBox emptyMessage() {
-  return const SizedBox(
+SizedBox emptyMessage(text, Icon? icon) {
+  return SizedBox(
       height: 300,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Ionicons.camera_outline,
-            size: 30,
-          ),
+          icon??const SizedBox(),
           kwidth10,
           Center(
               child: Text(
-            'No Post available',
-            style: TextStyle(
+            text,
+            style: const TextStyle(
               fontSize: 22,
               fontFamily: 'kanit',
             ),
@@ -474,26 +481,41 @@ class SkeletonProfilel extends StatelessWidget {
   }
 }
 
-Text bioProfileScreen(text,context) {
+Text bioProfileScreen(text, context) {
   return Text(
     text,
-    style:  TextStyle(fontSize: 15,color: Theme.of(context).colorScheme.primary,),
+    style: TextStyle(
+      fontSize: 15,
+      color: Theme.of(context).colorScheme.primary,
+    ),
   );
 }
 
-Text fullNameUserProfile(text,context) {
+Text fullNameUserProfile(text, context) {
   return Text(text,
-      style:  TextStyle(fontSize: 20, fontWeight: FontWeight.w700,color: Theme.of(context).colorScheme.secondary,));
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
+        color: Theme.of(context).colorScheme.secondary,
+      ));
 }
-Text fullNameUserPostCard(text,context) {
+
+Text fullNameUserPostCard(text, context) {
   return Text(text,
-      style:  TextStyle(fontSize: 20,color: Theme.of(context).colorScheme.secondary, ));
+      style: TextStyle(
+        fontSize: 20,
+        color: Theme.of(context).colorScheme.secondary,
+      ));
 }
-Text descriptionPostCard( state, int index,text,context) {
+
+Text descriptionPostCard(state, int index, text, context) {
   return Text(
-      text,
-      style:  TextStyle(fontSize: 16,color: Theme.of(context).colorScheme.secondary,),
-    );
+    text,
+    style: TextStyle(
+      fontSize: 16,
+      color: Theme.of(context).colorScheme.secondary,
+    ),
+  );
 }
 
 Text usernameUserProfile(text) => Text(
@@ -557,10 +579,10 @@ Column entireProfileContent(BuildContext context, CurrentUserSuccessState state,
           ),
         ],
       ),
-      fullNameUserProfile(state.currentUser.user.fullname!,context),
+      fullNameUserProfile(state.currentUser.user.fullname!, context),
       usernameUserProfile(state.currentUser.user.username),
       kheight15,
-      bioProfileScreen(state.currentUser.user.bio!,context),
+      bioProfileScreen(state.currentUser.user.bio!, context),
       kheight15,
       ProfileFollowersCountCard(
         state: state.currentUser,
@@ -572,11 +594,13 @@ Column entireProfileContent(BuildContext context, CurrentUserSuccessState state,
           horizontal: 30,
         ),
         child: containerTextButton(
-            "Edit Profile",
-            () => navigatorPush(
-                EditProfile(user: state.currentUser.user), context),
-            Theme.of(context).colorScheme.secondary,context,
-            textColor:  Theme.of(context).colorScheme.primary,),
+          "Edit Profile",
+          () =>
+              navigatorPush(EditProfile(user: state.currentUser.user), context),
+          Theme.of(context).colorScheme.secondary,
+          context,
+          textColor: Theme.of(context).colorScheme.primary,
+        ),
       ),
       kheight20,
       DefaultTabController(

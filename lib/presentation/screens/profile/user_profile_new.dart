@@ -231,7 +231,10 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
                             },
                           ),
                         )
-                      : emptyMessage()
+                      : emptyMessage('No Post available',  const Icon(
+            Ionicons.camera_outline,
+            size: 30,
+          ),)
                 ],
               ),
             );

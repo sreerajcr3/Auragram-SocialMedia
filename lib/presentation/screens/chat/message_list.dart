@@ -6,6 +6,7 @@ import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/chat/chat.dart';
 import 'package:aura/presentation/screens/chat/functions/functions.dart';
+import 'package:aura/presentation/screens/profile/widgets/widgets.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +25,6 @@ class _MessageListState extends State<MessageList> {
   void initState() {
     context.read<MessageListBloc>().add(GetUsersFromChat());
     context.read<AllMessagesBloc>().add(GetAllChatWithMeEvent());
-    // context.read<CurrentUserBloc>().add(CurrentUserFetchEvent());
     super.initState();
   }
 
@@ -49,42 +49,48 @@ class _MessageListState extends State<MessageList> {
           ],
           builder: (p0, state) {
             if (state[0] is UsersListFromChatSuccefullState) {
-              return ListView.builder(
-                itemCount: state[0].usersList.length,
-                itemBuilder: (ctx, index) {
-                  if (state[1] is GetAllChatWithMeSuccessState) {
-                    final user = state[0].usersList[index];
-                    final lastMessage = getLastMessage(user.id, state[1].chat);
-                    final DateTime finalDate =
-                        DateTime.parse(lastMessage.lastmessageTime);
-                    return InkWell(
-                      onTap: () => navigatorPush(
-                          ChatScreen(user: state[0].usersList[index]), context),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              state[0].usersList[index].profilePic != ''
-                                  ? state[0].usersList[index].profilePic
-                                  : demoProPic),
-                        ),
-                        title: Text(
-                          state[0].usersList[index].fullname,
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(
-                          lastMessage.lastMessage,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        trailing: Text(timeago.format(finalDate, locale: 'en')),
-                      ),
-                    );
-                  } else {
-                    return loading2(context);
-                  }
-                },
-              );
+              
+              return state[0].usersList .isNotEmpty
+                  ?  ListView.builder(
+                      itemCount: state[0].usersList.length,
+                      itemBuilder: (ctx, index) {
+                        if (state[1] is GetAllChatWithMeSuccessState) {
+                          final user = state[0].usersList[index];
+                          final lastMessage =
+                              getLastMessage(user.id, state[1].chat);
+                          final DateTime finalDate =
+                              DateTime.parse(lastMessage.lastmessageTime);
+                          return InkWell(
+                            onTap: () => navigatorPush(
+                                ChatScreen(user: state[0].usersList[index]),
+                                context),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                    state[0].usersList[index].profilePic != ''
+                                        ? state[0].usersList[index].profilePic
+                                        : demoProPic),
+                              ),
+                              title: Text(
+                                state[0].usersList[index].fullname,
+                                style: const TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text(
+                                lastMessage.lastMessage,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              trailing:
+                                  Text(timeago.format(finalDate, locale: 'en')),
+                            ),
+                          );
+                        }
+                        return null;
+                      },
+                    )
+                  : Center(child: emptyMessage("No conversations",null));
             } else {
               return loading();
             }

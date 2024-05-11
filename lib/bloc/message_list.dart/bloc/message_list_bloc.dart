@@ -15,8 +15,8 @@ class MessageListBloc extends Bloc<MessageListEvent, MessageListState> {
 
   FutureOr<void> getUsersFromChat(GetUsersFromChat event, Emitter<MessageListState> emit)async {
     final List result = await ApiServiceChat.getUsersInChat();
-   if (result .isNotEmpty){
+    print("result = =$result");
     emit(UsersListFromChatSuccefullState(usersList: result));
-   }
+   
   }
 }

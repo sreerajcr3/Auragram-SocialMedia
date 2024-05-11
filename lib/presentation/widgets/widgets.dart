@@ -67,6 +67,50 @@ class TextformField extends StatelessWidget {
     );
   }
 }
+class TextformFieldWithRegEx extends StatelessWidget {
+  final String labelText;
+ final String? Function(String?)? validator;
+  final TextEditingController controller;
+  final IconData? prefixIcon;
+  final IconData? suffixIcon;
+  const TextformFieldWithRegEx({
+    super.key,
+    required this.labelText,
+    required this.controller,
+    this.validator,
+    this.prefixIcon,
+    this.suffixIcon, 
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.sizeOf(context).width * 0.9,
+      child: TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator:validator,
+        controller: controller,
+        decoration: InputDecoration(
+            prefixIcon: Icon(prefixIcon),
+            suffixIcon: Icon(suffixIcon),
+            focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.red)),
+            errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.red)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide()),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide:
+                    const BorderSide()), // border: const OutlineInputBorder(),
+            labelText: labelText),
+      ),
+    );
+  }
+}
 
 class PasswordTextFormFeild extends StatefulWidget {
   final String labelText;

@@ -6,6 +6,7 @@ import 'package:aura/presentation/screens/bottom_navigation/bottom_navigation.da
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 class OtpScreen extends StatelessWidget {
   final String username;
@@ -24,6 +25,10 @@ class OtpScreen extends StatelessWidget {
       required this.accountType,
       required this.phoneNo});
   final otpcontroller = TextEditingController();
+  List<TextEditingController?> _otpControllers =
+      List.generate(6, (index) => TextEditingController());
+
+  List otpList = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,8 +37,8 @@ class OtpScreen extends StatelessWidget {
         listener: (context, state) {
           if (state is SignUpSuccessState) {
             snackBar("Account created..!", context);
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (_) => const CustomBottomNavigationBar()));
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (_) => const CustomBottomNavigationBar()));
           } else if (state is SignUpEmailExistState) {
             snackBar("Email exists", context);
           } else if (state is SignUpPhoneNoExistState) {
@@ -62,27 +67,33 @@ class OtpScreen extends StatelessWidget {
                   style: const TextStyle(fontSize: 20),
                 ),
                 kheight30,
-                TextFormField(
-                  controller: otpcontroller,
+                // TextFormField(
+                //   controller: otpcontroller,
+                // ),
+                OtpTextField(
+                  handleControllers: (controllers) {
+                    _otpControllers = controllers;
+                  },
+                  onCodeChanged: (value) {
+                    // Handle OTP value change
+                  },
+                  numberOfFields: 6,
+                  borderColor: Colors.black,
+                  showFieldAsBox: true,
+                  fieldWidth: 50,
+                  cursorColor: Colors.blue,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                // OtpTextField(
 
-                //     handleControllers: (controllers) {
-                //       // Store the controllers in a list
-                //     List<TextEditingController?> otpControllers = controllers;
-                //     // Use the controllers to access the values entered by the user
-                //     List<String> otpValues = otpControllers.map((controller) => controller.text).toList();
-                //     print(otpValues); // Print the values for debugging purposes
-                //     },
-                //     numberOfFields: 6,
-                //     borderColor: Colors.black,
-                //     showFieldAsBox: true,
-                //     fieldWidth: 50,
-                //     cursorColor: Colors.blue,
-                //     borderRadius: BorderRadius.circular(10)),
                 kheight30,
                 ElevatedButton(
                   onPressed: () {
+
+                    String otp = '';
+                    for (var controller in _otpControllers) {
+                      otp += controller?.text ?? '';
+                    }
+
                     final user = User(
                         username: username,
                         email: email,
@@ -90,11 +101,10 @@ class OtpScreen extends StatelessWidget {
                         fullname: fullname,
                         accountType: accountType,
                         phoneNo: phoneNo,
-                        otp: otpcontroller.text);
-                  
-
-                    // BlocProvider.of<SignUpBloc>(context).add(UserSignUp(context, user: user));
-                      userLoggedIn(context);
+                        otp: otp);
+                   
+                    // BlocProvider.of<SignUpBloc>(context).add(UserSignUp( user: user));
+                    userLoggedIn(context);
                     context.read<SignUpBloc>().add(UserSignUp(user: user));
                   },
                   child: const Text('Verify'),

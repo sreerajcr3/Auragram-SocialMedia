@@ -98,14 +98,35 @@ class _SignUpState extends State<SignUpScreen> {
                             controller: usernameController,
                           ),
                           kheight20,
-                          TextformField(
-                            valueText: "Phone Number",
+                          TextformFieldWithRegEx(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a phone number';
+                              }
+
+                              RegExp regex = RegExp(r'^[0-9]{10}$');
+                              if (!regex.hasMatch(value)) {
+                                return 'Please enter a valid 10-digit number';
+                              }
+                              return null;
+                            },
                             labelText: "Phone Number",
                             controller: phoneNoController,
                           ),
                           kheight20,
-                          TextformField(
-                            valueText: 'Email Address',
+                          TextformFieldWithRegEx(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter an email address';
+                              }
+
+                              RegExp regex =
+                                  RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                              if (!regex.hasMatch(value)) {
+                                return 'Please enter a valid email address';
+                              }
+                              return null;
+                            },
                             labelText: "Email Address",
                             controller: emailController,
                           ),
@@ -133,6 +154,7 @@ class _SignUpState extends State<SignUpScreen> {
                                 selectedValue = value;
                               },
                               hintText: 'Select Account type',
+                              
                             ),
                           ),
                           kheight20,
