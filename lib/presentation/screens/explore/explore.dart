@@ -38,12 +38,12 @@ class _ExplorePageState extends State<ExplorePage> {
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
+          // backgroundColor: kGrey,
           appBar:
               customAppbar(text: "Explore", context: context, onPressed: () {}),
-       
           body: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 children: [
                   Column(
@@ -55,29 +55,26 @@ class _ExplorePageState extends State<ExplorePage> {
                           Stack(
                             children: [
                               SizedBox(
-                                height: 53,
+                                height: 60,
                                 child: TextFormField(
                                   onChanged: (value) {
                                     onChangedValue = value;
                                     if (value.isNotEmpty) {
-                                       context.read<SearchBloc>().add(
-                                                GetUserEvent(
-                                                    text:
-                                                      value));
-                                    }else{
-                                          context.read<ExplorePageCubit>().pageChange(false);
+                                      context
+                                          .read<SearchBloc>()
+                                          .add(GetUserEvent(text: value));
+                                    } else {
+                                      context
+                                          .read<ExplorePageCubit>()
+                                          .pageChange(false);
                                     }
                                   },
                                   decoration: InputDecoration(
+                                      suffixIcon:const Icon(
+                                        Icons.search,
+                                        size: 30,
+                                      ),
                                       hintText: "Search",
-                                      suffixIcon: IconButton(
-                                          onPressed: () {
-                                            context.read<SearchBloc>().add(
-                                                GetUserEvent(
-                                                    text:
-                                                        searchController.text));
-                                          },
-                                          icon: const Icon(Icons.search)),
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10))),

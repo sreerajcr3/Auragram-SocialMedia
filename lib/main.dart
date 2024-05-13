@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
           primaryColorLight: kWhite,
           fontFamily: "JosefinSans",
           colorScheme: ColorScheme.fromSeed(
-              seedColor: Color.fromARGB(255, 255, 255, 255,),
+              seedColor:const Color.fromARGB(255, 255, 255, 255,),
               secondary: kBlack,
               primary: kBlack
               ),

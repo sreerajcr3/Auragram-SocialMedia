@@ -412,7 +412,7 @@ CircleAvatar postUserProPic(
                 return InkWell(
                   onTap: () => state.posts[index].user!.id ==
                           userState.currentUser.user.id
-                      ? indexChangeNotifier.value = 3
+                      ? indexChangeNotifier.value = 4
                       : navigatorPush(
                           UserProfileSccreen(
                             user: state.posts[index].user!,

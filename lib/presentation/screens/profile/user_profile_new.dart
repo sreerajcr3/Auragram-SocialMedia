@@ -70,172 +70,175 @@ class _UserProfileSccreenState extends State<UserProfileSccreen> {
                 .any((element) => element.id == state[0].currentUser.user.id);
 
             return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Stack(
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.sizeOf(context).width,
-                        height: height / 4,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.sizeOf(context).width,
-                              height: height / 5,
-                              child: Image.network(
-                                widget.user.coverPic == ''
-                                    ? demoCoverPic
-                                    : widget.user.coverPic.toString(),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Positioned(
-                          top: 150,
-                          child: Container(
-                            width: MediaQuery.sizeOf(context).width,
-                            height: height,
-                            decoration: const BoxDecoration(
-                              // color: kBlack,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20),
-                              ),
-                            ),
-                          )),
-                      Positioned(
-                          top: height / 8,
-                          left: width / 3,
-                          right: width / 3,
-                          child: CircleAvatar(
-                            radius: 51,
-                            child: CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  widget.user.profilePic == ''
-                                      ? demoProPic
-                                      : widget.user.profilePic!),
-                              radius: 48,
-                            ),
-                          )),
-                     
-                      Positioned(
-                        top: height / 3.2,
-                        left: 20,
-                        child: Text(
-                          widget.user.bio!,
-                          style: const TextStyle(
-                            fontFamily: "kanit",
-                            fontSize: 17,
-                          ),
-                        ),
-                      ),
-                   
-                    ],
-                  ),
-                  kheight15,
-                  fullNameUserProfile(
-                    widget.user.username,context
-                  ),
-                  usernameUserProfile(widget.user.username),
-
-                  kheight15,
-                  bioProfileScreen(
-                    widget.user.bio!,context
-                  ),
-
-                  kheight15,
-                  profileCountCard(state[1], context, followers.length, false),
-                  kheight15,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () async {
-                          final User currentuser = state[0].currentUser.user;
-
-                          final user = User(
-                            id: currentuser.id,
-                            username: currentuser.username,
-                            fullname: currentuser.fullname,
-                            followers: currentuser.followers,
-                            following: currentuser.following,
-                          );
-
-                          if (!follow!) {
-                            followers.add(user);
-
-                            context
-                                .read<FollowUnfollowBloc>()
-                                .add(TofollowEvent(userId: widget.user.id!));
-                          } else {
-                            followers.removeWhere(
-                                (element) => element.id == currentuser.id);
-
-                            context
-                                .read<FollowUnfollowBloc>()
-                                .add(ToUnfollowEvent(userId: widget.user.id!));
-                          }
-                          // StreamSubscription<FollowUnfollowState> subscription =
-                          //     context
-                          //         .read<FollowUnfollowBloc>()
-                          //         .stream
-                          //         .listen((state) {
-                          //   if (state is FollowSuccesssFullState) {
-                          //   } else if (state is UnFollowSuccesssFullState) {}
-                          // });
-
-                          context
-                              .read<FollowUnfollowBloc>()
-                              .add(FollowUpdateEvent());
-                        },
-                        child: follow!
-                            ? followUnfollowButton(
-                                "Following", color: kgreen, true)
-                            : followUnfollowButton("Follow", false),
-                      ),
-                      kwidth20,
-                      containerButton(
-                          Ionicons.chatbox_ellipses, () =>navigatorPush(ChatScreen(user: widget.user), context) , Colors.blue)
-                    ],
-                  ),
-                  state[1].getUserModel.posts.isNotEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GridView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: state[1].getUserModel.posts.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 1,
-                              mainAxisSpacing: 1,
-                            ),
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                onTap: () => navigatorPush(
-                                    GetuserPostDetailPage(
-                                        user: state[1].getUserModel.user),
-                                    context),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Stack(
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.sizeOf(context).width,
+                          height: height / 4,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.sizeOf(context).width,
+                                height: height / 5,
                                 child: Image.network(
-                                  state[1]
-                                      .getUserModel
-                                      .posts[index]
-                                      .mediaURL![0],
+                                  widget.user.coverPic == ''
+                                      ? demoCoverPic
+                                      : widget.user.coverPic.toString(),
                                   fit: BoxFit.cover,
                                 ),
-                              );
-                            },
+                              ),
+                            ],
                           ),
-                        )
-                      : emptyMessage('No Post available',  const Icon(
-            Ionicons.camera_outline,
-            size: 30,
-          ),)
-                ],
+                        ),
+                        Positioned(
+                            top: 150,
+                            child: Container(
+                              width: MediaQuery.sizeOf(context).width,
+                              height: height,
+                              decoration: const BoxDecoration(
+                                // color: kBlack,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                            )),
+                        Positioned(
+                            top: height / 8,
+                            left: width / 3,
+                            right: width / 3,
+                            child: CircleAvatar(
+                              radius: 51,
+                              child: CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                    widget.user.profilePic == ''
+                                        ? demoProPic
+                                        : widget.user.profilePic!),
+                                radius: 48,
+                              ),
+                            )),
+                       
+                        Positioned(
+                          top: height / 3.2,
+                          left: 20,
+                          child: Text(
+                            widget.user.bio!,
+                            style: const TextStyle(
+                              fontFamily: "kanit",
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                     
+                      ],
+                    ),
+                    kheight15,
+                    fullNameUserProfile(
+                      widget.user.username,context
+                    ),
+                    usernameUserProfile(widget.user.username),
+                
+                    kheight15,
+                    bioProfileScreen(
+                      widget.user.bio!,context
+                    ),
+                
+                    kheight15,
+                    profileCountCard(state[1], context, followers.length, false),
+                    kheight15,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: () async {
+                            final User currentuser = state[0].currentUser.user;
+                
+                            final user = User(
+                              id: currentuser.id,
+                              username: currentuser.username,
+                              fullname: currentuser.fullname,
+                              followers: currentuser.followers,
+                              following: currentuser.following,
+                            );
+                
+                            if (!follow!) {
+                              followers.add(user);
+                
+                              context
+                                  .read<FollowUnfollowBloc>()
+                                  .add(TofollowEvent(userId: widget.user.id!));
+                            } else {
+                              followers.removeWhere(
+                                  (element) => element.id == currentuser.id);
+                
+                              context
+                                  .read<FollowUnfollowBloc>()
+                                  .add(ToUnfollowEvent(userId: widget.user.id!));
+                            }
+                            // StreamSubscription<FollowUnfollowState> subscription =
+                            //     context
+                            //         .read<FollowUnfollowBloc>()
+                            //         .stream
+                            //         .listen((state) {
+                            //   if (state is FollowSuccesssFullState) {
+                            //   } else if (state is UnFollowSuccesssFullState) {}
+                            // });
+                
+                            context
+                                .read<FollowUnfollowBloc>()
+                                .add(FollowUpdateEvent());
+                          },
+                          child: follow!
+                              ? followUnfollowButton(
+                                  "Following", color: kgreen, true)
+                              : followUnfollowButton("Follow", false),
+                        ),
+                        kwidth20,
+                        containerButton(
+                            Ionicons.chatbox_ellipses, () =>navigatorPush(ChatScreen(user: widget.user), context) , Colors.blue)
+                      ],
+                    ),
+                    state[1].getUserModel.posts.isNotEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: state[1].getUserModel.posts.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 1,
+                                mainAxisSpacing: 1,
+                              ),
+                              itemBuilder: (context, index) {
+                                return InkWell(
+                                  onTap: () => navigatorPush(
+                                      GetuserPostDetailPage(
+                                          user: state[1].getUserModel.user),
+                                      context),
+                                  child: Image.network(
+                                    state[1]
+                                        .getUserModel
+                                        .posts[index]
+                                        .mediaURL![0],
+                                    fit: BoxFit.cover,
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        : emptyMessage('No Post available',  const Icon(
+                            Ionicons.camera_outline,
+                            size: 30,
+                          ),)
+                  ],
+                ),
               ),
             );
           } else {

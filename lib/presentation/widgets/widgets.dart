@@ -289,7 +289,8 @@ class AppName extends StatelessWidget {
       style: TextStyle(
           fontFamily: "DancingScript",
           fontSize: 40,
-          fontWeight: FontWeight.bold),
+          fontWeight: FontWeight.bold
+          ),
     );
   }
 }
