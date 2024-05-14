@@ -61,7 +61,10 @@ class _ChatScreenState extends State<ChatScreen> {
             // dates =dates.reversed.toList();
             // messgeByDate = messgeByDate.reversed.toList();
             return Scaffold(
-              appBar: customAppbarChatPage(fullname: widget.user.fullname!, context: context, profilePic: widget.user.profilePic!),
+              appBar: customAppbarChatPage(
+                  fullname: widget.user.fullname!,
+                  context: context,
+                  profilePic: widget.user.profilePic!),
               body: SizedBox(
                 height: height,
                 width: width,
@@ -91,22 +94,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                 })
                               ],
                             );
-                            // final chat = state[1].chat[index];
-                            // if (chat.sender.id ==
-                            //     state[0].currentUser.user.id) {
-                            //   return OwnMessage(
-                            //     chat: chat,
-                            //   );
-                            // } else {
-                            //   return UserMessage(
-                            //     chat: chat,
-                            //   );
-                            // }
                           }),
                     ),
                     Align(
                       alignment: Alignment.bottomCenter,
-                      child: Container(
+                      child: SizedBox(
                         height: 70,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -119,21 +111,24 @@ class _ChatScreenState extends State<ChatScreen> {
                                     margin: const EdgeInsets.only(
                                         left: 2, right: 2, bottom: 8),
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25)),
+                                        borderRadius:
+                                            BorderRadius.circular(25)),
                                     child: TextFormField(
                                       controller: messagecontroller,
-                                      textAlignVertical: TextAlignVertical.center,
+                                      textAlignVertical:
+                                          TextAlignVertical.center,
                                       keyboardType: TextInputType.multiline,
                                       maxLines: 5,
                                       minLines: 1,
                                       decoration: InputDecoration(
                                           border: InputBorder.none,
                                           hintText: "Type a message",
-                                          contentPadding: const EdgeInsets.all(5),
+                                          contentPadding:
+                                              const EdgeInsets.all(5),
                                           prefixIcon: IconButton(
                                               onPressed: () {},
-                                              icon:
-                                                  const Icon(Icons.emoji_emotions))),
+                                              icon: const Icon(
+                                                  Icons.emoji_emotions))),
                                     ),
                                   ),
                                 ),
@@ -144,12 +139,15 @@ class _ChatScreenState extends State<ChatScreen> {
                                     child: IconButton(
                                         onPressed: () {
                                           SocketService().sendMessage(
-                                              loginUsername:
-                                                  state[0].currentUser.user.username,
+                                              loginUsername: state[0]
+                                                  .currentUser
+                                                  .user
+                                                  .username,
                                               logineduserid:
                                                   state[0].currentUser.user.id,
                                               recieverid: widget.user.id!,
-                                              recievername: widget.user.username!,
+                                              recievername:
+                                                  widget.user.username!,
                                               message: messagecontroller.text);
                                           messagecontroller.clear();
                                         },

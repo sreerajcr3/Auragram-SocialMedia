@@ -9,7 +9,6 @@ import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/domain/model/user_model.dart';
 import 'package:aura/presentation/functions/functions.dart';
 import 'package:aura/presentation/screens/bottom_navigation/bottom_navigation.dart';
-import 'package:aura/presentation/screens/profile/current_user_profile.dart';
 import 'package:aura/presentation/screens/profile/widgets/widgets.dart';
 import 'package:aura/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -61,9 +60,9 @@ class _EditProfileState extends State<EditProfile> {
       body: BlocConsumer<EditProfileBloc, EditProfileState>(
         listener: (context, state) {
           if (state is EditProfileSuccessState) {
-          indexChangeNotifier.value = 3;
+          indexChangeNotifier.value = 4;
             snackBar("Profile Edited", context);
-            navigatorPush(const MyProfile(), context);
+            navigatorPush(const CustomBottomNavigationBar(), context);
           }
           else if(state is EditProfileLoadingState){
               loading();

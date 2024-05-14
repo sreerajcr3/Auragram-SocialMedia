@@ -35,6 +35,9 @@ navigatorPush(page, context) {
       type: PageTransitionType.fade,
       duration: const Duration(milliseconds: 1000)));
 }
+navigatorPushReplacement(page, context) {
+  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx)=>page), (route) => false);
+}
 
 //-----------------------shared preference---------------------
 
@@ -79,7 +82,7 @@ Future<void> logOut(context) async {
   SocketService().disconnectSocket();
   final sharedprefs = await SharedPreferences.getInstance();
   sharedprefs.setBool(savedkey, false);
-  navigatorReplacement(const LogIn(), context);
+  navigatorPushReplacement(const LogIn(), context);
   snackBar("Log out succefully", context);
 }
 
