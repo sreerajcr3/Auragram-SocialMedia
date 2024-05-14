@@ -80,7 +80,7 @@ class _SignUpState extends State<SignUpScreen> {
                     const TItleHeading(
                       text1: 'Welcome to ',
                       subText: 'Register your account',
-                      text2: 'Auragram..!',
+                      text2: '..!',
                     ),
                     kheight30,
                     Center(

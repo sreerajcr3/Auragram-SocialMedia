@@ -285,11 +285,11 @@ class AppName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Text(
-      "Auragram",
+      "illuminate",
       style: TextStyle(
-          fontFamily: "DancingScript",
-          fontSize: 40,
-          fontWeight: FontWeight.bold
+          fontFamily:"kanit",
+          fontSize: 30,
+          // fontWeight: FontWeight.bold
           ),
     );
   }

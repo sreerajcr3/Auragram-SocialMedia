@@ -65,11 +65,11 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                const Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: 10),
+                  padding:  EdgeInsets.symmetric(horizontal: 15),
                   child: AppName(),
             
                 ),
-                kheight5,
+                kheight15,
                 BlocBuilder<DeletePostBloc, DeletePostState>(
                   builder: (context, deleteState) {
                     //######################       to update the state after delete    ##########################

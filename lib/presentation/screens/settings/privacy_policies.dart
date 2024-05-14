@@ -19,7 +19,7 @@ class PrivacyTermsAndCondition extends StatelessWidget {
                 ? const Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
-                        """This privacy policy applies to the Auragram app (hereby referred to as "Application") for mobile devices that was created by (hereby referred to as "Service Provider") as a Free service. This service is intended for use "AS IS".
+                        """This privacy policy applies to the Illuminate app (hereby referred to as "Application") for mobile devices that was created by (hereby referred to as "Service Provider") as a Free service. This service is intended for use "AS IS".
                     
                     
  Information Collection and Use
@@ -59,14 +59,14 @@ You can stop all collection of information by the Application easily by uninstal
 
 
 Data Retention Policy
-The Service Provider will retain User Provided data for as long as you use the Application and for a reasonable time thereafter. If you'd like them to delete User Provided Data that you have provided via the Application, please contact them at Auragram@gmail.com and they will respond in a reasonable time.
+The Service Provider will retain User Provided data for as long as you use the Application and for a reasonable time thereafter. If you'd like them to delete User Provided Data that you have provided via the Application, please contact them at Illuminate@gmail.com and they will respond in a reasonable time.
 
 
 Children
 The Service Provider does not use the Application to knowingly solicit data from or market to children under the age of 13.
 
 
-The Application does not address anyone under the age of 13. The Service Provider does not knowingly collect personally identifiable information from children under 13 years of age. In the case the Service Provider discover that a child under 13 has provided personal information, the Service Provider will immediately delete this from their servers. If you are a parent or guardian and you are aware that your child has provided us with personal information, please contact the Service Provider (Auragram@gmail.com) so that they will be able to take the necessary actions.
+The Application does not address anyone under the age of 13. The Service Provider does not knowingly collect personally identifiable information from children under 13 years of age. In the case the Service Provider discover that a child under 13 has provided personal information, the Service Provider will immediately delete this from their servers. If you are a parent or guardian and you are aware that your child has provided us with personal information, please contact the Service Provider (Illuminate@gmail.com) so that they will be able to take the necessary actions.
 
 
 Security
@@ -85,12 +85,12 @@ By using the Application, you are consenting to the processing of your informati
 
 
 Contact Us
-If you have any questions regarding privacy while using the Application, or have questions about the practices, please contact the Service Provider via email at Auragram@gmail.com."""),
+If you have any questions regarding privacy while using the Application, or have questions about the practices, please contact the Service Provider via email at Illuminate@gmail.com."""),
                   )
                 : const Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Text(
-                        """These terms and conditions applies to the Auragram app (hereby referred to as "Application") for mobile devices that was created by (hereby referred to as "Service Provider") as a Free servi
+                        """These terms and conditions applies to the Illuminate app (hereby referred to as "Application") for mobile devices that was created by (hereby referred to as "Service Provider") as a Free servi
  Upon downloading or utilizing the Application, you are automatically agreeing to the following terms. It is strongly advised that you thoroughly read and understand these terms prior to using the Application. Unauthorized copying, modification of the Application, any part of the Application, or our trademarks is strictly prohibited. Any attempts to extract the source code of the Application, translate the Application into other languages, or create derivative versions are not permitted. All trademarks, copyrights, database rights, and other intellectual property rights related to the Application remain the property of the Service Provid
 The ice Provider is dedicated to ensuring that the Application is as beneficial and efficient as possible. As such, they reserve the right to modify the Application or charge for their services at any time and for any reason. The Service Provider assures you that any charges for the Application or its services will be clearly communicated to you.
 
@@ -124,7 +124,7 @@ These terms and conditions are effective as of 2028-04-16
 
 
 Contact Us
-If you have any questions or suggestions about the Terms and Conditions, please do not hesitate to contact the Service Provider at Auragram@gmail.com."""),
+If you have any questions or suggestions about the Terms and Conditions, please do not hesitate to contact the Service Provider at Illuminate@gmail.com."""),
                   )
           ],
         ),

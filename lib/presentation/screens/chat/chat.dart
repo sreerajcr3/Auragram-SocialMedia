@@ -1,7 +1,5 @@
 import 'package:aura/bloc/chat/bloc/chat_bloc.dart';
 import 'package:aura/bloc/currentUser_profile/bloc/current_user_bloc.dart';
-import 'package:aura/core/constants/measurements.dart';
-import 'package:aura/core/constants/user_demo_pic.dart';
 import 'package:aura/domain/model/chat_model.dart';
 import 'package:aura/domain/model/user_model.dart';
 import 'package:aura/domain/socket/socket.dart';
@@ -67,10 +65,10 @@ class _ChatScreenState extends State<ChatScreen> {
               body: SizedBox(
                 height: height,
                 width: width,
-                child: Stack(
+                child: Column(
                   children: [
-                    SizedBox(
-                      height: height / 1.26,
+                    Expanded(
+                      // height: height / 1.26,
                       child: ListView.builder(
                           itemCount: dates.length,
                           reverse: true,
@@ -108,52 +106,60 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     Align(
                       alignment: Alignment.bottomCenter,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: width - 55,
-                            child: Card(
-                              margin: const EdgeInsets.only(
-                                  left: 2, right: 2, bottom: 8),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25)),
-                              child: TextFormField(
-                                controller: messagecontroller,
-                                textAlignVertical: TextAlignVertical.center,
-                                keyboardType: TextInputType.multiline,
-                                maxLines: 5,
-                                minLines: 1,
-                                decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: "Type a message",
-                                    contentPadding: const EdgeInsets.all(5),
-                                    prefixIcon: IconButton(
-                                        onPressed: () {},
-                                        icon:
-                                            const Icon(Icons.emoji_emotions))),
-                              ),
+                      child: Container(
+                        height: 70,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: width - 55,
+                                  child: Card(
+                                    margin: const EdgeInsets.only(
+                                        left: 2, right: 2, bottom: 8),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25)),
+                                    child: TextFormField(
+                                      controller: messagecontroller,
+                                      textAlignVertical: TextAlignVertical.center,
+                                      keyboardType: TextInputType.multiline,
+                                      maxLines: 5,
+                                      minLines: 1,
+                                      decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText: "Type a message",
+                                          contentPadding: const EdgeInsets.all(5),
+                                          prefixIcon: IconButton(
+                                              onPressed: () {},
+                                              icon:
+                                                  const Icon(Icons.emoji_emotions))),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: CircleAvatar(
+                                    radius: 25,
+                                    child: IconButton(
+                                        onPressed: () {
+                                          SocketService().sendMessage(
+                                              loginUsername:
+                                                  state[0].currentUser.user.username,
+                                              logineduserid:
+                                                  state[0].currentUser.user.id,
+                                              recieverid: widget.user.id!,
+                                              recievername: widget.user.username!,
+                                              message: messagecontroller.text);
+                                          messagecontroller.clear();
+                                        },
+                                        icon: const Icon(Icons.send)),
+                                  ),
+                                )
+                              ],
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: CircleAvatar(
-                              radius: 25,
-                              child: IconButton(
-                                  onPressed: () {
-                                    SocketService().sendMessage(
-                                        loginUsername:
-                                            state[0].currentUser.user.username,
-                                        logineduserid:
-                                            state[0].currentUser.user.id,
-                                        recieverid: widget.user.id!,
-                                        recievername: widget.user.username!,
-                                        message: messagecontroller.text);
-                                    messagecontroller.clear();
-                                  },
-                                  icon: const Icon(Icons.send)),
-                            ),
-                          )
-                        ],
+                          ],
+                        ),
                       ),
                     )
                   ],
